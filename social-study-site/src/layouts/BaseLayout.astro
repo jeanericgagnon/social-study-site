@@ -4,6 +4,7 @@ export interface Props {
   description: string;
   canonical?: string;
   ogImage?: string;
+  robots?: string;
 }
 
 const {
@@ -11,6 +12,7 @@ const {
   description,
   canonical,
   ogImage = '/brand/SecondaryLogo.jpg',
+  robots = 'index,follow',
 } = Astro.props;
 
 const url = new URL(Astro.url);
@@ -52,7 +54,7 @@ const canonicalUrl = canonical
       rel="stylesheet"
     />
 
-    <meta name="robots" content="index,follow" />
+    <meta name="robots" content={robots} />
 
     <script type="application/ld+json" is:inline>{JSON.stringify({
       "@context": "https://schema.org",

@@ -135,11 +135,19 @@ function pickBg(slug) {
   return colors[h % colors.length];
 }
 
-function astroPage({ title, description, html, canonicalPath, slug }) {
+function firstImageSrc(html) {
+  const h = String(html || '');
+  const m = h.match(/<img[^>]+src=["']([^"']+)["']/i);
+  return m ? m[1] : null;
+}
+
+function astroPage({ title, description, html, canonicalPath, slug, datePublished }) {
   // IMPORTANT: html is untrusted external content; we do not execute it.
   // We render it as inert HTML inside Astro (no scripts).
-  const safeHtmlLiteral = JSON.stringify(sanitizeCampaignHtml(html));
+  const cleaned = sanitizeCampaignHtml(html);
+  const safeHtmlLiteral = JSON.stringify(cleaned);
   const bg = pickBg(slug);
+  const img = firstImageSrc(cleaned);
 
   return `---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
@@ -149,12 +157,43 @@ import '../../../styles/global.css';
 const title = ${JSON.stringify(title)};
 const description = ${JSON.stringify(description)};
 const html = ${safeHtmlLiteral};
-const canonical = Astro.site ? new URL(${JSON.stringify(canonicalPath)}, Astro.site).toString() : undefined;
+const canonicalPath = ${JSON.stringify(canonicalPath)};
+const canonical = Astro.site ? new URL(canonicalPath, Astro.site).toString() : undefined;
+const datePublished = ${JSON.stringify(datePublished)};
+const image = ${JSON.stringify(img)};
 
 const bgValue = ${JSON.stringify(bg.value)};
 ---
 
 <BaseLayout title={title} description={description} canonical={canonical}>
+  {canonical && (
+    <script type="application/ld+json" is:inline>
+      {JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'BlogPosting',
+        headline: title,
+        description,
+        datePublished,
+        mainEntityOfPage: canonical,
+        url: canonical,
+        image: image
+          ? [Astro.site ? new URL(image, Astro.site).toString() : image]
+          : undefined,
+        publisher: {
+          '@type': 'Organization',
+          name: 'The Social Study',
+          url: Astro.site ? Astro.site.toString() : 'https://www.thesocial.study',
+          logo: {
+            '@type': 'ImageObject',
+            url: Astro.site
+              ? new URL('/brand/LogoNoBackground.png', Astro.site).toString()
+              : '/brand/LogoNoBackground.png',
+          },
+        },
+      })}
+    </script>
+  )}
+
   <div style={\`background:\${bgValue}; min-height: 100vh;\`}>
     <SiteHeader />
     <main class="mx-auto max-w-3xl px-4 pb-20">
@@ -229,7 +268,11 @@ async function main() {
 
     const pageDir = path.join(outPagesDir, slug);
     ensureDir(pageDir);
-    fs.writeFileSync(path.join(pageDir, 'index.astro'), astroPage({ title, description, html, canonicalPath, slug }), 'utf8');
+    fs.writeFileSync(
+      path.join(pageDir, 'index.astro'),
+      astroPage({ title, description, html, canonicalPath, slug, datePublished: sendTime }),
+      'utf8'
+    );
 
     indexItems.push({
       id: c.id,

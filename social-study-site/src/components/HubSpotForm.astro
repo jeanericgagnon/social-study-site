@@ -9,13 +9,15 @@ const { portalId, formId, region = 'na1' } = Astro.props;
 const targetId = `hs-form-${formId}`;
 ---
 
-<div class="rounded-2xl border-2 border-black bg-white/80 p-5">
+<div class="hs-wrap relative overflow-hidden rounded-2xl border-2 border-black bg-white/80 p-5 pt-5">
   <div
     id={targetId}
     data-hs-region={region}
     data-hs-portal={portalId}
     data-hs-form={formId}
   ></div>
+  <!-- Visual cover strip (best-effort) to hide HubSpot branding area -->
+  <div class="hs-brand-cover pointer-events-none absolute bottom-0 left-0 right-0 h-10 bg-[#f7f0d0]"></div>
 </div>
 
 <script is:inline src="https://js.hsforms.net/forms/v2.js"></script>

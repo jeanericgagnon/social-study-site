@@ -19,8 +19,9 @@ body{
 }
 
 /* HubSpot embed polish (best-effort) */
-.hs-wrap{ padding-bottom: 3.25rem; }
-.hs-brand-cover{ border-top: 2px solid rgba(0,0,0,.08); }
+/* Cover area from submit button down to the container border */
+.hs-wrap{ padding-bottom: 6.5rem; }
+.hs-brand-cover{ height: 6.5rem; }
 
 .hs-form :is(input, textarea, select){
   border: 2px solid rgba(0,0,0,.7) !important;

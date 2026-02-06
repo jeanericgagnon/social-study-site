@@ -1,0 +1,28 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import SiteHeader from '../../../components/SiteHeader.astro';
+import MailchimpSignup from '../../../components/MailchimpSignup.astro';
+import '../../../styles/global.css';
+
+const title = 'Newsletter Signup — Orange County | The Social Study';
+const description = 'Subscribe to the Social Study newsletter. City selection: Orange County.';
+---
+
+<BaseLayout title={title} description={description}>
+  <SiteHeader />
+  <main class="mx-auto max-w-3xl px-4 pb-20">
+    <header class="mt-6 rounded-[26px] border-[3px] border-black bg-[var(--cream)] p-6">
+      <div class="text-xs uppercase tracking-widest text-slate-600">Newsletter signup</div>
+      <h1 class="h-brand mt-2 text-5xl">Orange County</h1>
+      <p class="mt-3 text-slate-700">One newsletter for everyone. We tag your city for event interest.</p>
+    </header>
+
+    <div class="mt-8">
+      <MailchimpSignup title="Orange County" subtitle="Speaker Q&A articles" f_id="001ae6e3f0" tags="1853487" />
+    </div>
+
+    <div class="mt-6 text-center">
+      <a class="underline" href="../">Choose a different city</a>
+    </div>
+  </main>
+</BaseLayout>

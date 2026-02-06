@@ -1,0 +1,28 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import SiteHeader from '../../../components/SiteHeader.astro';
+import HubSpotForm from '../../../components/HubSpotForm.astro';
+import '../../../styles/global.css';
+
+const title = 'Host an Event — Orange County | The Social Study';
+const description = 'Host venue form for The Social Study (Orange County).';
+---
+
+<BaseLayout title={title} description={description}>
+  <SiteHeader />
+  <main class="mx-auto max-w-3xl px-4 pb-20">
+    <header class="mt-6 rounded-[26px] border-[3px] border-black bg-[var(--cream)] p-6">
+      <div class="text-xs uppercase tracking-widest text-slate-600">Host an event</div>
+      <h1 class="h-brand mt-2 text-5xl">Orange County</h1>
+      <p class="mt-3 text-slate-700">Send venue details and we’ll follow up.</p>
+    </header>
+
+    <div class="mt-8">
+      <HubSpotForm portalId="49143429" formId="8d103262-de08-4d75-862b-064cf672d04a" region="na1" />
+    </div>
+
+    <div class="mt-6 text-center">
+      <a class="underline" href="../">Choose a different city</a>
+    </div>
+  </main>
+</BaseLayout>

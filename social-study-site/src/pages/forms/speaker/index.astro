@@ -1,0 +1,28 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import SiteHeader from '../../../components/SiteHeader.astro';
+import '../../../styles/global.css';
+
+const title = 'Become a Speaker | The Social Study';
+const description = 'Apply to speak at The Social Study. Choose your city.';
+---
+
+<BaseLayout title={title} description={description}>
+  <SiteHeader />
+  <main class="mx-auto max-w-4xl px-4 pb-20">
+    <header class="mt-6 rounded-[26px] border-[3px] border-black bg-[var(--cream)] p-6">
+      <h1 class="h-brand text-5xl">Become a speaker</h1>
+      <p class="mt-3 text-slate-700">Select your city to apply.</p>
+    </header>
+
+    <section class="mt-8 flex flex-wrap justify-center gap-3">
+      <a class="rounded-full border-[3px] border-black bg-[var(--teal)] px-6 py-3 font-semibold text-white hover:opacity-90" href="./san-diego/">San Diego</a>
+      <a class="rounded-full border-[3px] border-black bg-[var(--coral)] px-6 py-3 font-semibold text-white hover:opacity-90" href="./orange-county/">Orange County</a>
+      <a class="rounded-full border-[3px] border-black bg-[var(--espresso)] px-6 py-3 font-semibold text-white hover:opacity-90" href="./denver/">Denver</a>
+    </section>
+
+    <footer class="mt-16 border-t border-slate-200 pt-8 text-sm text-slate-600">
+      <a class="underline" href="../../privacy/">Privacy</a>
+    </footer>
+  </main>
+</BaseLayout>

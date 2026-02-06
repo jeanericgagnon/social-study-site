@@ -1,0 +1,23 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import SiteHeader from '../../../components/SiteHeader.astro';
+import HubSpotForm from '../../../components/HubSpotForm.astro';
+import '../../../styles/global.css';
+
+const title = 'MC Denver | Form';
+const description = 'Apply to be an MC for The Social Study Denver.';
+---
+
+<BaseLayout title={title} description={description}>
+  <SiteHeader />
+  <main class="mx-auto max-w-3xl px-4 pb-20">
+    <header class="mt-6 rounded-[26px] border-[3px] border-black bg-[var(--cream)] p-6">
+      <h1 class="h-brand text-5xl">MC — Denver</h1>
+      <p class="mt-3 text-slate-700">Help host the room and set the vibe.</p>
+    </header>
+
+    <div class="mt-8">
+      <HubSpotForm portalId="244844478" formId="55dabb14-634a-4302-9c6b-f322f0010445" region="na2" />
+    </div>
+  </main>
+</BaseLayout>

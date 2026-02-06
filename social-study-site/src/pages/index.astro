@@ -198,9 +198,16 @@ const faqs = [
                   style={{ height: index <= 1 ? '328px' : '231px' }}
                 >
                   <div
-                    class="relative h-full w-full overflow-hidden rounded-[26px] border-[3px] border-solid border-black"
-                    style={{ backgroundColor: card.bg }}
+                    class="relative h-full w-full overflow-hidden rounded-[26px] border-[3px] border-solid border-black bg-transparent"
                   >
+                    <div
+                      class="absolute left-0 w-full rounded-[26px]"
+                      style={{
+                        backgroundColor: card.bg,
+                        height: index <= 1 ? '212px' : '212px',
+                        top: index === 0 ? '114px' : index === 1 ? '99px' : '18px',
+                      }}
+                    ></div>
                     <img
                       class="absolute object-contain"
                       alt={card.title}

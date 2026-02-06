@@ -18,7 +18,7 @@ const targetId = `hs-form-${formId}`;
   ></div>
   <!-- Visual cover strip (best-effort) to hide HubSpot branding area.
        We dynamically position this to start just BELOW the submit button. -->
-  <div class="hs-brand-cover pointer-events-none absolute bg-white z-10" aria-hidden="true"></div>
+  <div class="hs-brand-cover pointer-events-none absolute left-0 right-0 bottom-0 bg-white z-10" aria-hidden="true"></div>
 </div>
 
 <script is:inline src="https://js.hsforms.net/forms/v2.js"></script>
@@ -49,6 +49,7 @@ const targetId = `hs-form-${formId}`;
         cover.style.bottom = '2px';
         cover.style.borderBottomLeftRadius = '14px';
         cover.style.borderBottomRightRadius = '14px';
+        cover.style.display = 'block';
 
         // Start the cover slightly above the submit button bottom to hide HubSpot's divider line.
         var topPx = Math.max(0, Math.round(btnRect.bottom - wrapRect.top - 30));

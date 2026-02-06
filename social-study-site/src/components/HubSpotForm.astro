@@ -9,7 +9,7 @@ const { portalId, formId, region = 'na1' } = Astro.props;
 const targetId = `hs-form-${formId}`;
 ---
 
-<div class="hs-wrap relative mx-auto w-full max-w-[640px] overflow-hidden rounded-2xl border-2 border-black bg-white p-5 pt-5">
+<div class="hs-wrap relative mx-auto w-full max-w-[640px] overflow-hidden rounded-2xl border-2 border-black bg-white p-5 pt-5 outline outline-2 outline-black outline-offset-[-2px]">
   <div
     id={targetId}
     data-hs-region={region}
@@ -18,7 +18,7 @@ const targetId = `hs-form-${formId}`;
   ></div>
   <!-- Visual cover strip (best-effort) to hide HubSpot branding area.
        We dynamically position this to start just BELOW the submit button. -->
-  <div class="hs-brand-cover pointer-events-none absolute bg-white" aria-hidden="true"></div>
+  <div class="hs-brand-cover pointer-events-none absolute bg-white z-10" aria-hidden="true"></div>
 </div>
 
 <script is:inline src="https://js.hsforms.net/forms/v2.js"></script>

@@ -1,0 +1,58 @@
+name: Mailchimp newsletter sync
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Daily at 6:17am America/Denver-ish (GitHub schedules are UTC; this is 13:17 UTC)
+    - cron: '17 13 * * *'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: mailchimp-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install
+        working-directory: social-study-site
+        run: npm ci
+
+      - name: Sync newsletters
+        working-directory: social-study-site
+        env:
+          MAILCHIMP_API_KEY: ${{ secrets.MAILCHIMP_API_KEY }}
+          MAILCHIMP_FOLDER_NAME: ArticleSends
+          MAILCHIMP_LIST_COUNT: '200'
+        run: npm run sync:mailchimp
+
+      - name: Build
+        working-directory: social-study-site
+        run: npm run build
+
+      - name: Commit changes
+        run: |
+          set -e
+          git status --porcelain
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "No changes to commit."
+            exit 0
+          fi
+          git config user.name "newsletter-sync-bot"
+          git config user.email "newsletter-sync-bot@users.noreply.github.com"
+          git add social-study-site/src/data/newsletters.json social-study-site/src/pages/newsletter
+          git commit -m "chore: sync newsletters from Mailchimp"
+          git push

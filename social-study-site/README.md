@@ -1,43 +1,36 @@
-# Astro Starter Kit: Minimal
+# The Social Study — Website (Astro)
 
-```sh
-npm create astro@latest -- --template minimal
+## Local dev
+
+```bash
+cd social-study-site
+npm install
+npm run dev -- --host 127.0.0.1 --port 4321
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+Open: http://127.0.0.1:4321
 
-## 🚀 Project Structure
+## Newsletter archive (Mailchimp)
 
-Inside of your Astro project, you'll see the following folders and files:
+We auto-generate `/newsletter/<slug>/` pages from Mailchimp campaigns located in the Mailchimp folder:
 
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+- **ArticleSends**
+
+### Manual sync
+
+```bash
+cd social-study-site
+MAILCHIMP_API_KEY="..." npm run sync:mailchimp
+npm run build
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+### Auto sync (GitHub Actions)
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+A scheduled GitHub Action runs daily and commits new newsletter pages into the repo.
 
-Any static assets, like images, can be placed in the `public/` directory.
+Required repo secret:
+- `MAILCHIMP_API_KEY`
 
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Security note:
+- Do **not** commit API keys.
+- Rotate/revoke any key if it’s ever pasted into chat or committed by accident.

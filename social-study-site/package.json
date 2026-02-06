@@ -6,6 +6,7 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
+    "sync:mailchimp": "node scripts/mailchimp-sync.mjs",
     "astro": "astro"
   },
   "dependencies": {

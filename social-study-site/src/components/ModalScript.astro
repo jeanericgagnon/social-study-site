@@ -1,0 +1,47 @@
+<script is:inline>
+  (function () {
+    function openModal(id) {
+      var d = document.getElementById(id);
+      if (!d) return;
+      if (typeof d.showModal === 'function') d.showModal();
+      else d.setAttribute('open', '');
+    }
+    function closeModal(dialogEl) {
+      if (!dialogEl) return;
+      if (typeof dialogEl.close === 'function') dialogEl.close();
+      else dialogEl.removeAttribute('open');
+    }
+
+    document.addEventListener('click', function (e) {
+      var t = e.target;
+      if (!(t instanceof Element)) return;
+
+      var openBtn = t.closest('[data-modal-open]');
+      if (openBtn) {
+        e.preventDefault();
+        var id = openBtn.getAttribute('data-modal-open');
+        if (id) openModal(id);
+        return;
+      }
+
+      // Close button
+      var closeBtn = t.closest('[data-modal-close]');
+      if (closeBtn) {
+        var dlg = closeBtn.closest('dialog');
+        closeModal(dlg);
+        return;
+      }
+
+      // Click outside content closes
+      if (t instanceof HTMLDialogElement) {
+        closeModal(t);
+      }
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key !== 'Escape') return;
+      var open = document.querySelector('dialog[open]');
+      if (open) closeModal(open);
+    });
+  })();
+</script>

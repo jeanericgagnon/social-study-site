@@ -1,0 +1,36 @@
+---
+export interface Props {
+  id: string;
+  title: string;
+  wide?: boolean;
+}
+
+const { id, title, wide = false } = Astro.props;
+---
+
+<dialog
+  id={id}
+  class={`backdrop:bg-black/50 rounded-2xl border-2 border-black p-0 shadow-xl w-[min(92vw,${wide ? '900px' : '720px'})]`}
+>
+  <div class="bg-[#f7f0d0] rounded-2xl">
+    <div class="flex items-center justify-between gap-4 px-5 py-4 border-b-2 border-black">
+      <div class="h-brand text-2xl leading-none">{title}</div>
+      <button
+        type="button"
+        class="h-10 w-10 grid place-items-center rounded-full border-2 border-black bg-white hover:bg-slate-50"
+        data-modal-close
+        aria-label="Close"
+      >
+        ✕
+      </button>
+    </div>
+
+    <div class="px-5 py-5">
+      <slot />
+    </div>
+  </div>
+</dialog>
+
+<style>
+  dialog::backdrop { background: rgba(0,0,0,.5); }
+</style>

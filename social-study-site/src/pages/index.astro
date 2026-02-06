@@ -1,6 +1,13 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import LandingNavbar from '../components/LandingNavbar.astro';
+import Modal from '../components/Modal.astro';
+import ModalScript from '../components/ModalScript.astro';
+import NewsletterModalContent from '../components/NewsletterModalContent.astro';
+import SpeakerModalContent from '../components/SpeakerModalContent.astro';
+import HostModalContent from '../components/HostModalContent.astro';
+import BringCityModalContent from '../components/BringCityModalContent.astro';
+import McDenverModalContent from '../components/McDenverModalContent.astro';
 import '../styles/global.css';
 
 const title = 'The Social Study | Lectures in Bars and Breweries';
@@ -12,28 +19,32 @@ const actionCards = [
     bg: '#2a5d67',
     hover: '#1d4249',
     img: 'newsletterbackgroundremoved-1.png',
-    href: 'newsletter/',
+    modal: 'modal-newsletter',
+    fallbackHref: 'newsletter/',
   },
   {
     title: 'BECOME A SPEAKER',
     bg: '#d7795d',
     hover: '#c25d41',
     img: 'speakerbackgroundremoved-1.png',
-    href: 'speak/',
+    modal: 'modal-speaker',
+    fallbackHref: 'speak/',
   },
   {
     title: 'HOST AN EVENT',
     bg: '#C89F56',
     hover: '#b18c49',
     img: 'projector.png',
-    href: 'host/',
+    modal: 'modal-host',
+    fallbackHref: 'host/',
   },
   {
     title: 'BRING TO YOUR CITY',
     bg: '#3b2f2f',
     hover: '#2a2222',
     img: 'bringyourcity-1.png',
-    href: 'bring-to-your-city/',
+    modal: 'modal-city',
+    fallbackHref: 'bring-to-your-city/',
   },
 ];
 
@@ -74,6 +85,23 @@ const faqs = [
   <LandingNavbar />
 
   <main class="bg-[#f6f0d5] flex flex-row justify-center w-full">
+    <Modal id="modal-newsletter" title="Join the newsletter" wide>
+      <NewsletterModalContent />
+    </Modal>
+    <Modal id="modal-speaker" title="Become a speaker" wide>
+      <SpeakerModalContent />
+    </Modal>
+    <Modal id="modal-host" title="Host an event" wide>
+      <HostModalContent />
+    </Modal>
+    <Modal id="modal-city" title="Bring it to your city">
+      <BringCityModalContent />
+    </Modal>
+    <Modal id="modal-mc" title="MC Denver">
+      <McDenverModalContent />
+    </Modal>
+    <ModalScript />
+
     <div class="bg-[#f6f0d5] w-full max-w-[1248px] relative overflow-x-hidden">
       <div class="relative w-full max-w-[1001px] mx-auto px-4 sm:px-9">
         <!-- Hero -->
@@ -152,7 +180,8 @@ const faqs = [
               return (
                 <a
                   key={card.title}
-                  href={card.href}
+                  href={card.fallbackHref}
+                  data-modal-open={card.modal}
                   class={`absolute w-[397px] ${pos} cursor-pointer transition-all duration-300 transform hover:scale-105`}
                   style={{ height: index <= 1 ? '328px' : index === 2 ? '231px' : '222px' }}
                 >
@@ -192,7 +221,8 @@ const faqs = [
             {actionCards.map((card) => (
               <a
                 key={card.title}
-                href={card.href}
+                href={card.fallbackHref}
+                data-modal-open={card.modal}
                 class="relative w-full h-[300px] cursor-pointer transition-all duration-300 transform hover:scale-105"
               >
                 <div
@@ -219,6 +249,7 @@ const faqs = [
         <section class="flex justify-center mt-8 sm:mt-12 px-4 sm:px-0">
           <a
             href="mc-denver/"
+            data-modal-open="modal-mc"
             class="relative w-full h-[300px] sm:w-[397px] sm:h-[222px] bg-[#3b2f2f] hover:bg-[#2a2222] rounded-[26px] border-[3px] border-solid border-black cursor-pointer transform transition-all duration-300 hover:scale-105 overflow-hidden"
           >
             <div class="relative w-full h-full">

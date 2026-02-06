@@ -1,0 +1,21 @@
+---
+import HubSpotForm from './HubSpotForm.astro';
+const portalId = '49143429';
+---
+
+<p class="text-slate-900/90">Short, sharp, story-forward talks that work in a bar setting.</p>
+
+<div class="mt-6 grid gap-6 md:grid-cols-3">
+  <div>
+    <div class="h-brand text-xl">San Diego</div>
+    <div class="mt-3"><HubSpotForm portalId={portalId} formId="cd909a62-610c-44e3-9759-460913af5652" region="na1" /></div>
+  </div>
+  <div>
+    <div class="h-brand text-xl">Orange County</div>
+    <div class="mt-3"><HubSpotForm portalId={portalId} formId="ae0e15d7-e7f1-4610-82c7-a584c99e0419" region="na1" /></div>
+  </div>
+  <div>
+    <div class="h-brand text-xl">Denver</div>
+    <div class="mt-3"><HubSpotForm portalId={portalId} formId="1c1c9692-139b-42e1-87d5-2f0adbf5fdbc" region="na1" /></div>
+  </div>
+</div>

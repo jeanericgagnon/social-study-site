@@ -1,0 +1,21 @@
+---
+import HubSpotForm from './HubSpotForm.astro';
+const portalId = '49143429';
+---
+
+<p class="text-slate-900/90">Bars, breweries, and venues — send your info and we’ll follow up.</p>
+
+<div class="mt-6 grid gap-6 md:grid-cols-3">
+  <div>
+    <div class="h-brand text-xl">San Diego</div>
+    <div class="mt-3"><HubSpotForm portalId={portalId} formId="b0000866-2430-4ab0-a65b-97a1227c7ee0" region="na1" /></div>
+  </div>
+  <div>
+    <div class="h-brand text-xl">Orange County</div>
+    <div class="mt-3"><HubSpotForm portalId={portalId} formId="8d103262-de08-4d75-862b-064cf672d04a" region="na1" /></div>
+  </div>
+  <div>
+    <div class="h-brand text-xl">Denver</div>
+    <div class="mt-3"><HubSpotForm portalId={portalId} formId="40f87040-8264-4404-9deb-0efb6d2ea12b" region="na1" /></div>
+  </div>
+</div>

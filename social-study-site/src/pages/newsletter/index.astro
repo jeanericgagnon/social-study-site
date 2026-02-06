@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import SiteHeader from '../../components/SiteHeader.astro';
+import newsletters from '../../data/newsletters.json';
 import '../../styles/global.css';
 
 const title = 'Newsletter | The Social Study';
@@ -35,28 +36,45 @@ const description = 'Interview-style newsletters: thoughtful Q&A with our speake
     <section class="mt-12" id="archive">
       <div class="h-brand text-2xl">Archive</div>
       <p class="mt-2 text-slate-700">
-        Coming soon — we’ll publish each newsletter as a permanent article page (easy to share, easy to find).
+        Speaker Q&A articles. Newest first.
       </p>
 
-      <div class="mt-5 grid gap-4 md:grid-cols-2">
-        <div class="rounded-[26px] border-[3px] border-black bg-white p-5">
-          <div class="h-brand text-xl">What to expect</div>
-          <ul class="mt-3 list-disc pl-5 text-slate-700">
-            <li>Short Q&A with the speaker</li>
-            <li>Favorite references + rabbit holes</li>
-            <li>One idea to bring into real life</li>
-          </ul>
+      {newsletters.items?.length ? (
+        <div class="mt-6 grid gap-4">
+          {newsletters.items.map((item) => (
+            <a
+              class="block rounded-[26px] border-[3px] border-black bg-white p-5 hover:bg-slate-50"
+              href={`./${item.slug}/`}
+            >
+              <div class="flex flex-wrap items-baseline justify-between gap-3">
+                <div class="h-brand text-2xl">{item.title}</div>
+                <div class="text-sm text-slate-600">{item.date}</div>
+              </div>
+              <p class="mt-2 text-slate-700">{item.description}</p>
+            </a>
+          ))}
         </div>
-        <div class="rounded-[26px] border-[3px] border-black bg-white p-5">
-          <div class="h-brand text-xl">Example issue (placeholder)</div>
-          <p class="mt-2 text-slate-700">
-            “The question nobody asked during Q&A” — plus the speaker’s real answer.
-          </p>
-          <p class="mt-3 text-sm text-slate-600">
-            (We’ll replace this with real issues as soon as we start publishing them.)
-          </p>
+      ) : (
+        <div class="mt-5 grid gap-4 md:grid-cols-2">
+          <div class="rounded-[26px] border-[3px] border-black bg-white p-5">
+            <div class="h-brand text-xl">What to expect</div>
+            <ul class="mt-3 list-disc pl-5 text-slate-700">
+              <li>Short Q&A with the speaker</li>
+              <li>Favorite references + rabbit holes</li>
+              <li>One idea to bring into real life</li>
+            </ul>
+          </div>
+          <div class="rounded-[26px] border-[3px] border-black bg-white p-5">
+            <div class="h-brand text-xl">No issues synced yet</div>
+            <p class="mt-2 text-slate-700">
+              Run the Mailchimp sync script and the archive will populate automatically.
+            </p>
+            <p class="mt-3 text-sm text-slate-600">
+              (We’ll publish each newsletter as a permanent article page with a shareable link.)
+            </p>
+          </div>
         </div>
-      </div>
+      )}
     </section>
 
     <section class="mt-12" id="subscribe">

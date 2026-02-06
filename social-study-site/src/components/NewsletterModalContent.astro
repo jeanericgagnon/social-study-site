@@ -2,23 +2,32 @@
 import MailchimpSignup from './MailchimpSignup.astro';
 ---
 
-<div class="grid gap-6 md:grid-cols-3">
-  <div>
-    <div class="h-brand text-xl">San Diego</div>
-    <div class="mt-3">
-      <MailchimpSignup title="San Diego" subtitle="Ticket drops + updates" f_id="006de6e3f0" tags="1853334,1853469" />
-    </div>
+<div data-panel="menu">
+  <p class="text-slate-900/90">Select your city:</p>
+  <div class="mt-4 grid gap-3 sm:grid-cols-3">
+    <button class="rounded-full border-2 border-black bg-white px-5 py-3 hover:bg-slate-50" data-panel-open="sd">San Diego</button>
+    <button class="rounded-full border-2 border-black bg-white px-5 py-3 hover:bg-slate-50" data-panel-open="oc">Orange County</button>
+    <button class="rounded-full border-2 border-black bg-white px-5 py-3 hover:bg-slate-50" data-panel-open="den">Denver</button>
   </div>
-  <div>
-    <div class="h-brand text-xl">Orange County</div>
-    <div class="mt-3">
-      <MailchimpSignup title="Orange County" subtitle="Ticket drops + updates" f_id="001ae6e3f0" tags="1853487" />
-    </div>
+</div>
+
+<div class="hidden" data-panel="sd">
+  <button class="text-sm underline" data-panel-open="menu">← Back</button>
+  <div class="mt-4">
+    <MailchimpSignup title="San Diego" subtitle="Ticket drops + updates" f_id="006de6e3f0" tags="1853334,1853469" />
   </div>
-  <div>
-    <div class="h-brand text-xl">Denver</div>
-    <div class="mt-3">
-      <MailchimpSignup title="Denver" subtitle="Ticket drops + updates" f_id="0034e6e3f0" tags="1853740" />
-    </div>
+</div>
+
+<div class="hidden" data-panel="oc">
+  <button class="text-sm underline" data-panel-open="menu">← Back</button>
+  <div class="mt-4">
+    <MailchimpSignup title="Orange County" subtitle="Ticket drops + updates" f_id="001ae6e3f0" tags="1853487" />
+  </div>
+</div>
+
+<div class="hidden" data-panel="den">
+  <button class="text-sm underline" data-panel-open="menu">← Back</button>
+  <div class="mt-4">
+    <MailchimpSignup title="Denver" subtitle="Ticket drops + updates" f_id="0034e6e3f0" tags="1853740" />
   </div>
 </div>

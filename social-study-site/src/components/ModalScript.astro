@@ -12,6 +12,14 @@
       else dialogEl.removeAttribute('open');
     }
 
+    function setPanel(rootEl, panelId) {
+      if (!rootEl || !panelId) return;
+      var panels = rootEl.querySelectorAll('[data-panel]');
+      panels.forEach(function (p) {
+        p.classList.toggle('hidden', p.getAttribute('data-panel') !== panelId);
+      });
+    }
+
     document.addEventListener('click', function (e) {
       var t = e.target;
       if (!(t instanceof Element)) return;
@@ -21,6 +29,15 @@
         e.preventDefault();
         var id = openBtn.getAttribute('data-modal-open');
         if (id) openModal(id);
+        return;
+      }
+
+      var panelBtn = t.closest('[data-panel-open]');
+      if (panelBtn) {
+        e.preventDefault();
+        var dlg = panelBtn.closest('dialog');
+        var panelId = panelBtn.getAttribute('data-panel-open');
+        if (dlg && panelId) setPanel(dlg, panelId);
         return;
       }
 
@@ -43,5 +60,17 @@
       var open = document.querySelector('dialog[open]');
       if (open) closeModal(open);
     });
+
+    // Default all dialogs to their menu panel on open
+    document.addEventListener('close', function (e) {
+      var dlg = e.target;
+      if (!(dlg instanceof HTMLDialogElement)) return;
+      setPanel(dlg, 'menu');
+    }, true);
+    document.addEventListener('cancel', function (e) {
+      var dlg = e.target;
+      if (!(dlg instanceof HTMLDialogElement)) return;
+      setPanel(dlg, 'menu');
+    }, true);
   })();
 </script>

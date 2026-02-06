@@ -112,13 +112,35 @@ function sanitizeCampaignHtml(inputHtml) {
   // Remove MSO conditionals comments (harmless, but noisy).
   html = html.replace(/<!--\[if[\s\S]*?\[endif\]-->/gi, '');
 
+  // Remove Mailchimp footer/preferences/unsubscribe blocks for on-site articles.
+  // Common patterns: mceSectionFooter, archive/unsub merge tags.
+  html = html.replace(/<td[^>]*class="mceSectionFooter"[\s\S]*?<\/td>\s*<\/tr>/gi, '');
+  html = html.replace(/\*\|ARCHIVE\|\*/g, '');
+  html = html.replace(/\*\|UPDATE_PROFILE\|\*/g, '');
+  html = html.replace(/\*\|UNSUB\|\*/g, '');
+
   return html.trim();
 }
 
-function astroPage({ title, description, html, canonicalPath }) {
+function pickBg(slug) {
+  const colors = [
+    { name: 'cream', value: 'var(--cream)' },
+    { name: 'teal', value: 'var(--teal)' },
+    { name: 'gold', value: 'var(--gold)' },
+    { name: 'coral', value: 'var(--coral)' },
+    { name: 'espresso', value: 'var(--espresso)' },
+  ];
+  let h = 0;
+  for (let i = 0; i < String(slug).length; i++) h = (h * 31 + slug.charCodeAt(i)) >>> 0;
+  return colors[h % colors.length];
+}
+
+function astroPage({ title, description, html, canonicalPath, slug }) {
   // IMPORTANT: html is untrusted external content; we do not execute it.
   // We render it as inert HTML inside Astro (no scripts).
   const safeHtmlLiteral = JSON.stringify(sanitizeCampaignHtml(html));
+  const bg = pickBg(slug);
+
   return `---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import SiteHeader from '../../../components/SiteHeader.astro';
@@ -128,24 +150,29 @@ const title = ${JSON.stringify(title)};
 const description = ${JSON.stringify(description)};
 const html = ${safeHtmlLiteral};
 const canonical = Astro.site ? new URL(${JSON.stringify(canonicalPath)}, Astro.site).toString() : undefined;
+
+const bgValue = ${JSON.stringify(bg.value)};
 ---
 
 <BaseLayout title={title} description={description} canonical={canonical}>
-  <SiteHeader />
-  <main class="mx-auto max-w-3xl px-4 pb-20">
-    <header class="mt-6">
-      <h1 class="h-brand text-5xl">{title}</h1>
-      <p class="mt-4 text-lg text-slate-700">{description}</p>
-    </header>
+  <div style={\`background:\${bgValue}; min-height: 100vh;\`}>
+    <SiteHeader />
+    <main class="mx-auto max-w-3xl px-4 pb-20">
+      <header class="mt-6 rounded-[26px] border-[3px] border-black bg-white/90 p-6">
+        <div class="text-xs uppercase tracking-widest text-slate-600">Newsletter</div>
+        <h1 class="h-brand mt-2 text-5xl">{title}</h1>
+        <p class="mt-4 text-lg text-slate-700">{description}</p>
+      </header>
 
-    <article class="mt-10 rounded-[26px] border-[3px] border-black bg-white p-6 md:p-10">
-      <div class="newsletter-html" set:html={html} />
-    </article>
+      <article class="mt-8 rounded-[26px] border-[3px] border-black bg-white p-6 md:p-10">
+        <div class="newsletter-html" set:html={html} />
+      </article>
 
-    <footer class="mt-16 border-t border-slate-200 pt-8 text-sm text-slate-600">
-      <a class="underline" href="../../privacy/">Privacy</a>
-    </footer>
-  </main>
+      <footer class="mt-16 border-t border-slate-900/20 pt-8 text-sm text-slate-700">
+        <a class="underline" href="../../privacy/">Privacy</a>
+      </footer>
+    </main>
+  </div>
 </BaseLayout>
 
 <style>
@@ -202,7 +229,7 @@ async function main() {
 
     const pageDir = path.join(outPagesDir, slug);
     ensureDir(pageDir);
-    fs.writeFileSync(path.join(pageDir, 'index.astro'), astroPage({ title, description, html, canonicalPath }), 'utf8');
+    fs.writeFileSync(path.join(pageDir, 'index.astro'), astroPage({ title, description, html, canonicalPath, slug }), 'utf8');
 
     indexItems.push({
       id: c.id,

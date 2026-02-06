@@ -1,117 +1,268 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import SiteHeader from '../components/SiteHeader.astro';
+import LandingNavbar from '../components/LandingNavbar.astro';
 import '../styles/global.css';
 
 const title = 'The Social Study | Lectures in Bars and Breweries';
-const description = 'Join intimate 60-minute lectures by professors, experts, and storytellers in bars and breweries across San Diego, Orange County, and Denver.';
+const description = 'Join intimate 60-minute lectures by professors, experts, and storytellers in bars and breweries across San Diego, Orange County, and Denver. Educational talks over drinks in a casual setting.';
+
+const actionCards = [
+  {
+    title: 'JOIN NEWSLETTER',
+    bg: '#2a5d67',
+    hover: '#1d4249',
+    img: 'newsletterbackgroundremoved-1.png',
+    href: 'newsletter/',
+  },
+  {
+    title: 'BECOME A SPEAKER',
+    bg: '#d7795d',
+    hover: '#c25d41',
+    img: 'speakerbackgroundremoved-1.png',
+    href: 'speak/',
+  },
+  {
+    title: 'HOST AN EVENT',
+    bg: '#C89F56',
+    hover: '#b18c49',
+    img: 'projector.png',
+    href: 'host/',
+  },
+  {
+    title: 'BRING TO YOUR CITY',
+    bg: '#3b2f2f',
+    hover: '#2a2222',
+    img: 'bringyourcity-1.png',
+    href: 'bring-to-your-city/',
+  },
+];
+
+const faqs = [
+  {
+    q: 'What is The Social Study?',
+    a: 'Talks from professors, experts, and great storytellers—hosted in bars. Slides encouraged. No homework. Just interesting ideas in a casual setting.',
+  },
+  {
+    q: 'How do I buy tickets?',
+    a: 'We send out a newsletter when tickets go on sale. To avoid missing out, sign up above. We also post on Instagram. Each event is intimate and space is limited.',
+  },
+  {
+    q: 'What happens at a Social Study event?',
+    a: 'One speaker. A 60-minute talk, followed by ~20 minutes of Q&A. A good crowd. A drink or two. Time to hang out.',
+  },
+  {
+    q: 'Where are the events?',
+    a: 'Bars and breweries in various cities. We move around.',
+  },
+  {
+    q: "What if I don't drink?",
+    a: 'No pressure. Most places have non-alcoholic options.',
+  },
+  {
+    q: 'Can I speak at one?',
+    a: "Yes. If you've got something to share and you're a strong storyteller, apply on the Speak page.",
+  },
+  {
+    q: 'Do I need a ticket?',
+    a: 'Yep. All events are ticketed and space is limited.',
+  },
+];
 ---
 
 <BaseLayout title={title} description={description}>
-  <SiteHeader />
+  <a id="top"></a>
+  <LandingNavbar />
 
-  <main class="mx-auto max-w-6xl px-4 pb-20">
-    <section class="grid items-center gap-10 md:grid-cols-2">
-      <div>
-        <p class="h-hand text-xl text-slate-700">Lectures in bars and breweries</p>
-        <h1 class="h-brand mt-2 text-5xl leading-[1.05] md:text-6xl">
-          Learn something interesting.
-          <span class="block">Meet smart strangers.</span>
-        </h1>
-        <p class="mt-5 text-lg text-slate-700">
-          60-minute talks by professors, experts, and storytellers — then hang out for drinks and conversation.
-        </p>
+  <main class="bg-[#f6f0d5] flex flex-row justify-center w-full">
+    <div class="bg-[#f6f0d5] w-full max-w-[1248px] relative overflow-x-hidden">
+      <div class="relative w-full max-w-[1001px] mx-auto px-4 sm:px-9">
+        <!-- Hero -->
+        <header class="relative w-full h-[600px] sm:h-[784px]">
+          <div class="relative w-full h-full flex flex-col items-center">
+            <div class="relative w-full flex justify-center">
+              <img
+                class="w-[300px] h-[300px] sm:w-[524px] sm:h-[524px] object-contain mt-[18px]"
+                alt="The Social Study Logo"
+                src="cloudsocial-1.png"
+                loading="eager"
+              />
+            </div>
 
-        <div class="mt-6 flex flex-wrap gap-3" id="tickets">
+            <img
+              class="absolute w-[236px] h-[236px] sm:w-[428px] sm:h-[428px] top-[167px] sm:top-[247px] right-[-40px] sm:right-[50px] object-contain z-10"
+              alt="Globe"
+              src="globe-1.png"
+              loading="lazy"
+            />
+
+            <div
+              class="absolute w-[calc(100%-2rem)] sm:w-[556px] top-[273px] sm:top-[457px] px-0 sm:px-0 sm:left-[80px] h-hand font-normal text-black text-[40px] sm:text-[44px] tracking-[-0.84px] leading-[1.2] text-left mb-16 sm:mb-32 sm:whitespace-normal"
+            >
+              <span class="sm:hidden whitespace-pre-line leading-[1.1] relative z-30">
+                60-minute\nlectures by\nprofessors, experts,\nand storytellers in\nbars and breweries
+              </span>
+              <span class="hidden sm:inline whitespace-pre-line leading-[1.1] relative z-30">
+                60-minute\nlectures by professors,\nexperts, and storytellers in\nbars and breweries
+              </span>
+            </div>
+
+            <img
+              class="absolute w-[300px] h-[300px] sm:w-[524px] sm:h-[524px] top-[18px] left-[50%] -translate-x-1/2 object-cover pointer-events-none z-20"
+              alt="Y"
+              src="y-1.png"
+              loading="lazy"
+            />
+          </div>
+        </header>
+
+        <!-- Buy Tickets -->
+        <section class="flex justify-center mt-2 sm:-mt-16">
           <a
-            class="rounded-full bg-slate-900 px-5 py-3 text-white hover:bg-slate-800"
+            class="flex flex-col w-full max-w-[600px] mx-4 sm:mx-0 border-none shadow-none cursor-pointer transform transition-all duration-300 hover:scale-[1.02]"
             href="https://eventship.com/host/the-social-study"
+            target="_blank"
             rel="noopener"
           >
-            Get tickets
+            <div class="relative w-full h-[120px] sm:h-[160px] border-[3px] border-solid border-black rounded-[26px] bg-[#e6b74b]">
+              <img
+                class="absolute w-[100px] h-[100px] sm:w-[150px] sm:h-[150px] top-[5px] left-[10px] sm:left-[30px] object-cover"
+                alt="Tickets"
+                src="tickets.png"
+                loading="lazy"
+              />
+              <div class="absolute w-[200px] sm:w-[400px] h-[100px] top-[35px] sm:top-[45px] left-[120px] sm:left-[180px] h-brand font-extrabold text-[#592d10] text-3xl sm:text-6xl tracking-[0]">
+                BUY TICKETS
+              </div>
+            </div>
           </a>
-          <a class="rounded-full border border-slate-300 px-5 py-3 hover:bg-white" href="#cities">Choose your city</a>
-        </div>
+        </section>
 
-        <p class="mt-4 text-sm text-slate-600">
-          Tickets typically $35–$40. Most events sell out.
-        </p>
-      </div>
+        <!-- Action cards -->
+        <section class="flex justify-center mt-6 sm:-mt-8">
+          <div class="relative w-[832px] h-[562px] hidden sm:block">
+            {actionCards.map((card, index) => {
+              const pos =
+                index === 0
+                  ? 'top-0 left-0'
+                  : index === 1
+                    ? 'top-[20px] left-[435px]'
+                    : index === 2
+                      ? 'top-[340px] left-0'
+                      : 'top-[340px] left-[435px]';
+              return (
+                <a
+                  key={card.title}
+                  href={card.href}
+                  class={`absolute w-[397px] ${pos} cursor-pointer transition-all duration-300 transform hover:scale-105`}
+                  style={{ height: index <= 1 ? '328px' : index === 2 ? '231px' : '222px' }}
+                >
+                  <div
+                    class="absolute w-[397px] left-0 transition-colors duration-300 rounded-[26px] border-[3px] border-solid border-black"
+                    style={{
+                      backgroundColor: card.bg,
+                      height: index <= 1 ? (index === 0 ? '212px' : '212px') : index === 2 ? '212px' : '212px',
+                      top: index === 0 ? '114px' : index === 1 ? '99px' : index === 2 ? '18px' : '9px',
+                    }}
+                  ></div>
 
-      <div class="flex justify-center md:justify-end">
-        <img
-          src="brand/LogoNoBackground.png"
-          alt="The Social Study"
-          class="w-[320px] max-w-full drop-shadow-sm md:w-[420px]"
-          loading="eager"
-        />
-      </div>
-    </section>
+                  <img
+                    class="absolute object-contain"
+                    alt={card.title}
+                    src={card.img}
+                    loading="lazy"
+                    style={{
+                      width: index === 2 || index === 3 ? '186px' : '286px',
+                      height: index === 2 || index === 3 ? '186px' : '286px',
+                      left: index === 0 ? '53px' : index === 1 ? '55px' : index === 2 ? '105px' : '110px',
+                      top: '0px',
+                    }}
+                  />
 
-    <section class="mt-16" id="cities">
-      <h2 class="h-brand text-3xl">Cities</h2>
-      <div class="mt-6 grid gap-4 sm:grid-cols-3">
-        <a class="rounded-2xl border border-slate-200 bg-white/60 p-5 hover:bg-white" href="san-diego/">
-          <div class="h-brand text-xl">San Diego</div>
-          <div class="mt-1 text-slate-700">Lectures, drinks, and conversation.</div>
-        </a>
-        <a class="rounded-2xl border border-slate-200 bg-white/60 p-5 hover:bg-white" href="orange-county/">
-          <div class="h-brand text-xl">Orange County</div>
-          <div class="mt-1 text-slate-700">A smarter night out.</div>
-        </a>
-        <a class="rounded-2xl border border-slate-200 bg-white/60 p-5 hover:bg-white" href="denver/">
-          <div class="h-brand text-xl">Denver</div>
-          <div class="mt-1 text-slate-700">New city — join the first wave.</div>
-        </a>
-      </div>
-    </section>
+                  <div class="absolute w-[391px] h-[66px] bottom-[3px] left-[3px] bg-[#f7f0d0] rounded-[0px_0px_23px_23px]" />
+                  <div class="absolute bottom-0 w-full h-[66px] flex items-center justify-center text-center h-brand font-extrabold text-black text-[42px] tracking-[0] whitespace-nowrap">
+                    {card.title}
+                  </div>
+                </a>
+              );
+            })}
+          </div>
 
-    <section class="mt-16" id="faq">
-      <h2 class="h-brand text-3xl">How it works</h2>
-      <div class="mt-6 grid gap-4 md:grid-cols-2">
-        <div class="rounded-2xl border border-slate-200 bg-white/60 p-5">
-          <div class="h-brand text-xl">The format</div>
-          <p class="mt-2 text-slate-700">Arrive, grab a drink, a quick opener, then a 45–60 minute lecture + Q&A. Stay after to chat.</p>
-        </div>
-        <div class="rounded-2xl border border-slate-200 bg-white/60 p-5">
-          <div class="h-brand text-xl">Topics</div>
-          <p class="mt-2 text-slate-700">STEM, psychology, history, philosophy, culture — anything that pairs well with drinks and curiosity.</p>
-        </div>
-      </div>
-    </section>
+          <!-- Mobile action cards -->
+          <div class="w-full px-4 grid grid-cols-1 gap-6 sm:hidden">
+            {actionCards.map((card) => (
+              <a
+                key={card.title}
+                href={card.href}
+                class="relative w-full h-[300px] cursor-pointer transition-all duration-300 transform hover:scale-105"
+              >
+                <div
+                  class="relative w-full h-full rounded-[26px] border-[3px] border-solid border-black"
+                  style={{ backgroundColor: card.bg }}
+                >
+                  <img
+                    class="absolute left-1/2 -translate-x-1/2 object-contain w-[280px] h-[280px] top-[-40px]"
+                    alt={card.title}
+                    src={card.img}
+                    loading="lazy"
+                  />
+                  <div class="absolute w-full h-[66px] bottom-0 left-0 bg-[#f7f0d0] rounded-[0px_0px_23px_23px] z-10" />
+                  <div class="absolute bottom-0 w-full h-[66px] flex items-center justify-center text-center h-brand font-extrabold text-black text-[31px] tracking-[0] whitespace-nowrap z-20">
+                    {card.title}
+                  </div>
+                </div>
+              </a>
+            ))}
+          </div>
+        </section>
 
-    <section class="mt-16" id="newsletter">
-      <h2 class="h-brand text-3xl">Get updates</h2>
-      <p class="mt-2 text-slate-700">Get notified when tickets go live in your city.</p>
-      <div class="mt-6 grid gap-4 md:grid-cols-3">
-        <a class="rounded-2xl border border-slate-200 bg-white/60 p-5 hover:bg-white" href="newsletter/">Newsletter archive →</a>
-        <a class="rounded-2xl border border-slate-200 bg-white/60 p-5 hover:bg-white" href="san-diego/#signup">San Diego signup →</a>
-        <a class="rounded-2xl border border-slate-200 bg-white/60 p-5 hover:bg-white" href="orange-county/#signup">Orange County signup →</a>
-      </div>
-      <div class="mt-4">
-        <a class="text-slate-800 underline" href="denver/#signup">Denver signup →</a>
-      </div>
-    </section>
+        <!-- MC Denver -->
+        <section class="flex justify-center mt-8 sm:mt-12 px-4 sm:px-0">
+          <a
+            href="mc-denver/"
+            class="relative w-full h-[300px] sm:w-[397px] sm:h-[222px] bg-[#3b2f2f] hover:bg-[#2a2222] rounded-[26px] border-[3px] border-solid border-black cursor-pointer transform transition-all duration-300 hover:scale-105 overflow-hidden"
+          >
+            <div class="relative w-full h-full">
+              <img
+                class="absolute w-[300px] h-[300px] sm:w-[200px] sm:h-[200px] top-[-30px] sm:top-[-20px] left-1/2 -translate-x-1/2 object-contain z-10"
+                alt="MC Denver"
+                src="mic.png"
+                loading="lazy"
+              />
+              <div class="absolute w-full h-[66px] bottom-0 left-0 bg-[#f7f0d0] rounded-[0px_0px_23px_23px] z-10" />
+              <div class="absolute bottom-0 w-full h-[66px] flex items-center justify-center text-center h-brand font-extrabold text-black text-[31px] sm:text-[42px] tracking-[0] whitespace-nowrap z-20">
+                MC DENVER
+              </div>
+            </div>
+          </a>
+        </section>
 
-    <section class="mt-16" id="apply">
-      <h2 class="h-brand text-3xl">Get involved</h2>
-      <div class="mt-6 grid gap-4 md:grid-cols-2">
-        <a class="rounded-2xl border border-slate-200 bg-white/60 p-5 hover:bg-white" href="speak/">Apply to speak →</a>
-        <a class="rounded-2xl border border-slate-200 bg-white/60 p-5 hover:bg-white" href="host/">Host an event →</a>
-      </div>
-      <div class="mt-4">
-        <a class="text-slate-800 underline" href="bring-to-your-city/">Bring it to your city →</a>
-      </div>
-    </section>
+        <!-- FAQ -->
+        <section class="flex flex-col items-center justify-center p-1.5 mt-13">
+          <div class="flex justify-center mb-8">
+            <img
+              class="w-[150px] h-[150px] sm:w-[230px] sm:h-[230px] object-cover"
+              alt="FAQ"
+              src="faq-1.png"
+              loading="lazy"
+            />
+          </div>
 
-    <footer class="mt-20 border-t border-slate-200 pt-8 text-sm text-slate-600">
-      <div class="flex flex-wrap items-center justify-between gap-3">
-        <div>© {new Date().getFullYear()} The Social Study</div>
-        <div class="flex gap-4">
-          <a class="underline" href="privacy/">Privacy</a>
-          <a class="underline" href="mailto:contact@thesocial.study">Contact</a>
-        </div>
+          <div class="w-full max-w-[800px] px-4 sm:px-0">
+            {faqs.map((faq) => (
+              <details class="border-b border-black/20 py-3">
+                <summary class="cursor-pointer select-none text-left text-lg font-semibold">
+                  {faq.q}
+                </summary>
+                <div class="mt-2 text-base text-slate-900/90">{faq.a}</div>
+              </details>
+            ))}
+          </div>
+        </section>
+
+        <section class="mt-12 pb-10 flex justify-center">
+          <a class="text-sm underline" href="privacy/">Privacy</a>
+        </section>
       </div>
-    </footer>
+    </div>
   </main>
 </BaseLayout>

@@ -16,13 +16,38 @@ const targetId = `hs-form-${formId}`;
     data-hs-portal={portalId}
     data-hs-form={formId}
   ></div>
-  <!-- Visual cover strip (best-effort) to hide HubSpot branding area -->
-  <div class="hs-brand-cover pointer-events-none absolute bottom-0 left-0 right-0 bg-white"></div>
+  <!-- Visual cover strip (best-effort) to hide HubSpot branding area.
+       We dynamically position this to start just BELOW the submit button. -->
+  <div class="hs-brand-cover pointer-events-none absolute left-0 right-0 bottom-0 bg-white" aria-hidden="true"></div>
 </div>
 
 <script is:inline src="https://js.hsforms.net/forms/v2.js"></script>
 <script is:inline>
   (function () {
+    function positionCover(el) {
+      // el is the target div where HubSpot injects.
+      try {
+        var wrap = el.closest('.hs-wrap');
+        if (!wrap) return;
+        var cover = wrap.querySelector('.hs-brand-cover');
+        if (!cover) return;
+
+        var form = el.querySelector('form');
+        if (!form) return;
+
+        var btn = form.querySelector('input[type="submit"], button[type="submit"], .hs-button');
+        if (!btn) return;
+
+        // Compute position inside wrapper.
+        var wrapRect = wrap.getBoundingClientRect();
+        var btnRect = btn.getBoundingClientRect();
+
+        // Start the cover just below the submit button (a few px gap).
+        var topPx = Math.max(0, Math.round(btnRect.bottom - wrapRect.top + 8));
+        cover.style.top = topPx + 'px';
+      } catch (e) {}
+    }
+
     function bootOne(el) {
       if (!el) return;
       if (el.getAttribute('data-hs-booted') === '1') return;
@@ -35,7 +60,23 @@ const targetId = `hs-form-${formId}`;
       if (!portalId || !formId || !el.id) return;
 
       try {
-        window.hbspt.forms.create({ region: region, portalId: portalId, formId: formId, target: target });
+        window.hbspt.forms.create({
+          region: region,
+          portalId: portalId,
+          formId: formId,
+          target: target,
+          onFormReady: function () {
+            // HubSpot may still tweak layout after ready; position a few times.
+            var tries = 0;
+            var tick = function () {
+              tries++;
+              positionCover(el);
+              if (tries < 10) requestAnimationFrame(tick);
+            };
+            requestAnimationFrame(tick);
+            window.addEventListener('resize', function () { positionCover(el); });
+          },
+        });
         el.setAttribute('data-hs-booted', '1');
       } catch (e) {}
     }

@@ -9,28 +9,56 @@ const { portalId, formId, region = 'na1' } = Astro.props;
 const targetId = `hs-form-${formId}`;
 ---
 
-<div class="rounded-2xl border border-slate-200 bg-white/60 p-5">
-  <div id={targetId}></div>
+<div class="rounded-2xl border-2 border-black bg-white/80 p-5">
+  <div
+    id={targetId}
+    data-hs-region={region}
+    data-hs-portal={portalId}
+    data-hs-form={formId}
+  ></div>
 </div>
 
 <script is:inline src="https://js.hsforms.net/forms/v2.js"></script>
 <script is:inline>
-  (function() {
-    function boot() {
+  (function () {
+    function bootOne(el) {
+      if (!el) return;
+      if (el.getAttribute('data-hs-booted') === '1') return;
       if (!window.hbspt || !window.hbspt.forms) return;
+
+      var region = el.getAttribute('data-hs-region') || 'na1';
+      var portalId = el.getAttribute('data-hs-portal');
+      var formId = el.getAttribute('data-hs-form');
+      var target = '#' + el.id;
+      if (!portalId || !formId || !el.id) return;
+
       try {
-        window.hbspt.forms.create({
-          region: "{region}",
-          portalId: "{portalId}",
-          formId: "{formId}",
-          target: "#{targetId}",
-        });
+        window.hbspt.forms.create({ region: region, portalId: portalId, formId: formId, target: target });
+        el.setAttribute('data-hs-booted', '1');
       } catch (e) {}
     }
+
+    function bootAll() {
+      document.querySelectorAll('[data-hs-form]').forEach(function (el) {
+        bootOne(el);
+      });
+    }
+
+    // HubSpot script loads async; poll briefly until available.
+    var tries = 0;
+    var t = setInterval(function () {
+      tries++;
+      if (window.hbspt && window.hbspt.forms) {
+        clearInterval(t);
+        bootAll();
+      }
+      if (tries > 40) clearInterval(t);
+    }, 100);
+
     if (document.readyState === 'complete' || document.readyState === 'interactive') {
-      setTimeout(boot, 50);
+      setTimeout(bootAll, 50);
     } else {
-      document.addEventListener('DOMContentLoaded', boot);
+      document.addEventListener('DOMContentLoaded', bootAll);
     }
   })();
 </script>

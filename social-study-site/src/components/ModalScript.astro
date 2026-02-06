@@ -3,6 +3,7 @@
     function openModal(id) {
       var d = document.getElementById(id);
       if (!d) return;
+      setPanel(d, 'menu');
       if (typeof d.showModal === 'function') d.showModal();
       else d.setAttribute('open', '');
     }

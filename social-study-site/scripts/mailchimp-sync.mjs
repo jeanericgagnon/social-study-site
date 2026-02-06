@@ -90,10 +90,35 @@ function excerptFrom(html, n = 180) {
   return t.length > n ? `${t.slice(0, n).trim()}…` : t;
 }
 
+function sanitizeCampaignHtml(inputHtml) {
+  let html = String(inputHtml || '');
+
+  // Prefer body contents if this is a full HTML document.
+  const bodyMatch = html.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
+  if (bodyMatch) html = bodyMatch[1];
+
+  // Remove scripts entirely.
+  html = html.replace(/<script[\s\S]*?<\/script>/gi, '');
+
+  // Remove <style> blocks (email CSS can fight the site). We'll rely on the email's inline styles.
+  html = html.replace(/<style[\s\S]*?<\/style>/gi, '');
+
+  // Remove Mailchimp preview text blocks (invisible but noisy).
+  html = html.replace(/<span[^>]*class="mcnPreviewText"[\s\S]*?<\/span>/gi, '');
+
+  // Remove long hidden tracking/preheader divs.
+  html = html.replace(/<div[^>]*style="display:\s*none;[\s\S]*?<\/div>/gi, '');
+
+  // Remove MSO conditionals comments (harmless, but noisy).
+  html = html.replace(/<!--\[if[\s\S]*?\[endif\]-->/gi, '');
+
+  return html.trim();
+}
+
 function astroPage({ title, description, html, canonicalPath }) {
   // IMPORTANT: html is untrusted external content; we do not execute it.
-  // We render it as raw HTML for display.
-  const safeHtmlLiteral = JSON.stringify(html);
+  // We render it as inert HTML inside Astro (no scripts).
+  const safeHtmlLiteral = JSON.stringify(sanitizeCampaignHtml(html));
   return `---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import SiteHeader from '../../../components/SiteHeader.astro';

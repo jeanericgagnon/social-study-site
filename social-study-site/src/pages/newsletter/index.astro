@@ -9,19 +9,45 @@ const description = 'Newsletter archive for The Social Study: announcements, eve
 
 <BaseLayout title={title} description={description}>
   <SiteHeader />
-  <main class="mx-auto max-w-4xl px-4 pb-20">
-    <h1 class="h-brand mt-6 text-5xl">Newsletter archive</h1>
-    <p class="mt-4 text-lg text-slate-700">All updates in one place. (We’ll start syncing every Mailchimp send here.)</p>
-
-    <div class="mt-10 rounded-2xl border border-slate-200 bg-white/60 p-5">
-      <div class="h-brand text-xl">Coming soon</div>
-      <p class="mt-2 text-slate-700">For now, subscribe by city to get ticket drops.</p>
-      <div class="mt-4 flex flex-wrap gap-3">
-        <a class="rounded-full border border-slate-300 px-5 py-3 hover:bg-white" href="../san-diego/#signup">San Diego</a>
-        <a class="rounded-full border border-slate-300 px-5 py-3 hover:bg-white" href="../orange-county/#signup">Orange County</a>
-        <a class="rounded-full border border-slate-300 px-5 py-3 hover:bg-white" href="../denver/#signup">Denver</a>
+  <main class="mx-auto max-w-5xl px-4 pb-20">
+    <header class="mt-6 rounded-3xl border-2 border-black bg-[var(--cream)] p-6 md:p-10">
+      <h1 class="h-brand text-5xl">Newsletter archive</h1>
+      <p class="mt-4 text-lg text-slate-800">
+        Every ticket drop, recap, and update — in one place.
+      </p>
+      <div class="mt-6 flex flex-wrap gap-3">
+        <a class="rounded-full border-2 border-black bg-[var(--gold)] px-6 py-3 font-semibold text-[#592d10] hover:opacity-90" href="https://eventship.com/host/the-social-study" rel="noopener">Get tickets</a>
+        <a class="rounded-full border-2 border-black bg-white px-6 py-3 font-semibold hover:bg-slate-50" href="#subscribe">Subscribe by city</a>
       </div>
-    </div>
+    </header>
+
+    <section class="mt-10">
+      <div class="h-brand text-2xl">Recent issues</div>
+      <p class="mt-2 text-slate-700">Coming soon — we’ll publish each Mailchimp send here for easy sharing and SEO compounding.</p>
+
+      <div class="mt-5 grid gap-4 md:grid-cols-2">
+        <div class="rounded-2xl border-2 border-black bg-white p-5">
+          <div class="h-brand text-xl">No issues yet</div>
+          <p class="mt-2 text-slate-700">Once we start publishing, you’ll see each email as a page with a permanent link.</p>
+        </div>
+        <div class="rounded-2xl border-2 border-black bg-white p-5">
+          <div class="h-brand text-xl">Want to be first?</div>
+          <p class="mt-2 text-slate-700">Subscribe for ticket drops and updates.</p>
+          <a class="mt-4 inline-flex rounded-full border-2 border-black bg-[var(--teal)] px-6 py-3 font-semibold text-white hover:opacity-90" href="#subscribe">Choose your city</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="mt-12" id="subscribe">
+      <div class="h-brand text-2xl">Subscribe by city</div>
+      <p class="mt-2 text-slate-700">We’ll email when tickets go live. Unsubscribe anytime.</p>
+
+      <div class="mt-5 flex flex-wrap justify-center gap-3">
+        <a class="rounded-full border-2 border-black bg-[var(--teal)] px-6 py-3 font-semibold text-white hover:opacity-90" href="../san-diego/#signup">San Diego</a>
+        <a class="rounded-full border-2 border-black bg-[var(--coral)] px-6 py-3 font-semibold text-white hover:opacity-90" href="../orange-county/#signup">Orange County</a>
+        <a class="rounded-full border-2 border-black bg-[var(--espresso)] px-6 py-3 font-semibold text-white hover:opacity-90" href="../denver/#signup">Denver</a>
+      </div>
+    </section>
 
     <footer class="mt-16 border-t border-slate-200 pt-8 text-sm text-slate-600">
       <a class="underline" href="../privacy/">Privacy</a>

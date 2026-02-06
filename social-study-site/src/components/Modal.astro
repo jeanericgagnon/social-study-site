@@ -10,7 +10,7 @@ const { id, title, wide = false } = Astro.props;
 
 <dialog
   id={id}
-  class={`backdrop:bg-black/50 rounded-2xl border-2 border-black p-0 shadow-xl w-[min(92vw,${wide ? '900px' : '720px'})]`}
+  class={`m-auto max-h-[85vh] overflow-auto backdrop:bg-black/50 rounded-2xl border-2 border-black p-0 shadow-xl w-[min(92vw,${wide ? '900px' : '720px'})]`}
 >
   <div class="bg-[#f7f0d0] rounded-2xl">
     <div class="flex items-center justify-between gap-4 px-5 py-4 border-b-2 border-black">

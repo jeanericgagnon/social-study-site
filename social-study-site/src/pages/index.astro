@@ -197,17 +197,21 @@ const faqs = [
                   class={`absolute w-[397px] ${pos} cursor-pointer transition-all duration-300 transform hover:scale-105`}
                   style={{ height: index <= 1 ? '328px' : '231px' }}
                 >
-                  <div
-                    class="relative h-full w-full overflow-hidden rounded-[26px] border-[3px] border-solid border-black bg-transparent"
-                  >
+                  <div class="relative h-full w-full">
                     <div
-                      class="absolute left-0 w-full rounded-[26px]"
+                      class="absolute left-0 w-full overflow-hidden rounded-[26px] border-[3px] border-solid border-black transition-colors duration-300"
                       style={{
                         backgroundColor: card.bg,
-                        height: index <= 1 ? '212px' : '212px',
+                        height: '212px',
                         top: index <= 1 ? '114px' : '18px',
                       }}
-                    ></div>
+                    >
+                      <div class="absolute w-full h-[66px] bottom-0 left-0 bg-[#f7f0d0] rounded-[0px_0px_23px_23px] z-10" />
+                      <div class="absolute bottom-0 w-full h-[66px] flex items-center justify-center text-center h-brand font-extrabold text-black text-[42px] tracking-[0] whitespace-nowrap z-20">
+                        {card.title}
+                      </div>
+                    </div>
+
                     <img
                       class="absolute object-contain"
                       alt={card.title}
@@ -221,11 +225,6 @@ const faqs = [
                         zIndex: card.title === 'BRING TO YOUR CITY' ? 11 : 10,
                       }}
                     />
-
-                    <div class="absolute w-full h-[66px] bottom-0 left-0 bg-[#f7f0d0] rounded-[0px_0px_23px_23px] z-10" />
-                    <div class="absolute bottom-0 w-full h-[66px] flex items-center justify-center text-center h-brand font-extrabold text-black text-[42px] tracking-[0] whitespace-nowrap z-20">
-                      {card.title}
-                    </div>
                   </div>
                 </a>
               );

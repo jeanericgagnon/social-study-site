@@ -21,6 +21,7 @@ const actionCards = [
     img: 'newsletterbackgroundremoved-1.png',
     modal: 'modal-newsletter',
     fallbackHref: 'newsletter/',
+    mobile: { w: 280, h: 280, top: -40 },
   },
   {
     title: 'BECOME A SPEAKER',
@@ -29,6 +30,8 @@ const actionCards = [
     img: 'speakerbackgroundremoved-1.png',
     modal: 'modal-speaker',
     fallbackHref: 'speak/',
+    // Speaker art is taller; push it down a bit so it doesn't look like it's floating.
+    mobile: { w: 300, h: 300, top: -18 },
   },
   {
     title: 'HOST AN EVENT',
@@ -37,6 +40,7 @@ const actionCards = [
     img: 'projector.png',
     modal: 'modal-host',
     fallbackHref: 'host/',
+    mobile: { w: 250, h: 250, top: -10 },
   },
   {
     title: 'BRING TO YOUR CITY',
@@ -45,6 +49,8 @@ const actionCards = [
     img: 'bringyourcity-1.png',
     modal: 'modal-city',
     fallbackHref: 'bring-to-your-city/',
+    // This icon was getting clipped; shrink + lower.
+    mobile: { w: 240, h: 240, top: 0 },
   },
 ];
 
@@ -236,10 +242,11 @@ const faqs = [
                   style={{ backgroundColor: card.bg }}
                 >
                   <img
-                    class="absolute left-1/2 -translate-x-1/2 object-contain w-[260px] h-[260px] top-[-28px]"
+                    class="absolute left-1/2 -translate-x-1/2 object-contain"
                     alt={card.title}
                     src={card.img}
                     loading="lazy"
+                    style={{ width: `${card.mobile.w}px`, height: `${card.mobile.h}px`, top: `${card.mobile.top}px` }}
                   />
                   <div class="absolute w-full h-[66px] bottom-0 left-0 bg-[#f7f0d0] rounded-[0px_0px_23px_23px] z-10" />
                   <div class="absolute bottom-0 w-full h-[66px] flex items-center justify-center text-center h-brand font-extrabold text-black text-[31px] tracking-[0] whitespace-nowrap z-20">

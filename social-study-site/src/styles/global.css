@@ -41,6 +41,11 @@ body{
 
 /* Remove the faint divider line HubSpot sometimes injects below the submit */
 .hs-form hr{ display:none !important; border:0 !important; height:0 !important; }
+/* HubSpot can also render that line as a border on action/legal containers */
+.hs-form :is(.actions, .hs_submit, .legal-consent-container){
+  border-top: none !important;
+  box-shadow: none !important;
+}
 
 /* Brand-ish headings */
 .h-brand{

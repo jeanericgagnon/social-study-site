@@ -9,7 +9,7 @@ const { portalId, formId, region = 'na1' } = Astro.props;
 const targetId = `hs-form-${formId}`;
 ---
 
-<div class="hs-wrap relative overflow-hidden rounded-2xl border-2 border-black bg-white p-5 pt-5">
+<div class="hs-wrap relative mx-auto w-full max-w-[640px] overflow-hidden rounded-2xl border-2 border-black bg-white p-5 pt-5">
   <div
     id={targetId}
     data-hs-region={region}
@@ -43,8 +43,9 @@ const targetId = `hs-form-${formId}`;
         var btnRect = btn.getBoundingClientRect();
 
         // Start the cover just below the submit button (a few px gap).
-        // Raise cover a bit more to hide any remaining divider line.
-        var topPx = Math.max(0, Math.round(btnRect.bottom - wrapRect.top - 12));
+        // Raise cover more aggressively to hide the divider area HubSpot injects under submit.
+        // Keep it below the button, but cover any line/margin area beneath.
+        var topPx = Math.max(0, Math.round(btnRect.bottom - wrapRect.top - 30));
         cover.style.top = topPx + 'px';
       } catch (e) {}
     }

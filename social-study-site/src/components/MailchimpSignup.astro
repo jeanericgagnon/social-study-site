@@ -30,22 +30,22 @@ const id = '2e70c821de';
     <div class="grid gap-3 md:grid-cols-2">
       <label class="grid gap-1">
         <span class="text-sm text-slate-700">First name</span>
-        <input class="rounded-xl border border-slate-300 px-3 py-2" type="text" name="FNAME" />
+        <input class="rounded-xl border-2 border-black/70 bg-white px-3 py-2" type="text" name="FNAME" />
       </label>
       <label class="grid gap-1">
         <span class="text-sm text-slate-700">Last name</span>
-        <input class="rounded-xl border border-slate-300 px-3 py-2" type="text" name="LNAME" />
+        <input class="rounded-xl border-2 border-black/70 bg-white px-3 py-2" type="text" name="LNAME" />
       </label>
     </div>
 
     <label class="grid gap-1">
       <span class="text-sm text-slate-700">Email <span class="text-red-700">*</span></span>
-      <input class="rounded-xl border border-slate-300 px-3 py-2" type="email" name="EMAIL" required />
+      <input class="rounded-xl border-2 border-black/70 bg-white px-3 py-2" type="email" name="EMAIL" required />
     </label>
 
     <label class="grid gap-1">
       <span class="text-sm text-slate-700">Phone</span>
-      <input class="rounded-xl border border-slate-300 px-3 py-2" type="tel" name="PHONE" />
+      <input class="rounded-xl border-2 border-black/70 bg-white px-3 py-2" type="tel" name="PHONE" />
     </label>
 
     {/* bot trap */}
@@ -53,7 +53,7 @@ const id = '2e70c821de';
       <input type="text" name={`b_${u}_${id}`} tabindex="-1" value="" />
     </div>
 
-    <button class="rounded-full bg-slate-900 px-5 py-3 text-white hover:bg-slate-800" type="submit">
+    <button class="rounded-full border-2 border-black bg-[var(--gold)] px-5 py-3 font-semibold text-[#592d10] hover:opacity-90" type="submit">
       Subscribe
     </button>
 

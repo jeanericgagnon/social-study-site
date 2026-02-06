@@ -1,0 +1,17 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import '../styles/global.css';
+
+const title = 'Privacy | The Social Study';
+const description = 'Privacy policy for The Social Study.';
+---
+
+<BaseLayout title={title} description={description}>
+  <SiteHeader />
+  <main class="mx-auto max-w-3xl px-4 pb-20">
+    <h1 class="h-brand mt-6 text-5xl">Privacy</h1>
+    <p class="mt-4 text-slate-700">We collect the information you submit (like email) to send event updates and manage forms. We don’t sell your data.</p>
+    <p class="mt-3 text-slate-700">For questions: <a class="underline" href="mailto:contact@thesocial.study">contact@thesocial.study</a></p>
+  </main>
+</BaseLayout>

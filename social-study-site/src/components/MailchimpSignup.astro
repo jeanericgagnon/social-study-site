@@ -1,0 +1,62 @@
+---
+export interface Props {
+  title: string;
+  subtitle?: string;
+  f_id: string;
+  tags: string;
+}
+
+const { title, subtitle, f_id, tags } = Astro.props;
+
+const action = 'https://study.us2.list-manage.com/subscribe/post';
+const u = 'c6eb1678fc547ca9e3efb3d6f';
+const id = '2e70c821de';
+---
+
+<section class="rounded-2xl border border-slate-200 bg-white/60 p-5" id="signup">
+  <h2 class="h-brand text-2xl">{title}</h2>
+  {subtitle && <p class="mt-1 text-slate-700">{subtitle}</p>}
+
+  <form
+    class="mt-4 grid gap-3"
+    action={`${action}?u=${u}&id=${id}`}
+    method="post"
+    target="_blank"
+    novalidate
+  >
+    <input type="hidden" name="f_id" value={f_id} />
+    <input type="hidden" name="tags" value={tags} />
+
+    <div class="grid gap-3 md:grid-cols-2">
+      <label class="grid gap-1">
+        <span class="text-sm text-slate-700">First name</span>
+        <input class="rounded-xl border border-slate-300 px-3 py-2" type="text" name="FNAME" />
+      </label>
+      <label class="grid gap-1">
+        <span class="text-sm text-slate-700">Last name</span>
+        <input class="rounded-xl border border-slate-300 px-3 py-2" type="text" name="LNAME" />
+      </label>
+    </div>
+
+    <label class="grid gap-1">
+      <span class="text-sm text-slate-700">Email <span class="text-red-700">*</span></span>
+      <input class="rounded-xl border border-slate-300 px-3 py-2" type="email" name="EMAIL" required />
+    </label>
+
+    <label class="grid gap-1">
+      <span class="text-sm text-slate-700">Phone</span>
+      <input class="rounded-xl border border-slate-300 px-3 py-2" type="tel" name="PHONE" />
+    </label>
+
+    {/* bot trap */}
+    <div style="position:absolute;left:-5000px" aria-hidden="true">
+      <input type="text" name={`b_${u}_${id}`} tabindex="-1" value="" />
+    </div>
+
+    <button class="rounded-full bg-slate-900 px-5 py-3 text-white hover:bg-slate-800" type="submit">
+      Subscribe
+    </button>
+
+    <p class="text-xs text-slate-600">We’ll only email when tickets go live. Unsubscribe anytime.</p>
+  </form>
+</section>

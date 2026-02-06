@@ -1,0 +1,10 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# Force canonical www
+[[redirects]]
+  from = "https://thesocial.study/*"
+  to = "https://www.thesocial.study/:splat"
+  status = 301
+  force = true

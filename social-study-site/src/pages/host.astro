@@ -1,0 +1,40 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import HubSpotForm from '../components/HubSpotForm.astro';
+import '../styles/global.css';
+
+const title = 'Host an Event | The Social Study';
+const description = 'Own a venue? Host a Social Study lecture night. We bring the speaker and crowd; you bring the space and drinks.';
+
+const portalId = '49143429';
+---
+
+<BaseLayout title={title} description={description}>
+  <SiteHeader />
+  <main class="mx-auto max-w-4xl px-4 pb-20">
+    <h1 class="h-brand mt-6 text-5xl">Host an event</h1>
+    <p class="mt-4 text-lg text-slate-700">If you run a bar, brewery, or venue and want to host, send us the details. We’ll follow up with dates and logistics.</p>
+
+    <section class="mt-10 grid gap-4">
+      <div class="rounded-2xl border border-slate-200 bg-white/60 p-5">
+        <div class="h-brand text-xl">San Diego</div>
+        <div class="mt-3"><HubSpotForm portalId={portalId} formId="b0000866-2430-4ab0-a65b-97a1227c7ee0" region="na1" /></div>
+      </div>
+
+      <div class="rounded-2xl border border-slate-200 bg-white/60 p-5">
+        <div class="h-brand text-xl">Orange County</div>
+        <div class="mt-3"><HubSpotForm portalId={portalId} formId="8d103262-de08-4d75-862b-064cf672d04a" region="na1" /></div>
+      </div>
+
+      <div class="rounded-2xl border border-slate-200 bg-white/60 p-5">
+        <div class="h-brand text-xl">Denver</div>
+        <div class="mt-3"><HubSpotForm portalId={portalId} formId="40f87040-8264-4404-9deb-0efb6d2ea12b" region="na1" /></div>
+      </div>
+    </section>
+
+    <footer class="mt-16 border-t border-slate-200 pt-8 text-sm text-slate-600">
+      <a class="underline" href="privacy/">Privacy</a>
+    </footer>
+  </main>
+</BaseLayout>

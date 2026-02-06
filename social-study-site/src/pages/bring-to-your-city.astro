@@ -1,0 +1,25 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import HubSpotForm from '../components/HubSpotForm.astro';
+import '../styles/global.css';
+
+const title = 'Bring The Social Study to Your City';
+const description = 'Want The Social Study in your city? Tell us where you are and we’ll reach out when we’re planning new markets.';
+---
+
+<BaseLayout title={title} description={description}>
+  <SiteHeader />
+  <main class="mx-auto max-w-3xl px-4 pb-20">
+    <h1 class="h-brand mt-6 text-5xl">Bring it to your city</h1>
+    <p class="mt-4 text-lg text-slate-700">Tell us where you want Social Study next. If we expand there, you’ll be the first to know.</p>
+
+    <div class="mt-8">
+      <HubSpotForm portalId="49143429" formId="2f792adc-cf3e-4361-8889-b5c5913463e7" region="na1" />
+    </div>
+
+    <footer class="mt-16 border-t border-slate-200 pt-8 text-sm text-slate-600">
+      <a class="underline" href="privacy/">Privacy</a>
+    </footer>
+  </main>
+</BaseLayout>

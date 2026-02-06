@@ -1,0 +1,117 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import '../styles/global.css';
+
+const title = 'The Social Study | Lectures in Bars and Breweries';
+const description = 'Join intimate 60-minute lectures by professors, experts, and storytellers in bars and breweries across San Diego, Orange County, and Denver.';
+---
+
+<BaseLayout title={title} description={description}>
+  <SiteHeader />
+
+  <main class="mx-auto max-w-6xl px-4 pb-20">
+    <section class="grid items-center gap-10 md:grid-cols-2">
+      <div>
+        <p class="h-hand text-xl text-slate-700">Lectures in bars and breweries</p>
+        <h1 class="h-brand mt-2 text-5xl leading-[1.05] md:text-6xl">
+          Learn something interesting.
+          <span class="block">Meet smart strangers.</span>
+        </h1>
+        <p class="mt-5 text-lg text-slate-700">
+          60-minute talks by professors, experts, and storytellers — then hang out for drinks and conversation.
+        </p>
+
+        <div class="mt-6 flex flex-wrap gap-3" id="tickets">
+          <a
+            class="rounded-full bg-slate-900 px-5 py-3 text-white hover:bg-slate-800"
+            href="https://eventship.com/host/the-social-study"
+            rel="noopener"
+          >
+            Get tickets
+          </a>
+          <a class="rounded-full border border-slate-300 px-5 py-3 hover:bg-white" href="#cities">Choose your city</a>
+        </div>
+
+        <p class="mt-4 text-sm text-slate-600">
+          Tickets typically $35–$40. Most events sell out.
+        </p>
+      </div>
+
+      <div class="flex justify-center md:justify-end">
+        <img
+          src="brand/LogoNoBackground.png"
+          alt="The Social Study"
+          class="w-[320px] max-w-full drop-shadow-sm md:w-[420px]"
+          loading="eager"
+        />
+      </div>
+    </section>
+
+    <section class="mt-16" id="cities">
+      <h2 class="h-brand text-3xl">Cities</h2>
+      <div class="mt-6 grid gap-4 sm:grid-cols-3">
+        <a class="rounded-2xl border border-slate-200 bg-white/60 p-5 hover:bg-white" href="san-diego/">
+          <div class="h-brand text-xl">San Diego</div>
+          <div class="mt-1 text-slate-700">Lectures, drinks, and conversation.</div>
+        </a>
+        <a class="rounded-2xl border border-slate-200 bg-white/60 p-5 hover:bg-white" href="orange-county/">
+          <div class="h-brand text-xl">Orange County</div>
+          <div class="mt-1 text-slate-700">A smarter night out.</div>
+        </a>
+        <a class="rounded-2xl border border-slate-200 bg-white/60 p-5 hover:bg-white" href="denver/">
+          <div class="h-brand text-xl">Denver</div>
+          <div class="mt-1 text-slate-700">New city — join the first wave.</div>
+        </a>
+      </div>
+    </section>
+
+    <section class="mt-16" id="faq">
+      <h2 class="h-brand text-3xl">How it works</h2>
+      <div class="mt-6 grid gap-4 md:grid-cols-2">
+        <div class="rounded-2xl border border-slate-200 bg-white/60 p-5">
+          <div class="h-brand text-xl">The format</div>
+          <p class="mt-2 text-slate-700">Arrive, grab a drink, a quick opener, then a 45–60 minute lecture + Q&A. Stay after to chat.</p>
+        </div>
+        <div class="rounded-2xl border border-slate-200 bg-white/60 p-5">
+          <div class="h-brand text-xl">Topics</div>
+          <p class="mt-2 text-slate-700">STEM, psychology, history, philosophy, culture — anything that pairs well with drinks and curiosity.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="mt-16" id="newsletter">
+      <h2 class="h-brand text-3xl">Get updates</h2>
+      <p class="mt-2 text-slate-700">Get notified when tickets go live in your city.</p>
+      <div class="mt-6 grid gap-4 md:grid-cols-3">
+        <a class="rounded-2xl border border-slate-200 bg-white/60 p-5 hover:bg-white" href="newsletter/">Newsletter archive →</a>
+        <a class="rounded-2xl border border-slate-200 bg-white/60 p-5 hover:bg-white" href="san-diego/#signup">San Diego signup →</a>
+        <a class="rounded-2xl border border-slate-200 bg-white/60 p-5 hover:bg-white" href="orange-county/#signup">Orange County signup →</a>
+      </div>
+      <div class="mt-4">
+        <a class="text-slate-800 underline" href="denver/#signup">Denver signup →</a>
+      </div>
+    </section>
+
+    <section class="mt-16" id="apply">
+      <h2 class="h-brand text-3xl">Get involved</h2>
+      <div class="mt-6 grid gap-4 md:grid-cols-2">
+        <a class="rounded-2xl border border-slate-200 bg-white/60 p-5 hover:bg-white" href="speak/">Apply to speak →</a>
+        <a class="rounded-2xl border border-slate-200 bg-white/60 p-5 hover:bg-white" href="host/">Host an event →</a>
+      </div>
+      <div class="mt-4">
+        <a class="text-slate-800 underline" href="bring-to-your-city/">Bring it to your city →</a>
+      </div>
+    </section>
+
+    <footer class="mt-20 border-t border-slate-200 pt-8 text-sm text-slate-600">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div>© {new Date().getFullYear()} The Social Study</div>
+        <div class="flex gap-4">
+          <a class="underline" href="privacy/">Privacy</a>
+          <a class="underline" href="mailto:contact@thesocial.study">Contact</a>
+        </div>
+      </div>
+    </footer>
+  </main>
+</BaseLayout>

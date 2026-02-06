@@ -1,0 +1,71 @@
+---
+export interface Props {
+  title: string;
+  description: string;
+  canonical?: string;
+  ogImage?: string;
+}
+
+const {
+  title,
+  description,
+  canonical,
+  ogImage = '/brand/SecondaryLogo.jpg',
+} = Astro.props;
+
+const url = new URL(Astro.url);
+const canonicalUrl = canonical
+  ? canonical
+  : (Astro.site ? new URL(url.pathname, Astro.site).toString() : undefined);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+
+    {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
+
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    {canonicalUrl && <meta property="og:url" content={canonicalUrl} />}
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="The Social Study" />
+    <meta property="og:image" content={(Astro.site ? new URL(ogImage, Astro.site).toString() : ogImage)} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={(Astro.site ? new URL(ogImage, Astro.site).toString() : ogImage)} />
+
+    <link rel="icon" type="image/png" href="/brand/Globe.png" />
+    <link rel="apple-touch-icon" href="/brand/Globe.png" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@800&family=Patrick+Hand&display=swap"
+      rel="stylesheet"
+    />
+
+    <meta name="robots" content="index,follow" />
+
+    <script type="application/ld+json" is:inline>{JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      name: "The Social Study",
+      url: Astro.site ? Astro.site.toString() : "https://www.thesocial.study",
+      logo: Astro.site ? new URL("/brand/LogoNoBackground.png", Astro.site).toString() : "/brand/LogoNoBackground.png",
+      sameAs: [],
+    })}</script>
+
+    <meta name="generator" content={Astro.generator} />
+  </head>
+  <body class="bg-[#fbf4ea] text-slate-900">
+    <slot />
+  </body>
+</html>

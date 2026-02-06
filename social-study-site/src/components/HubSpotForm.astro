@@ -1,0 +1,36 @@
+---
+export interface Props {
+  portalId: string;
+  formId: string;
+  region?: string;
+}
+
+const { portalId, formId, region = 'na1' } = Astro.props;
+const targetId = `hs-form-${formId}`;
+---
+
+<div class="rounded-2xl border border-slate-200 bg-white/60 p-5">
+  <div id={targetId}></div>
+</div>
+
+<script is:inline src="https://js.hsforms.net/forms/v2.js"></script>
+<script is:inline>
+  (function() {
+    function boot() {
+      if (!window.hbspt || !window.hbspt.forms) return;
+      try {
+        window.hbspt.forms.create({
+          region: "{region}",
+          portalId: "{portalId}",
+          formId: "{formId}",
+          target: "#{targetId}",
+        });
+      } catch (e) {}
+    }
+    if (document.readyState === 'complete' || document.readyState === 'interactive') {
+      setTimeout(boot, 50);
+    } else {
+      document.addEventListener('DOMContentLoaded', boot);
+    }
+  })();
+</script>

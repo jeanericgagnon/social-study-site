@@ -1,0 +1,40 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import '../styles/global.css';
+
+const title = 'Events | The Social Study';
+const description = 'Upcoming Social Study events in San Diego, Orange County, and Denver. Get tickets on Eventship.';
+---
+
+<BaseLayout title={title} description={description}>
+  <SiteHeader />
+  <main class="mx-auto max-w-4xl px-4 pb-20">
+    <h1 class="h-brand mt-6 text-5xl">Events</h1>
+    <p class="mt-4 text-lg text-slate-700">Tickets and event details live on Eventship.</p>
+
+    <div class="mt-6 flex flex-wrap gap-3">
+      <a class="rounded-full bg-slate-900 px-5 py-3 text-white hover:bg-slate-800" href="https://eventship.com/host/the-social-study" rel="noopener">Get tickets</a>
+      <a class="rounded-full border border-slate-300 px-5 py-3 hover:bg-white" href="../#cities">Choose your city</a>
+    </div>
+
+    <section class="mt-12 grid gap-4 md:grid-cols-3">
+      <a class="rounded-2xl border border-slate-200 bg-white/60 p-5 hover:bg-white" href="../san-diego/">
+        <div class="h-brand text-xl">San Diego</div>
+        <div class="mt-1 text-slate-700">Get ticket drops + updates.</div>
+      </a>
+      <a class="rounded-2xl border border-slate-200 bg-white/60 p-5 hover:bg-white" href="../orange-county/">
+        <div class="h-brand text-xl">Orange County</div>
+        <div class="mt-1 text-slate-700">Get ticket drops + updates.</div>
+      </a>
+      <a class="rounded-2xl border border-slate-200 bg-white/60 p-5 hover:bg-white" href="../denver/">
+        <div class="h-brand text-xl">Denver</div>
+        <div class="mt-1 text-slate-700">Join the first wave.</div>
+      </a>
+    </section>
+
+    <footer class="mt-16 border-t border-slate-200 pt-8 text-sm text-slate-600">
+      <a class="underline" href="../privacy/">Privacy</a>
+    </footer>
+  </main>
+</BaseLayout>

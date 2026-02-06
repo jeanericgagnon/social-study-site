@@ -1,0 +1,52 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import MailchimpSignup from '../components/MailchimpSignup.astro';
+import '../styles/global.css';
+
+const title = 'Denver | The Social Study — Lectures in Bars and Breweries';
+const description = 'Educational talks over drinks in Denver. 60-minute lectures by professors, experts, and storytellers — then stay to meet people.';
+---
+
+<BaseLayout title={title} description={description}>
+  <SiteHeader />
+  <main class="mx-auto max-w-4xl px-4 pb-20">
+    <h1 class="h-brand mt-6 text-5xl">Denver</h1>
+    <p class="mt-4 text-lg text-slate-700">
+      Denver is new — which means you get the best part: becoming a regular before it’s obvious.
+    </p>
+
+    <div class="mt-6 flex flex-wrap gap-3">
+      <a class="rounded-full bg-slate-900 px-5 py-3 text-white hover:bg-slate-800" href="https://eventship.com/host/the-social-study" rel="noopener">Get tickets</a>
+      <a class="rounded-full border border-slate-300 px-5 py-3 hover:bg-white" href="../#cities">Other cities</a>
+    </div>
+
+    <section class="mt-10 grid gap-4 md:grid-cols-3">
+      <div class="rounded-2xl border border-slate-200 bg-white/60 p-5">
+        <div class="h-brand text-xl">Format</div>
+        <p class="mt-2 text-slate-700">A short opener, a great talk, Q&A, then drinks + conversation.</p>
+      </div>
+      <div class="rounded-2xl border border-slate-200 bg-white/60 p-5">
+        <div class="h-brand text-xl">Topics</div>
+        <p class="mt-2 text-slate-700">Science, tech, psychology, history — speaker-led, story-forward.</p>
+      </div>
+      <div class="rounded-2xl border border-slate-200 bg-white/60 p-5">
+        <div class="h-brand text-xl">Tickets</div>
+        <p class="mt-2 text-slate-700">Typically $35–$40. Tickets sell out — grab them early.</p>
+      </div>
+    </section>
+
+    <div class="mt-12">
+      <MailchimpSignup
+        title="Get Denver ticket drops"
+        subtitle="Be first to know when tickets go live in Denver."
+        f_id="0034e6e3f0"
+        tags="1853740"
+      />
+    </div>
+
+    <footer class="mt-16 border-t border-slate-200 pt-8 text-sm text-slate-600">
+      <a class="underline" href="../privacy/">Privacy</a>
+    </footer>
+  </main>
+</BaseLayout>

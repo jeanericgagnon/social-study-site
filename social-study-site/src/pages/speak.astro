@@ -1,0 +1,40 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import HubSpotForm from '../components/HubSpotForm.astro';
+import '../styles/global.css';
+
+const title = 'Apply to Speak | The Social Study';
+const description = 'Apply to give a talk at The Social Study. Professors, experts, and storytellers — short, sharp, and built for a bar setting.';
+
+const portalId = '49143429';
+---
+
+<BaseLayout title={title} description={description}>
+  <SiteHeader />
+  <main class="mx-auto max-w-4xl px-4 pb-20">
+    <h1 class="h-brand mt-6 text-5xl">Apply to speak</h1>
+    <p class="mt-4 text-lg text-slate-700">We’re looking for unique ideas from people with real expertise. Keep it accessible, story-forward, and fun over drinks.</p>
+
+    <section class="mt-10 grid gap-4">
+      <div class="rounded-2xl border border-slate-200 bg-white/60 p-5">
+        <div class="h-brand text-xl">San Diego</div>
+        <div class="mt-3"><HubSpotForm portalId={portalId} formId="cd909a62-610c-44e3-9759-460913af5652" region="na1" /></div>
+      </div>
+
+      <div class="rounded-2xl border border-slate-200 bg-white/60 p-5">
+        <div class="h-brand text-xl">Orange County</div>
+        <div class="mt-3"><HubSpotForm portalId={portalId} formId="ae0e15d7-e7f1-4610-82c7-a584c99e0419" region="na1" /></div>
+      </div>
+
+      <div class="rounded-2xl border border-slate-200 bg-white/60 p-5">
+        <div class="h-brand text-xl">Denver</div>
+        <div class="mt-3"><HubSpotForm portalId={portalId} formId="1c1c9692-139b-42e1-87d5-2f0adbf5fdbc" region="na1" /></div>
+      </div>
+    </section>
+
+    <footer class="mt-16 border-t border-slate-200 pt-8 text-sm text-slate-600">
+      <a class="underline" href="privacy/">Privacy</a>
+    </footer>
+  </main>
+</BaseLayout>

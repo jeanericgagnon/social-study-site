@@ -198,30 +198,27 @@ const faqs = [
                   style={{ height: index <= 1 ? '328px' : '231px' }}
                 >
                   <div
-                    class="absolute w-[397px] left-0 transition-colors duration-300 rounded-[26px] border-[3px] border-solid border-black"
-                    style={{
-                      backgroundColor: card.bg,
-                      height: index <= 1 ? (index === 0 ? '212px' : '212px') : index === 2 ? '212px' : '212px',
-                      top: index === 0 ? '114px' : index === 1 ? '99px' : '18px',
-                    }}
-                  ></div>
+                    class="relative h-full w-full overflow-hidden rounded-[26px] border-[3px] border-solid border-black"
+                    style={{ backgroundColor: card.bg }}
+                  >
+                    <img
+                      class="absolute object-contain"
+                      alt={card.title}
+                      src={card.img}
+                      loading="lazy"
+                      style={{
+                        width: index === 2 || index === 3 ? '186px' : '286px',
+                        height: index === 2 || index === 3 ? '186px' : '286px',
+                        left: index === 0 ? '53px' : index === 1 ? '55px' : index === 2 ? '105px' : '110px',
+                        top: '0px',
+                        zIndex: card.title === 'BRING TO YOUR CITY' ? 11 : 10,
+                      }}
+                    />
 
-                  <img
-                    class="absolute object-contain"
-                    alt={card.title}
-                    src={card.img}
-                    loading="lazy"
-                    style={{
-                      width: index === 2 || index === 3 ? '186px' : '286px',
-                      height: index === 2 || index === 3 ? '186px' : '286px',
-                      left: index === 0 ? '53px' : index === 1 ? '55px' : index === 2 ? '105px' : '110px',
-                      top: '0px',
-                    }}
-                  />
-
-                  <div class="absolute w-[391px] h-[66px] bottom-[3px] left-[3px] bg-[#f7f0d0] rounded-[0px_0px_23px_23px]" />
-                  <div class="absolute bottom-0 w-full h-[66px] flex items-center justify-center text-center h-brand font-extrabold text-black text-[42px] tracking-[0] whitespace-nowrap">
-                    {card.title}
+                    <div class="absolute w-full h-[66px] bottom-0 left-0 bg-[#f7f0d0] rounded-[0px_0px_23px_23px] z-10" />
+                    <div class="absolute bottom-0 w-full h-[66px] flex items-center justify-center text-center h-brand font-extrabold text-black text-[42px] tracking-[0] whitespace-nowrap z-20">
+                      {card.title}
+                    </div>
                   </div>
                 </a>
               );

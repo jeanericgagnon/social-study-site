@@ -1,5 +1,8 @@
 {
-  "generatedAt": null,
-  "folder": { "id": null, "name": "ArticleSends" },
+  "folder": {
+    "id": "cf9a8f5de3",
+    "name": "ArticleSends"
+  },
+  "generatedAt": "2026-02-06T19:11:51.152Z",
   "items": []
 }

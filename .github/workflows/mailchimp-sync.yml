@@ -31,6 +31,17 @@ jobs:
         working-directory: social-study-site
         run: npm ci
 
+      - name: Check Mailchimp secret present
+        env:
+          MAILCHIMP_API_KEY: ${{ secrets.MAILCHIMP_API_KEY }}
+        run: |
+          if [ -z "$MAILCHIMP_API_KEY" ]; then
+            echo "MAILCHIMP_API_KEY secret is missing or not accessible to this workflow run."
+            echo "Add it at: Repo Settings → Secrets and variables → Actions → New repository secret"
+            exit 1
+          fi
+          echo "MAILCHIMP_API_KEY is present (length: ${#MAILCHIMP_API_KEY})."
+
       - name: Sync newsletters
         working-directory: social-study-site
         env:

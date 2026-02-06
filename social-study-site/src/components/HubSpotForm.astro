@@ -43,8 +43,8 @@ const targetId = `hs-form-${formId}`;
         var btnRect = btn.getBoundingClientRect();
 
         // Start the cover just below the submit button (a few px gap).
-        // Raise cover slightly to hide any remaining branding/header line.
-        var topPx = Math.max(0, Math.round(btnRect.bottom - wrapRect.top - 2));
+        // Raise cover a bit more to hide any remaining divider line.
+        var topPx = Math.max(0, Math.round(btnRect.bottom - wrapRect.top - 12));
         cover.style.top = topPx + 'px';
       } catch (e) {}
     }

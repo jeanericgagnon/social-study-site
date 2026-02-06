@@ -39,6 +39,9 @@ body{
 }
 .hs-form .hs-button:hover{ opacity: .9 !important; }
 
+/* Remove the faint divider line HubSpot sometimes injects below the submit */
+.hs-form hr{ display:none !important; border:0 !important; height:0 !important; }
+
 /* Brand-ish headings */
 .h-brand{
   font-family: 'Baloo 2', system-ui;

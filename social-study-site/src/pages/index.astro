@@ -218,8 +218,18 @@ const faqs = [
                       src={card.img}
                       loading="lazy"
                       style={{
-                        width: index === 2 || index === 3 ? '186px' : '286px',
-                        height: index === 2 || index === 3 ? '186px' : '286px',
+                        width:
+                          index === 2 || index === 3
+                            ? '186px'
+                            : card.title === 'BECOME A SPEAKER'
+                              ? '260px'
+                              : '286px',
+                        height:
+                          index === 2 || index === 3
+                            ? '186px'
+                            : card.title === 'BECOME A SPEAKER'
+                              ? '260px'
+                              : '286px',
                         left: index === 0 ? '53px' : index === 1 ? '55px' : index === 2 ? '105px' : '110px',
                         top: '0px',
                         zIndex: card.title === 'BRING TO YOUR CITY' ? 11 : 10,

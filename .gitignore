@@ -1,0 +1,28 @@
+# Sys / OpenClaw workspace ignores (prevent accidental secret commits)
+
+# Node / Python
+node_modules/
+.venv/
+__pycache__/
+*.pyc
+
+# Local runtime / downloads
+/tmp/
+drive-downloads/
+
+# OpenClaw / Google OAuth secrets & tokens
+secrets/
+**/secrets/
+
+gcal/token*.json
+gcal/client_secret.json
+gcal/*token*.json
+
+# Any generic token/secret files (defense-in-depth)
+**/*token*.json
+**/*client_secret*.json
+**/*.env
+**/.env
+
+# OS
+.DS_Store

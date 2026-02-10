@@ -136,8 +136,10 @@ def main():
         print("NO_REPLY")
         return
 
+    recipients = ["quino@thesocial.study", "nick@thesocial.study"]
+
     lines = [
-        "Hi Quino,",
+        "Hi Quino and Nick,",
         "",
         "Reminder: these Eventship/Social Study events are 3 days out:",
         "",
@@ -147,8 +149,10 @@ def main():
     lines += ["", "Thanks,", "Sys"]
 
     subject = f"[3-day reminder] {len(events)} Eventship event(s) for {target_day.isoformat()}"
-    send_email(gmail, "quino@thesocial.study", subject, "\n".join(lines))
-    print(f"SENT {len(events)} to quino@thesocial.study")
+    body = "\n".join(lines)
+    for recipient in recipients:
+        send_email(gmail, recipient, subject, body)
+    print(f"SENT {len(events)} to {', '.join(recipients)}")
 
 
 if __name__ == "__main__":

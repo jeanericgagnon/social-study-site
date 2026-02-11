@@ -9,6 +9,7 @@ from zoneinfo import ZoneInfo
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
+from google.auth.exceptions import RefreshError
 
 LA = ZoneInfo("America/Los_Angeles")
 GCAL_DIR = Path("/Users/ericsysclaw/.openclaw/workspace/gcal")
@@ -21,29 +22,43 @@ TOKEN_CANDIDATES = [
 
 
 def load_creds():
-    token_path = next((p for p in TOKEN_CANDIDATES if p.exists()), None)
-    if not token_path:
+    existing = [p for p in TOKEN_CANDIDATES if p.exists()]
+    if not existing:
         raise SystemExit("No Google token found")
 
-    data = json.loads(token_path.read_text())
-    creds = Credentials(
-        token=data.get("token"),
-        refresh_token=data.get("refresh_token"),
-        token_uri=data.get("token_uri"),
-        client_id=data.get("client_id"),
-        client_secret=data.get("client_secret"),
-        scopes=data.get("scopes", []),
-    )
-    if creds and creds.expired and creds.refresh_token:
-        creds.refresh(Request())
-        data["token"] = creds.token
-        token_path.write_text(json.dumps(data, indent=2))
+    errors = []
+    for token_path in existing:
+        data = json.loads(token_path.read_text())
+        scopes = set(data.get("scopes") or [])
+        if "https://www.googleapis.com/auth/gmail.send" not in scopes:
+            errors.append(f"{token_path.name}: missing gmail.send scope")
+            continue
 
-    scopes = set(data.get("scopes") or [])
-    if "https://www.googleapis.com/auth/gmail.send" not in scopes:
-        raise SystemExit("Token missing gmail.send scope")
+        creds = Credentials(
+            token=data.get("token"),
+            refresh_token=data.get("refresh_token"),
+            token_uri=data.get("token_uri"),
+            client_id=data.get("client_id"),
+            client_secret=data.get("client_secret"),
+            scopes=data.get("scopes", []),
+        )
 
-    return creds
+        try:
+            # Proactively validate the token so revoked/invalid refresh tokens
+            # fail fast here (instead of failing later mid-request).
+            if creds and creds.refresh_token:
+                creds.refresh(Request())
+                data["token"] = creds.token
+                token_path.write_text(json.dumps(data, indent=2))
+            elif not creds.valid:
+                errors.append(f"{token_path.name}: token invalid and no refresh_token")
+                continue
+            return creds
+        except RefreshError as e:
+            errors.append(f"{token_path.name}: refresh failed ({e})")
+            continue
+
+    raise SystemExit("No usable Google token found; " + " | ".join(errors))
 
 
 def to_local_day(value: str) -> dt.date:

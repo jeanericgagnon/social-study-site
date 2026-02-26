@@ -1,96 +1,133 @@
-# Wedding Site PM — Consolidated Context (for #wedding-site-pm)
+# Wedding Site PM — Consolidated Product + Roadmap Context
 
-Updated: 2026-02-26
+Updated: 2026-02-26 (PT)
 Owner: Eric
+Channel: `#wedding-site-pm`
 
 ## 1) Mission
-Ship a calm, accessible, execution-first wedding website product quickly.
-PM lane exists to keep frontend/backend aligned, enforce proof-based progress, surface blockers early, and keep scope disciplined.
+Ship a calm, accessible, execution-first wedding website product quickly, then harden and expand.
+PM lane enforces proof-based execution, cross-lane alignment (frontend/backend), and blocker visibility.
 
-## 2) Product Direction (locked)
-- UX principles:
-  - Accessible by default (WCAG AA, keyboard-first, clear focus states)
-  - Low-stimulation, calm UI
+## 2) Product Direction (Locked)
+- UX posture:
+  - Accessible by default (WCAG AA, keyboard-first, visible focus states)
+  - Low-stimulation, calm interface
   - Fast first success (publishable site in minutes)
-  - Progressive power (simple first, advanced optional)
-- Architecture:
-  - Section-based system (Hero, Story, Schedule, RSVP, Travel, Gallery, FAQ, Registry, Footer)
-  - Templates define structure/variant composition
-  - Palettes/tokens provide visual variety at scale
-- Onboarding:
-  - Path A: Quick intake auto-populates sections
-  - Path B: Skip + manual section editing
-- URL model:
+  - Progressive power (simple first, advanced controls optional)
+- Architecture posture:
+  - Section-based content model (Hero, Story, Schedule, RSVP, Travel, Gallery, FAQ, Registry, Footer)
+  - Templates define structure + section variants
+  - Palettes/tokens create visual variety at scale
+- Onboarding decision:
+  - Path A: quick intake (auto-populate sections)
+  - Path B: skip intake and edit manually
+- URL decision:
   - Hosted custom slug
   - Optional custom domain connection
 
-## 3) MVP Priorities (current execution order)
-1. Audit/stabilize build for errors
-2. Add remaining must-have features
-3. UX polish
+## 3) Product Canon (Consolidated Feature Scope)
+Core clusters to track in planning and delivery:
+- Site builder + template library + live preview
+- Hosting + free tier + custom slug + custom domain
+- Theme system: prebuilt palettes + full customization
+- RSVP + guest controls + meal/plus-one + reminders + export
+- Guest data management + segmentation + event privacy controls
+- Content modules: FAQ, travel/accommodations, registry/cash funds
+- Messaging: SMS broadcast + 2-way replies + in-app messaging
+- Media: photo/video collection, no-app upload, QR upload, pass-the-camera, slideshow
+- Collaboration: admin collaborators + granular permissions
+- Engagement: polls/quizzes + Spotify voting + time-capsule mechanics
+- Analytics/support/export + retention/storage transparency + white-label
 
-Required passes in this phase:
-- Frontend ↔ backend integration verification
+## 4) Differentiator Priorities
+Current emphasized differentiators:
+1. Digital Time Capsule / Vault
+2. Guest Time-Capsule Submissions
+3. Anniversary Loop System
+4. Pass-the-Camera Mode
+5. Spotify Song Voting + Approved Sync
+
+## 5) Roadmap Model (Execution Order)
+### Phase 1 — MVP ship fast
+- Launch core builder flow + publish path + key wedding essentials
+- Keep scope tight and outcome-focused
+
+### Phase 2 — Audit + hardening
+- Code audit/refactor pass
+- Integration verification (frontend ↔ backend contracts)
 - Release hardening (validation, security headers, rate limits, logging/monitoring)
 - Rollback/backup plan
-- Final go/no-go checklist with full build + regression smoke
+- Final regression + go/no-go gate
 
-## 4) PM Operating Rules (how this lane runs)
-- Proof over chatter. Required proof block format:
-  - `commit: <short hash>`
-  - `files: <changed paths>`
-  - `verify: <lint/test/build output>`
-  - `preview: <url OR blocker:+ETA>`
-- Status labels:
-  - Use **IN FLIGHT** until proof gates are met.
-  - Do not call DONE early from velocity alone.
-- Scope discipline:
-  - Core path ships first.
-  - Non-critical polish/debt goes to queued cleanup batches.
-- Escalation severity:
-  - S1: security/credentials/data risk (immediate)
-  - S2: hard blocker >30m
-  - S3: normal dependency wait (batch)
-- Reporting preference (when asked "status"):
-  - Split by Frontend / Backend
-  - Include: health emoji, last local commit+time, shipped/working on, downtime/uptime, ETA to next proof, ETA to deliverable, efficiency label
+### Phase 3 — Full feature expansion
+- Execute remaining canonical feature backlog
+- Add future differentiator expansions
 
-## 5) Source of Truth Files
-- Product context:
-  - `/Users/ericsysclaw/.openclaw/workspace/discord-wedding-site-chat/wedding-site-context-master.md`
-  - `/Users/ericsysclaw/.openclaw/workspace/discord-wedding-site-chat/consolidated-features-list.md`
-  - `/Users/ericsysclaw/.openclaw/workspace/discord-wedding-site-chat/figma-board-starter.md`
-- Visual tokens/palette:
-  - `/Users/ericsysclaw/.openclaw/workspace/discord-general/data/site-palette-v1.json`
-- PM lane memory snapshots:
-  - `/Users/ericsysclaw/.openclaw/workspace/discord-project-manager/memory/2026-02-10.md`
-  - `/Users/ericsysclaw/.openclaw/workspace/discord-project-manager/memory/2026-02-11.md`
-  - `/Users/ericsysclaw/.openclaw/workspace/discord-project-manager/memory/2026-02-12.md`
+## 6) Pricing / GTM Doctrine (Saved)
+- Principle: one-time start fee orientation; avoid recurring platform-fee surprises.
+- Any third-party pass-through costs (SMS/payment rails/domain) must be transparent before use.
+- Positioning wedge: trust + clarity on total cost; no hidden fee behavior.
 
-## 6) Consolidated Feature Canon (top clusters)
-- Core builder + templates + live preview
-- Hosting, free tier, custom slug, optional custom domain
-- Theme system: prebuilt palettes + full customization
-- RSVP + guest management + exports + reminders
-- Messaging: SMS + in-app broadcast/replies
-- Media: photo/video upload, QR upload, pass-the-camera, slideshow
-- Registry + cash fund + fee transparency
-- Collaboration + roles/permissions
-- Polls/quizzes + visibility rules
-- Spotify playlist + voting/approval sync
-- Time capsule + anniversary loop + guest contributions
-- Analytics + support + white-label options
+## 7) PM Operating Contract (Mandatory)
+### Proof-based updates only
+Every status update must include:
+- `commit: <short hash>`
+- `files: <changed paths>`
+- `verify: <lint/test/build output>`
+- `preview: <url OR blocker:+ETA>`
 
-## 7) Current Known Delivery Reality
-- Recent shipping pattern has been local commits + Vercel deploys.
-- GitHub auth friction existed on host previously but did not block local+Vercel execution.
-- PM should evaluate real artifacts (commits, deploy proofs, verification outputs), not assumptions.
+### Status structure
+- Always split status by **Frontend** and **Backend**.
+- Do not mark **DONE** until proof gates are met.
+- If proof gates are not met, label **IN FLIGHT**.
 
-## 8) Suggested Default Behavior in #wedding-site-pm
-- On mention or task request:
-  1) Acknowledge objective in one line
-  2) Return latest Frontend/Backend proof state
-  3) Call out blockers + owner + ETA
-  4) Propose next 1–3 concrete actions
-- Keep messages concise and machine-checkable.
-- Prefer evidence and explicit unknowns over confident guesses.
+### Blocker escalation
+- **S1**: security/credentials/data risk (immediate)
+- **S2**: hard blocker >30m
+- **S3**: dependency wait (batch)
+
+### Default response shape
+1. objective
+2. latest proof state FE/BE
+3. blockers + owner + ETA
+4. next 1–3 concrete actions
+
+## 8) Delivery Reality / Evidence Rules
+- Treat real artifacts as truth: local commits, verify output, deploy proof.
+- Recent operating reality has often been local commits + Vercel deploys.
+- Do not rely on assumptions or channel chatter; require evidence.
+
+## 9) Visual System Context (current palette direction)
+Core palette tokens currently referenced:
+- Primary: `#7A8F73`
+- Hover: `#667B60`
+- Soft brand: `#E8EFE5`
+- Background: `#FCFBF8`
+- Surface: `#F4F1EB`
+- Text primary: `#26231F`
+- Accent warm: `#C97B5B`
+- Accent gold: `#C6A66A`
+- Accent plum: `#6F5D7E`
+
+## 10) Source-of-Truth Files
+Primary product context:
+- `/Users/ericsysclaw/.openclaw/workspace/discord-wedding-site-chat/wedding-site-context-master.md`
+- `/Users/ericsysclaw/.openclaw/workspace/discord-wedding-site-chat/consolidated-features-list.md`
+- `/Users/ericsysclaw/.openclaw/workspace/discord-wedding-site-chat/roadmap-notes.md`
+- `/Users/ericsysclaw/.openclaw/workspace/discord-wedding-site-chat/figma-board-starter.md`
+- `/Users/ericsysclaw/.openclaw/workspace/discord-general/data/site-palette-v1.json`
+
+Market/pricing research context:
+- `/Users/ericsysclaw/.openclaw/workspace/discord-wedding-site-chat/competitor-pricing-dataset.md`
+- `/Users/ericsysclaw/.openclaw/workspace/discord-wedding-site-chat/competitive-feature-cost-teardown.md`
+
+Historic PM process context:
+- `/Users/ericsysclaw/.openclaw/workspace/discord-project-manager/memory/2026-02-10.md`
+- `/Users/ericsysclaw/.openclaw/workspace/discord-project-manager/memory/2026-02-11.md`
+- `/Users/ericsysclaw/.openclaw/workspace/discord-project-manager/memory/2026-02-12.md`
+
+## 11) Channel Behavior for #wedding-site-pm
+- Keep updates concise and machine-checkable.
+- Prefer explicit unknowns over guessed certainty.
+- Ask for decision only when a genuine product/scope tradeoff is required.
+- Everything else: execute and report proof.

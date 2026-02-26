@@ -126,7 +126,61 @@ Historic PM process context:
 - `/Users/ericsysclaw/.openclaw/workspace/discord-project-manager/memory/2026-02-11.md`
 - `/Users/ericsysclaw/.openclaw/workspace/discord-project-manager/memory/2026-02-12.md`
 
-## 11) Channel Behavior for #wedding-site-pm
+## 11) Full-Stack Technical Context (Operational)
+Primary implementation reference appears to be:
+- `/Users/ericsysclaw/.openclaw/workspace/discord-wedding-site/wedding-site`
+
+### Frontend stack
+- Next.js App Router (`next@16.1.6`)
+- React (`react@19.2.3`, `react-dom@19.2.3`)
+- TypeScript
+- Tailwind CSS v4 + PostCSS
+- ESLint (Next config)
+
+### Backend/API stack
+- Next.js API routes under `src/app/api/**`
+- Shared domain layer under `src/lib/domain/**`
+- Contract-first API shapes under `src/contracts/**` (must update contracts with API changes)
+
+### Data/Auth layer
+- Supabase-backed auth/session + data model (from architecture docs)
+- Key tables mentioned in current architecture docs:
+  - `wedding_sites`, `guests`, `registry_items`, `site_rsvps`, `messages`, `itinerary_items`, `builder_media_assets`
+- RLS is expected enabled; owner-scoped CRUD + limited public access patterns
+
+### Testing + quality gates
+- Vitest test runner
+- Typecheck pass (`tsc --noEmit`)
+- Verify command (`npm run verify`) is mandatory proof artifact
+- Lint + test + build are part of proof/verification discipline
+
+### Build/deploy
+- Local dev: `npm run dev`
+- Production build: `npm run build`
+- Deploy target: Vercel (preview + production)
+- Current delivery pattern often uses local commits + Vercel deploy proofs
+
+### Runtime architecture boundaries (important for lane ownership)
+- Frontend lane:
+  - `src/app/**` (excluding `src/app/api/**`)
+  - UX, accessibility, performance, rendering states
+- Backend lane:
+  - `src/app/api/**`
+  - Validation, transforms, domain rules, API behavior
+- Shared boundary:
+  - `src/contracts/**` requires FE+BE alignment review
+
+### PM enforcement on technical work
+- Any API behavior change must include:
+  - contract update,
+  - verification output,
+  - explicit frontend impact note.
+- Any schema/data-affecting change must include:
+  - migration/compatibility note,
+  - rollback note,
+  - affected endpoints/components list.
+
+## 12) Channel Behavior for #wedding-site-pm
 - Keep updates concise and machine-checkable.
 - Prefer explicit unknowns over guessed certainty.
 - Ask for decision only when a genuine product/scope tradeoff is required.

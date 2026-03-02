@@ -113,15 +113,11 @@ def is_eventship(ev: dict) -> bool:
             ev.get("htmlLink", "") or "",
         ]
     ).lower()
-    eventship_source = (
+    return (
         organizer == "events@eventship.com"
         or creator == "events@eventship.com"
         or "eventship" in hay
     )
-    if not eventship_source:
-        return False
-    # Only include ticket-release related events.
-    return "ticket release" in hay or "release tickets" in hay
 
 
 def get_target_events(cal_service, days_out=3):
@@ -204,16 +200,17 @@ def ensure_chat_space(chat_service, can_create_space: bool) -> str:
 
 def build_message(events):
     lines = [
-        "Heads up: The Social Study events are 3 days out.",
-        "Please confirm ticket release time, venue, and speaker for each:",
+        f"Heads up: The Social Study events are 3 days out ({len(events)} total).",
+        "Remember to release returned tickets, confirm speaker, and confirm venue:",
         "",
     ]
     for e in events:
         venue = e.get("venue") or "(venue missing — confirm venue)"
-        lines.append(f"• {e['date']} • {e['time']} — {e['title']}")
-        lines.append("  - Ticket release time: (confirm)")
-        lines.append(f"  - Venue: {venue}")
-        lines.append("  - Speaker: (confirm)")
+        lines.append(f"• {e['title']}")
+        lines.append(f"  - Date/Time: {e['date']} • {e['time']}")
+        lines.append("  - Release returned tickets")
+        lines.append("  - Confirm speaker")
+        lines.append(f"  - Confirm venue: {venue}")
     return "\n".join(lines)
 
 

@@ -32,11 +32,31 @@ curl -s -X POST http://127.0.0.1:19081/run \
   -d '{"skill":"playwright-mcp","action":"smoke","payload":{"url":"https://example.com"}}'
 ```
 
+## Unified dispatcher (single interface)
+Use `dispatch.py` to call all runners through one command:
+
+```bash
+cd sandbox-runners
+set -a; source .env; set +a
+
+python3 dispatch.py --skill playwright-mcp --action smoke \
+  --payload '{"url":"https://example.com"}'
+
+python3 dispatch.py --skill automation-workflows --action run \
+  --payload '{"workflowId":"smoke-test"}'
+
+python3 dispatch.py --skill agentmail --action send \
+  --payload '{"to":"eric@thesocial.study","subject":"Hello","templateId":"brief-v1"}'
+```
+
+Optional: override routing via `--routes path/to/routes.json`.
+
 ## Expand with a new sandbox
 1. Create `configs/<new-runner>/policy.json`
 2. Copy a service block in `docker-compose.yml`
 3. Add `<NEW_RUNNER>_TOKEN` to `.env`
-4. `docker compose up -d --build`
+4. Add route mapping in `dispatch.py` (or pass `--routes`)
+5. `docker compose up -d --build`
 
 ## Important notes
 - Same Ethernet/LAN is fine. Isolation is process/container policy, not physical network separation.

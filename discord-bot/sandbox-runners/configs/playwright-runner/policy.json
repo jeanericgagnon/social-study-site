@@ -32,6 +32,7 @@
         "enabled": true,
         "requireUrl": true,
         "maxPages": 25,
+        "maxTemplatePages": 120,
         "allowedDomains": [
           "theknot.com",
           "zola.com",

@@ -216,6 +216,41 @@ def _fetch_page(url: str, timeout_s: int) -> Dict[str, Any]:
         }
 
 
+
+def _is_template_detail_url(url: str) -> bool:
+    p = (urlparse(url).path or "").lower()
+    if any(k in p for k in ["template", "design", "theme"]):
+        if any(p.endswith(x) for x in ["/templates", "/template", "/designs", "/themes", "/gallery", "/showcase"]):
+            return False
+        return True
+    return False
+
+
+def _discover_template_detail_pages(seed_urls: list[str], start_url: str, timeout_s: int, max_template_pages: int) -> list[str]:
+    queue = list(seed_urls)
+    seen = set()
+    found = []
+    while queue and len(found) < max_template_pages:
+        u = queue.pop(0)
+        if u in seen:
+            continue
+        seen.add(u)
+        try:
+            pg = _fetch_page(u, timeout_s)
+            for link in pg.get("links", []):
+                if not _same_domain(start_url, link):
+                    continue
+                if _is_template_detail_url(link) and link not in found:
+                    found.append(link)
+                    if len(found) >= max_template_pages:
+                        break
+                lp = (urlparse(link).path or "").lower()
+                if any(k in lp for k in ["template", "design", "theme", "gallery", "showcase"]) and link not in seen and link not in queue:
+                    queue.append(link)
+        except Exception:
+            continue
+    return found
+
 def _handle_playwright_smoke(payload: Dict[str, Any]) -> Dict[str, Any]:
     url = payload.get("url", "")
     timeout_s = int(payload.get("timeoutSec", 10))
@@ -251,6 +286,10 @@ def _handle_playwright_scrape(payload: Dict[str, Any], action_cfg: Dict[str, Any
     policy_max_pages = int(action_cfg.get("maxPages", 20))
     req_max_pages = int(payload.get("maxPages", min(10, policy_max_pages)))
     max_pages = max(1, min(req_max_pages, policy_max_pages))
+
+    policy_max_template_pages = int(action_cfg.get("maxTemplatePages", 120))
+    req_max_template_pages = int(payload.get("maxTemplatePages", min(50, policy_max_template_pages)))
+    max_template_pages = max(1, min(req_max_template_pages, policy_max_template_pages))
 
     queue = [start_url]
     visited = set()
@@ -297,16 +336,26 @@ def _handle_playwright_scrape(payload: Dict[str, Any], action_cfg: Dict[str, Any
         if not any(existing.get("url") == p["url"] for existing in pages):
             pages.append(p)
 
+    template_detail_pages = _discover_template_detail_pages(
+        discovered["templates"],
+        start_url,
+        timeout_s,
+        max_template_pages,
+    )
+
     return {
         "ok": True,
         "mode": "real-handler",
         "startUrl": start_url,
         "pagesCrawled": len(pages),
         "maxPages": max_pages,
+        "maxTemplatePages": max_template_pages,
         "pages": pages,
         "builderPages": discovered["builder"],
         "registryPages": discovered["registry"],
         "templatePages": discovered["templates"],
+        "templateDetailPages": template_detail_pages,
+        "templateDetailCount": len(template_detail_pages),
     }
 
 

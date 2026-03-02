@@ -1,10 +1,30 @@
 {
   "version": 1,
   "skills": {
+    "backup-restore-runbook-generator": {
+      "source": "patricio0312rev/skills",
+      "sourceType": "github",
+      "computedHash": "eacd5a626ed69fce004b9bb1289e032b65aaa15e6e7d25143e72512c53e9f40c"
+    },
+    "cicd-pipeline-setup": {
+      "source": "aj-geddes/useful-ai-prompts",
+      "sourceType": "github",
+      "computedHash": "b8201f6a1568291881f6730d56acd4a2065e5e7172101def666784fe6656af37"
+    },
+    "incident-runbook-templates": {
+      "source": "wshobson/agents",
+      "sourceType": "github",
+      "computedHash": "035308b8a33b724bbfc9b10d0dfdbcda5f90dfb9611b44042df80f1dad690947"
+    },
     "performance": {
       "source": "addyosmani/web-quality-skills",
       "sourceType": "github",
       "computedHash": "acbafe2fcbfc3a1a67db47c2f6299d5c0e16f543c4e683e38e74a8ccb54888fb"
+    },
+    "python-observability": {
+      "source": "wshobson/agents",
+      "sourceType": "github",
+      "computedHash": "2c0db2a638bf3145be591f085d17b98d62d204e5f674c305070def055c779068"
     },
     "receiving-code-review": {
       "source": "obra/superpowers",
@@ -21,10 +41,20 @@
       "sourceType": "github",
       "computedHash": "93a837ba79c3c3f0b3e503fd9d8b54c638337d73d200c1af3bca9607264bf0e0"
     },
+    "secrets-management": {
+      "source": "wshobson/agents",
+      "sourceType": "github",
+      "computedHash": "9b51d1c97b4ee0df6ea0ba6d1bb9c8a6b4437ea38a2ac77e8a8a927b57d36067"
+    },
     "systematic-debugging": {
       "source": "obra/superpowers",
       "sourceType": "github",
       "computedHash": "72e9ab72627e4fd8ed26a582e82309a98ecdc4f6e1c99418430ac05682c9e91d"
+    },
+    "vulnerability-scanning": {
+      "source": "aj-geddes/useful-ai-prompts",
+      "sourceType": "github",
+      "computedHash": "67babd88379e0b3af4054a0fc890f86f8623213ebcdb4bd117a0e6d226c65dbd"
     }
   }
 }

@@ -20,6 +20,11 @@ TOKEN_CANDIDATES = [
     GCAL_DIR / "token.json",
 ]
 
+# Authoritative source calendar(s) for this reminder.
+TARGET_CALENDAR_IDS = [
+    "eric@thesocial.study",
+]
+
 
 def load_creds():
     existing = [p for p in TOKEN_CANDIDATES if p.exists()]
@@ -30,7 +35,11 @@ def load_creds():
     for token_path in existing:
         data = json.loads(token_path.read_text())
         scopes = set(data.get("scopes") or [])
-        if "https://www.googleapis.com/auth/gmail.send" not in scopes:
+        has_gmail_send = (
+            "https://www.googleapis.com/auth/gmail.send" in scopes
+            or "https://mail.google.com/" in scopes
+        )
+        if not has_gmail_send:
             errors.append(f"{token_path.name}: missing gmail.send scope")
             continue
 
@@ -95,7 +104,21 @@ def get_target_events(cal_service):
     time_max = end.astimezone(dt.timezone.utc).isoformat().replace("+00:00", "Z")
 
     events = []
-    calendars = cal_service.calendarList().list().execute().get("items", [])
+    calendars = []
+    for cal_id in TARGET_CALENDAR_IDS:
+        try:
+            meta = cal_service.calendars().get(calendarId=cal_id).execute()
+            cal_name = meta.get("summary", cal_id)
+            calendars.append({"id": cal_id, "summary": cal_name})
+        except Exception:
+            # If explicit calendar is not accessible, skip it.
+            continue
+
+    if not calendars:
+        raise SystemExit(
+            "No accessible target calendars. Ensure this token can read eric@thesocial.study."
+        )
+
     for c in calendars:
         cal_id = c.get("id")
         cal_name = c.get("summary", "(unknown)")
@@ -125,6 +148,7 @@ def get_target_events(cal_service):
                     "title": ev.get("summary", "(no title)"),
                     "date": str(target_day),
                     "time": local_time_label(raw),
+                    "venue": (ev.get("location") or "").strip(),
                     "calendar": cal_name,
                 }
             )
@@ -151,19 +175,24 @@ def main():
         print("NO_REPLY")
         return
 
-    recipients = ["quino@thesocial.study", "nick@thesocial.study"]
+    recipients = ["eric@thesocial.study", "quino@thesocial.study"]
 
     lines = [
-        "Hi Quino and Nick,",
+        "Hi Eric and Quino,",
         "",
-        "Reminder: these Eventship/Social Study events are 3 days out:",
+        "Heads up: these Eventship/Social Study events are 3 days out.",
+        "Please confirm ticket release time, venue, and speaker for each:",
         "",
     ]
     for e in events:
+        venue = e.get("venue") or "(venue missing — confirm venue)"
         lines.append(f"- {e['date']} • {e['time']} — {e['title']}")
+        lines.append(f"  - Ticket release time: (confirm)")
+        lines.append(f"  - Venue: {venue}")
+        lines.append(f"  - Speaker: (confirm)")
     lines += ["", "Thanks,", "Sys"]
 
-    subject = f"[3-day reminder] {len(events)} Eventship event(s) for {target_day.isoformat()}"
+    subject = f"[3-day event check] {len(events)} Eventship event(s) for {target_day.isoformat()}"
     body = "\n".join(lines)
     for recipient in recipients:
         send_email(gmail, recipient, subject, body)

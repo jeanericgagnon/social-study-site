@@ -30,10 +30,6 @@ DEFAULT_ROUTES = {
         "url": "http://127.0.0.1:19082/run",
         "tokenEnv": "AUTOMATION_RUNNER_TOKEN",
     },
-    "agentmail": {
-        "url": "http://127.0.0.1:19083/run",
-        "tokenEnv": "AGENTMAIL_RUNNER_TOKEN",
-    },
 }
 
 

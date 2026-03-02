@@ -2,9 +2,11 @@ from fastapi import FastAPI, Header, Request
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 from typing import Any, Dict, Optional
+from urllib.parse import urlparse
 import os
 import json
 import hmac
+import time
 from datetime import datetime, timezone
 
 app = FastAPI(title="Sandbox Skill Runner")
@@ -13,6 +15,10 @@ RUNNER_NAME = os.getenv("RUNNER_NAME", "runner")
 API_TOKEN = os.getenv("RUNNER_API_TOKEN", "")
 POLICY_PATH = os.getenv("RUNNER_POLICY", "/app/policy.json")
 MAX_BODY_BYTES = int(os.getenv("RUNNER_MAX_BODY_BYTES", "65536"))  # 64KB
+RATE_LIMIT_PER_MIN = int(os.getenv("RUNNER_RATE_LIMIT_PER_MIN", "120"))
+
+# very small local-only rate limiter
+_RATE = {"window": int(time.time() // 60), "count": 0}
 
 
 class RunRequest(BaseModel):
@@ -22,17 +28,29 @@ class RunRequest(BaseModel):
 
 
 @app.middleware("http")
-async def size_guard(request: Request, call_next):
+async def guards(request: Request, call_next):
     cl = request.headers.get("content-length")
     if cl and cl.isdigit() and int(cl) > MAX_BODY_BYTES:
         return JSONResponse({"ok": False, "error": "payload_too_large"}, status_code=413)
+
+    if request.method == "POST" and request.url.path == "/run":
+        ctype = request.headers.get("content-type", "")
+        if "application/json" not in ctype:
+            return JSONResponse({"ok": False, "error": "invalid_content_type"}, status_code=415)
+
+        minute = int(time.time() // 60)
+        if _RATE["window"] != minute:
+            _RATE["window"] = minute
+            _RATE["count"] = 0
+        _RATE["count"] += 1
+        if _RATE["count"] > RATE_LIMIT_PER_MIN:
+            return JSONResponse({"ok": False, "error": "rate_limited"}, status_code=429)
+
     return await call_next(request)
 
 
 def _safe_token_match(given: Optional[str]) -> bool:
-    if not API_TOKEN:
-        return False
-    if given is None:
+    if not API_TOKEN or given is None:
         return False
     return hmac.compare_digest(given, API_TOKEN)
 
@@ -46,8 +64,48 @@ def read_policy() -> Dict[str, Any]:
 
 
 def audit(event: Dict[str, Any]) -> None:
-    # stdout only; container logs are the audit trail
     print(json.dumps(event, ensure_ascii=False), flush=True)
+
+
+def _domain_ok(url: str, allowed_domains: list[str]) -> bool:
+    try:
+        host = (urlparse(url).hostname or "").lower()
+        return any(host == d or host.endswith(f".{d}") for d in allowed_domains)
+    except Exception:
+        return False
+
+
+def _payload_policy_ok(req: RunRequest, action_cfg: Dict[str, Any]) -> tuple[bool, str]:
+    payload = req.payload or {}
+
+    if action_cfg.get("requireUrl"):
+        url = payload.get("url")
+        if not isinstance(url, str) or not url.startswith(("http://", "https://")):
+            return False, "invalid_url"
+        allowed_domains = action_cfg.get("allowedDomains", [])
+        if allowed_domains and not _domain_ok(url, allowed_domains):
+            return False, "domain_not_allowed"
+
+    if action_cfg.get("requireTo"):
+        to = payload.get("to")
+        if not isinstance(to, str) or "@" not in to:
+            return False, "invalid_recipient"
+        allowed_domains = action_cfg.get("allowedRecipientDomains", [])
+        if allowed_domains:
+            domain = to.split("@")[-1].lower()
+            if domain not in [d.lower() for d in allowed_domains]:
+                return False, "recipient_domain_not_allowed"
+
+    required_fields = action_cfg.get("requiredFields", [])
+    for f in required_fields:
+        if f not in payload:
+            return False, f"missing_field:{f}"
+
+    max_payload_keys = int(action_cfg.get("maxPayloadKeys", 20))
+    if len(payload.keys()) > max_payload_keys:
+        return False, "too_many_payload_keys"
+
+    return True, "ok"
 
 
 @app.get("/health")
@@ -77,19 +135,22 @@ def run(req: RunRequest, x_runner_token: Optional[str] = Header(default=None)):
 
     skill_actions = actions.get(req.skill, {})
     action_cfg = skill_actions.get(req.action)
-    if not action_cfg:
+    if not action_cfg or not action_cfg.get("enabled", False):
         audit({"ts": now, "runner": RUNNER_NAME, "event": "deny", "reason": "action_not_allowed", "skill": req.skill, "action": req.action})
         return {"ok": False, "error": "action_not_allowed", "skill": req.skill, "action": req.action}
 
-    # Secure default: explicit allowlist only, no shell execution fallback.
-    # You can add concrete safe handlers here later.
+    ok, reason = _payload_policy_ok(req, action_cfg)
+    if not ok:
+        audit({"ts": now, "runner": RUNNER_NAME, "event": "deny", "reason": reason, "skill": req.skill, "action": req.action})
+        return {"ok": False, "error": reason, "skill": req.skill, "action": req.action}
+
     audit({
         "ts": now,
         "runner": RUNNER_NAME,
         "event": "allowed_stub",
         "skill": req.skill,
         "action": req.action,
-        "payload_keys": sorted(list(req.payload.keys())),
+        "payload_keys": sorted(list((req.payload or {}).keys())),
     })
 
     return {
@@ -98,5 +159,5 @@ def run(req: RunRequest, x_runner_token: Optional[str] = Header(default=None)):
         "skill": req.skill,
         "action": req.action,
         "mode": "secure-stub",
-        "note": "Action is allowlisted and authenticated. Concrete handler not wired yet.",
+        "note": "Action is allowlisted/authenticated and passed payload policy checks.",
     }

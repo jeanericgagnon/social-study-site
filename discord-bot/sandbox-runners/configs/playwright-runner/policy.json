@@ -2,14 +2,25 @@
   "allowedSkills": ["playwright-mcp", "playwright-scraper-skill"],
   "actions": {
     "playwright-mcp": {
-      "smoke": { "enabled": true }
+      "smoke": {
+        "enabled": true,
+        "requireUrl": true,
+        "allowedDomains": ["example.com"],
+        "maxPayloadKeys": 5
+      }
     },
     "playwright-scraper-skill": {
-      "scrape": { "enabled": true }
+      "scrape": {
+        "enabled": true,
+        "requireUrl": true,
+        "allowedDomains": ["example.com"],
+        "requiredFields": ["url"],
+        "maxPayloadKeys": 8
+      }
     }
   },
   "network": {
     "egressMode": "allowlist",
-    "notes": "Use host firewall or egress proxy to enforce domain allowlist"
+    "notes": "Enforce with host firewall/proxy."
   }
 }

@@ -8,6 +8,9 @@ import json
 import hmac
 import time
 from datetime import datetime, timezone
+from urllib.request import Request, urlopen
+from urllib.error import URLError, HTTPError
+import re
 
 app = FastAPI(title="Sandbox Skill Runner")
 
@@ -108,6 +111,52 @@ def _payload_policy_ok(req: RunRequest, action_cfg: Dict[str, Any]) -> tuple[boo
     return True, "ok"
 
 
+def _extract_title(html: str) -> str:
+    m = re.search(r"<title[^>]*>(.*?)</title>", html, flags=re.IGNORECASE | re.DOTALL)
+    if not m:
+        return ""
+    return re.sub(r"\s+", " ", m.group(1)).strip()[:200]
+
+
+def _handle_playwright_smoke(payload: Dict[str, Any]) -> Dict[str, Any]:
+    url = payload.get("url", "")
+    timeout_s = int(payload.get("timeoutSec", 10))
+    timeout_s = max(2, min(timeout_s, 20))
+
+    req = Request(
+        url,
+        headers={
+            "User-Agent": "SandboxRunner/1.0 (+playwright-mcp-smoke)",
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        },
+        method="GET",
+    )
+
+    try:
+        with urlopen(req, timeout=timeout_s) as resp:
+            body_bytes = resp.read(16384)
+            content_type = resp.headers.get("Content-Type", "")
+            status = getattr(resp, "status", 200)
+            final_url = resp.geturl()
+            html = body_bytes.decode("utf-8", errors="ignore")
+            title = _extract_title(html)
+            return {
+                "ok": True,
+                "mode": "real-handler",
+                "status": int(status),
+                "finalUrl": final_url,
+                "contentType": content_type,
+                "title": title,
+                "bytesRead": len(body_bytes),
+            }
+    except HTTPError as e:
+        return {"ok": False, "mode": "real-handler", "error": "http_error", "status": int(e.code)}
+    except URLError as e:
+        return {"ok": False, "mode": "real-handler", "error": "network_error", "detail": str(e.reason)}
+    except Exception:
+        return {"ok": False, "mode": "real-handler", "error": "smoke_failed"}
+
+
 @app.get("/health")
 def health():
     return {
@@ -143,6 +192,23 @@ def run(req: RunRequest, x_runner_token: Optional[str] = Header(default=None)):
     if not ok:
         audit({"ts": now, "runner": RUNNER_NAME, "event": "deny", "reason": reason, "skill": req.skill, "action": req.action})
         return {"ok": False, "error": reason, "skill": req.skill, "action": req.action}
+
+    if req.skill == "playwright-mcp" and req.action == "smoke":
+        result = _handle_playwright_smoke(req.payload or {})
+        audit({
+            "ts": now,
+            "runner": RUNNER_NAME,
+            "event": "executed",
+            "skill": req.skill,
+            "action": req.action,
+            "result_ok": bool(result.get("ok")),
+        })
+        return {
+            "runner": RUNNER_NAME,
+            "skill": req.skill,
+            "action": req.action,
+            **result,
+        }
 
     audit({
         "ts": now,

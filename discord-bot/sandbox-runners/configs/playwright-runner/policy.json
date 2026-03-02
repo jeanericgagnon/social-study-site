@@ -5,7 +5,22 @@
       "smoke": {
         "enabled": true,
         "requireUrl": true,
-        "allowedDomains": ["example.com"],
+        "allowedDomains": [
+          "example.com",
+          "theknot.com",
+          "zola.com",
+          "weddingwire.com",
+          "joy.com",
+          "withjoy.com",
+          "minted.com",
+          "wix.com",
+          "squarespace.com",
+          "strikingly.com",
+          "webflow.com",
+          "wordpress.com",
+          "showit.com",
+          "carrd.co"
+        ],
         "maxPayloadKeys": 5
       }
     },
@@ -13,7 +28,21 @@
       "scrape": {
         "enabled": true,
         "requireUrl": true,
-        "allowedDomains": ["example.com"],
+        "allowedDomains": [
+          "theknot.com",
+          "zola.com",
+          "weddingwire.com",
+          "joy.com",
+          "withjoy.com",
+          "minted.com",
+          "wix.com",
+          "squarespace.com",
+          "strikingly.com",
+          "webflow.com",
+          "wordpress.com",
+          "showit.com",
+          "carrd.co"
+        ],
         "requiredFields": ["url"],
         "maxPayloadKeys": 8
       }

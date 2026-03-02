@@ -138,6 +138,17 @@ def _extract_links(base_url: str, html: str) -> list[str]:
     return out
 
 
+def _classify_url(url: str) -> str:
+    p = (urlparse(url).path or "").lower()
+    if any(k in p for k in ["registry", "gift-registry", "wedding-registry"]):
+        return "registry"
+    if any(k in p for k in ["template", "design", "themes", "gallery", "examples", "showcase"]):
+        return "templates"
+    if any(k in p for k in ["website-builder", "build", "website", "create", "maker", "features"]):
+        return "builder"
+    return "other"
+
+
 def _same_domain(a: str, b: str) -> bool:
     try:
         ha = (urlparse(a).hostname or "").lower()
@@ -211,6 +222,7 @@ def _handle_playwright_scrape(payload: Dict[str, Any], action_cfg: Dict[str, Any
     queue = [start_url]
     visited = set()
     pages = []
+    discovered = {"builder": [], "registry": [], "templates": []}
 
     while queue and len(pages) < max_pages:
         url = queue.pop(0)
@@ -220,15 +232,24 @@ def _handle_playwright_scrape(payload: Dict[str, Any], action_cfg: Dict[str, Any
 
         try:
             page = _fetch_page(url, timeout_s)
+            final_url = page["finalUrl"]
             pages.append({
-                "url": page["finalUrl"],
+                "url": final_url,
                 "status": page["status"],
                 "title": page["title"],
                 "contentType": page["contentType"],
             })
+
+            cls = _classify_url(final_url)
+            if cls in discovered and final_url not in discovered[cls]:
+                discovered[cls].append(final_url)
+
             for link in page["links"]:
                 if _same_domain(start_url, link) and link not in visited and link not in queue:
                     queue.append(link)
+                    lcls = _classify_url(link)
+                    if lcls in discovered and link not in discovered[lcls]:
+                        discovered[lcls].append(link)
         except HTTPError as e:
             pages.append({"url": url, "status": int(e.code), "error": "http_error"})
         except Exception:
@@ -241,6 +262,9 @@ def _handle_playwright_scrape(payload: Dict[str, Any], action_cfg: Dict[str, Any
         "pagesCrawled": len(pages),
         "maxPages": max_pages,
         "pages": pages,
+        "builderPages": discovered["builder"],
+        "registryPages": discovered["registry"],
+        "templatePages": discovered["templates"],
     }
 
 

@@ -12,14 +12,9 @@
           "weddingwire.com",
           "joy.com",
           "withjoy.com",
-          "minted.com",
-          "wix.com",
-          "squarespace.com",
-          "strikingly.com",
-          "webflow.com",
-          "wordpress.com",
-          "showit.com",
-          "carrd.co"
+          "appycouple.com",
+          "blissandbone.com",
+          "rileyandgrey.com"
         ],
         "maxPayloadKeys": 5
       }
@@ -34,14 +29,9 @@
           "weddingwire.com",
           "joy.com",
           "withjoy.com",
-          "minted.com",
-          "wix.com",
-          "squarespace.com",
-          "strikingly.com",
-          "webflow.com",
-          "wordpress.com",
-          "showit.com",
-          "carrd.co"
+          "appycouple.com",
+          "blissandbone.com",
+          "rileyandgrey.com"
         ],
         "requiredFields": ["url"],
         "maxPayloadKeys": 8

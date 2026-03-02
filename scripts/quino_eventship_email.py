@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
-import base64
+import argparse
 import datetime as dt
 import json
-from email.mime.text import MIMEText
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
@@ -14,15 +13,16 @@ from google.auth.exceptions import RefreshError
 LA = ZoneInfo("America/Los_Angeles")
 GCAL_DIR = Path("/Users/ericsysclaw/.openclaw/workspace/gcal")
 TOKEN_CANDIDATES = [
-    GCAL_DIR / "token_sys_send.json",
+    GCAL_DIR / "token_sys_send.json",  # includes chat + calendar scopes
+    GCAL_DIR / "token_chat_send.json",
     GCAL_DIR / "token_sys.json",
-    GCAL_DIR / "token_all.json",
-    GCAL_DIR / "token.json",
 ]
-
-# Authoritative source calendar(s) for this reminder.
-TARGET_CALENDAR_IDS = [
-    "eric@thesocial.study",
+TARGET_CALENDAR_IDS = ["eric@thesocial.study"]
+CHAT_SPACE_FILE = GCAL_DIR / "eventship_chat_space.txt"
+CHAT_RECIPIENTS = [
+    "users/eric@thesocial.study",
+    "users/quino@thesocial.study",
+    "users/nick@thesocial.study",
 ]
 
 
@@ -35,12 +35,20 @@ def load_creds():
     for token_path in existing:
         data = json.loads(token_path.read_text())
         scopes = set(data.get("scopes") or [])
-        has_gmail_send = (
-            "https://www.googleapis.com/auth/gmail.send" in scopes
-            or "https://mail.google.com/" in scopes
+        has_calendar = any(s.startswith("https://www.googleapis.com/auth/calendar") for s in scopes)
+        has_chat_send = (
+            "https://www.googleapis.com/auth/chat.messages.create" in scopes
+            or "https://www.googleapis.com/auth/chat.messages" in scopes
         )
-        if not has_gmail_send:
-            errors.append(f"{token_path.name}: missing gmail.send scope")
+        has_chat_spaces = (
+            "https://www.googleapis.com/auth/chat.spaces" in scopes
+            or "https://www.googleapis.com/auth/chat.spaces.create" in scopes
+        )
+        if not has_calendar:
+            errors.append(f"{token_path.name}: missing calendar scope")
+            continue
+        if not has_chat_send:
+            errors.append(f"{token_path.name}: missing chat.messages.create scope")
             continue
 
         creds = Credentials(
@@ -53,8 +61,6 @@ def load_creds():
         )
 
         try:
-            # Proactively validate the token so revoked/invalid refresh tokens
-            # fail fast here (instead of failing later mid-request).
             if creds and creds.refresh_token:
                 creds.refresh(Request())
                 data["token"] = creds.token
@@ -62,7 +68,7 @@ def load_creds():
             elif not creds.valid:
                 errors.append(f"{token_path.name}: token invalid and no refresh_token")
                 continue
-            return creds
+            return creds, has_chat_spaces
         except RefreshError as e:
             errors.append(f"{token_path.name}: refresh failed ({e})")
             continue
@@ -94,9 +100,9 @@ def is_eventship(ev: dict) -> bool:
     return "eventship" in hay
 
 
-def get_target_events(cal_service):
+def get_target_events(cal_service, days_out=3):
     now = dt.datetime.now(LA)
-    target_day = now.date() + dt.timedelta(days=3)
+    target_day = now.date() + dt.timedelta(days=days_out)
 
     start = dt.datetime.combine(target_day, dt.time(0, 0), tzinfo=LA)
     end = start + dt.timedelta(days=1)
@@ -108,24 +114,18 @@ def get_target_events(cal_service):
     for cal_id in TARGET_CALENDAR_IDS:
         try:
             meta = cal_service.calendars().get(calendarId=cal_id).execute()
-            cal_name = meta.get("summary", cal_id)
-            calendars.append({"id": cal_id, "summary": cal_name})
+            calendars.append({"id": cal_id, "summary": meta.get("summary", cal_id)})
         except Exception:
-            # If explicit calendar is not accessible, skip it.
             continue
 
     if not calendars:
-        raise SystemExit(
-            "No accessible target calendars. Ensure this token can read eric@thesocial.study."
-        )
+        raise SystemExit("No accessible target calendars. Ensure token can read eric@thesocial.study")
 
     for c in calendars:
-        cal_id = c.get("id")
-        cal_name = c.get("summary", "(unknown)")
         rows = (
             cal_service.events()
             .list(
-                calendarId=cal_id,
+                calendarId=c["id"],
                 timeMin=time_min,
                 timeMax=time_max,
                 singleEvents=True,
@@ -149,7 +149,7 @@ def get_target_events(cal_service):
                     "date": str(target_day),
                     "time": local_time_label(raw),
                     "venue": (ev.get("location") or "").strip(),
-                    "calendar": cal_name,
+                    "calendar": c["summary"],
                 }
             )
 
@@ -157,46 +157,64 @@ def get_target_events(cal_service):
     return target_day, events
 
 
-def send_email(gmail_service, to_addr: str, subject: str, body: str):
-    msg = MIMEText(body)
-    msg["to"] = to_addr
-    msg["subject"] = subject
-    raw = base64.urlsafe_b64encode(msg.as_bytes()).decode("utf-8")
-    gmail_service.users().messages().send(userId="me", body={"raw": raw}).execute()
+def ensure_chat_space(chat_service, can_create_space: bool) -> str:
+    if CHAT_SPACE_FILE.exists():
+        s = CHAT_SPACE_FILE.read_text().strip()
+        if s.startswith("spaces/"):
+            return s
+
+    if not can_create_space:
+        raise SystemExit("Missing stored chat space id and token lacks chat.spaces create scope")
+
+    body = {
+        "space": {"spaceType": "GROUP_CHAT", "displayName": "Eventship 3-day alerts"},
+        "memberships": [{"member": {"name": m}} for m in CHAT_RECIPIENTS],
+    }
+    created = chat_service.spaces().setup(body=body).execute()
+    space = created.get("name")
+    if not space:
+        raise SystemExit("Failed to create Chat space")
+    CHAT_SPACE_FILE.write_text(space + "\n")
+    return space
 
 
-def main():
-    creds = load_creds()
-    cal = build("calendar", "v3", credentials=creds, cache_discovery=False)
-    gmail = build("gmail", "v1", credentials=creds, cache_discovery=False)
-
-    target_day, events = get_target_events(cal)
-    if not events:
-        print("NO_REPLY")
-        return
-
-    recipients = ["eric@thesocial.study", "quino@thesocial.study"]
-
+def build_message(events):
     lines = [
-        "Hi Eric and Quino,",
-        "",
-        "Heads up: these Eventship/Social Study events are 3 days out.",
+        "Heads up: these Eventship events are 3 days out.",
         "Please confirm ticket release time, venue, and speaker for each:",
         "",
     ]
     for e in events:
         venue = e.get("venue") or "(venue missing — confirm venue)"
-        lines.append(f"- {e['date']} • {e['time']} — {e['title']}")
-        lines.append(f"  - Ticket release time: (confirm)")
+        lines.append(f"• {e['date']} • {e['time']} — {e['title']}")
+        lines.append("  - Ticket release time: (confirm)")
         lines.append(f"  - Venue: {venue}")
-        lines.append(f"  - Speaker: (confirm)")
-    lines += ["", "Thanks,", "Sys"]
+        lines.append("  - Speaker: (confirm)")
+    return "\n".join(lines)
 
-    subject = f"[3-day event check] {len(events)} Eventship event(s) for {target_day.isoformat()}"
-    body = "\n".join(lines)
-    for recipient in recipients:
-        send_email(gmail, recipient, subject, body)
-    print(f"SENT {len(events)} to {', '.join(recipients)}")
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--dry-run", action="store_true")
+    args = ap.parse_args()
+
+    creds, can_create_space = load_creds()
+    cal = build("calendar", "v3", credentials=creds, cache_discovery=False)
+    chat = build("chat", "v1", credentials=creds, cache_discovery=False)
+
+    target_day, events = get_target_events(cal, days_out=3)
+    if not events:
+        print("NO_REPLY")
+        return
+
+    text = build_message(events)
+    if args.dry_run:
+        print(text)
+        return
+
+    space = ensure_chat_space(chat, can_create_space)
+    chat.spaces().messages().create(parent=space, body={"text": text}).execute()
+    print(f"SENT {len(events)} to {space}")
 
 
 if __name__ == "__main__":

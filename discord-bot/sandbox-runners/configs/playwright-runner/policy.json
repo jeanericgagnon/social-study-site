@@ -31,6 +31,7 @@
       "scrape": {
         "enabled": true,
         "requireUrl": true,
+        "maxPages": 25,
         "allowedDomains": [
           "theknot.com",
           "zola.com",

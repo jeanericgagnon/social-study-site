@@ -2,7 +2,7 @@ from fastapi import FastAPI, Header, Request
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 from typing import Any, Dict, Optional
-from urllib.parse import urlparse
+from urllib.parse import urlparse, urljoin
 import os
 import json
 import hmac
@@ -118,43 +118,130 @@ def _extract_title(html: str) -> str:
     return re.sub(r"\s+", " ", m.group(1)).strip()[:200]
 
 
+def _extract_links(base_url: str, html: str) -> list[str]:
+    links = []
+    for m in re.finditer(r'href=["\']([^"\']+)["\']', html, flags=re.IGNORECASE):
+        href = (m.group(1) or "").strip()
+        if not href or href.startswith(("#", "mailto:", "tel:", "javascript:")):
+            continue
+        abs_url = urljoin(base_url, href)
+        if abs_url.startswith(("http://", "https://")):
+            links.append(abs_url)
+    # stable unique order
+    out = []
+    seen = set()
+    for u in links:
+        key = u.split("#", 1)[0]
+        if key not in seen:
+            seen.add(key)
+            out.append(key)
+    return out
+
+
+def _same_domain(a: str, b: str) -> bool:
+    try:
+        ha = (urlparse(a).hostname or "").lower()
+        hb = (urlparse(b).hostname or "").lower()
+        return ha == hb
+    except Exception:
+        return False
+
+
+def _fetch_page(url: str, timeout_s: int) -> Dict[str, Any]:
+    req = Request(
+        url,
+        headers={
+            "User-Agent": "SandboxRunner/1.0 (+playwright-scraper)",
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        },
+        method="GET",
+    )
+    with urlopen(req, timeout=timeout_s) as resp:
+        body_bytes = resp.read(32768)
+        content_type = resp.headers.get("Content-Type", "")
+        status = int(getattr(resp, "status", 200))
+        final_url = resp.geturl()
+        html = body_bytes.decode("utf-8", errors="ignore")
+        return {
+            "status": status,
+            "finalUrl": final_url,
+            "contentType": content_type,
+            "title": _extract_title(html),
+            "bytesRead": len(body_bytes),
+            "links": _extract_links(final_url, html),
+        }
+
+
 def _handle_playwright_smoke(payload: Dict[str, Any]) -> Dict[str, Any]:
     url = payload.get("url", "")
     timeout_s = int(payload.get("timeoutSec", 10))
     timeout_s = max(2, min(timeout_s, 20))
 
-    req = Request(
-        url,
-        headers={
-            "User-Agent": "SandboxRunner/1.0 (+playwright-mcp-smoke)",
-            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-        },
-        method="GET",
-    )
-
     try:
-        with urlopen(req, timeout=timeout_s) as resp:
-            body_bytes = resp.read(16384)
-            content_type = resp.headers.get("Content-Type", "")
-            status = getattr(resp, "status", 200)
-            final_url = resp.geturl()
-            html = body_bytes.decode("utf-8", errors="ignore")
-            title = _extract_title(html)
-            return {
-                "ok": True,
-                "mode": "real-handler",
-                "status": int(status),
-                "finalUrl": final_url,
-                "contentType": content_type,
-                "title": title,
-                "bytesRead": len(body_bytes),
-            }
+        page = _fetch_page(url, timeout_s)
+        return {
+            "ok": True,
+            "mode": "real-handler",
+            "status": int(page["status"]),
+            "finalUrl": page["finalUrl"],
+            "contentType": page["contentType"],
+            "title": page["title"],
+            "bytesRead": page["bytesRead"],
+        }
     except HTTPError as e:
         return {"ok": False, "mode": "real-handler", "error": "http_error", "status": int(e.code)}
     except URLError as e:
         return {"ok": False, "mode": "real-handler", "error": "network_error", "detail": str(e.reason)}
     except Exception:
         return {"ok": False, "mode": "real-handler", "error": "smoke_failed"}
+
+
+def _handle_playwright_scrape(payload: Dict[str, Any], action_cfg: Dict[str, Any]) -> Dict[str, Any]:
+    start_url = str(payload.get("url", "")).strip()
+    if not start_url:
+        return {"ok": False, "mode": "real-handler", "error": "invalid_url"}
+
+    timeout_s = int(payload.get("timeoutSec", 10))
+    timeout_s = max(2, min(timeout_s, 20))
+
+    policy_max_pages = int(action_cfg.get("maxPages", 20))
+    req_max_pages = int(payload.get("maxPages", min(10, policy_max_pages)))
+    max_pages = max(1, min(req_max_pages, policy_max_pages))
+
+    queue = [start_url]
+    visited = set()
+    pages = []
+
+    while queue and len(pages) < max_pages:
+        url = queue.pop(0)
+        if url in visited:
+            continue
+        visited.add(url)
+
+        try:
+            page = _fetch_page(url, timeout_s)
+            pages.append({
+                "url": page["finalUrl"],
+                "status": page["status"],
+                "title": page["title"],
+                "contentType": page["contentType"],
+            })
+            for link in page["links"]:
+                if _same_domain(start_url, link) and link not in visited and link not in queue:
+                    queue.append(link)
+        except HTTPError as e:
+            pages.append({"url": url, "status": int(e.code), "error": "http_error"})
+        except Exception:
+            pages.append({"url": url, "error": "fetch_failed"})
+
+    return {
+        "ok": True,
+        "mode": "real-handler",
+        "startUrl": start_url,
+        "pagesCrawled": len(pages),
+        "maxPages": max_pages,
+        "pages": pages,
+    }
 
 
 def _handle_automation_run(payload: Dict[str, Any], action_cfg: Dict[str, Any]) -> Dict[str, Any]:
@@ -258,6 +345,24 @@ def run(req: RunRequest, x_runner_token: Optional[str] = Header(default=None)):
             "skill": req.skill,
             "action": req.action,
             "result_ok": bool(result.get("ok")),
+        })
+        return {
+            "runner": RUNNER_NAME,
+            "skill": req.skill,
+            "action": req.action,
+            **result,
+        }
+
+    if req.skill == "playwright-scraper-skill" and req.action == "scrape":
+        result = _handle_playwright_scrape(req.payload or {}, action_cfg)
+        audit({
+            "ts": now,
+            "runner": RUNNER_NAME,
+            "event": "executed",
+            "skill": req.skill,
+            "action": req.action,
+            "result_ok": bool(result.get("ok")),
+            "pagesCrawled": result.get("pagesCrawled"),
         })
         return {
             "runner": RUNNER_NAME,

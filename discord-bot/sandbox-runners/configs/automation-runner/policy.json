@@ -5,6 +5,7 @@
       "run": {
         "enabled": true,
         "requiredFields": ["workflowId"],
+        "allowedWorkflowIds": ["smoke-test"],
         "maxPayloadKeys": 10
       }
     }

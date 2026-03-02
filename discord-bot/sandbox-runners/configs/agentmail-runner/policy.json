@@ -1,19 +1,8 @@
 {
-  "allowedSkills": ["agentmail"],
-  "actions": {
-    "agentmail": {
-      "send": {
-        "enabled": true,
-        "requireTo": true,
-        "allowedRecipientDomains": ["thesocial.study"],
-        "requiredFields": ["to", "subject", "templateId"],
-        "allowedTemplateIds": ["brief-v1", "alert-v1"],
-        "maxSubjectLength": 120,
-        "maxBodyLength": 4000,
-        "maxPayloadKeys": 12
-      }
-    }
-  },
+  "allowedSkills": [],
+  "actions": {},
+  "disabled": true,
+  "reason": "Agentmail unhooked per user request",
   "network": {
     "egressMode": "allowlist",
     "notes": "Enforce with host firewall/proxy."

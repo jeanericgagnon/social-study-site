@@ -51,6 +51,12 @@ python3 dispatch.py --skill agentmail --action send \
 
 Optional: override routing via `--routes path/to/routes.json`.
 
+Or use the shell wrapper (auto-loads `.env`):
+
+```bash
+./run-skill.sh playwright-mcp smoke '{"url":"https://example.com"}'
+```
+
 ## Expand with a new sandbox
 1. Create `configs/<new-runner>/policy.json`
 2. Copy a service block in `docker-compose.yml`

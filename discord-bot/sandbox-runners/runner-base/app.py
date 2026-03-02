@@ -176,6 +176,43 @@ def _handle_automation_run(payload: Dict[str, Any], action_cfg: Dict[str, Any]) 
     }
 
 
+def _handle_agentmail_send(payload: Dict[str, Any], action_cfg: Dict[str, Any]) -> Dict[str, Any]:
+    to = str(payload.get("to", "")).strip().lower()
+    subject = str(payload.get("subject", "")).strip()
+    body = str(payload.get("body", "")).strip()
+    template_id = str(payload.get("templateId", "")).strip()
+
+    if not to or "@" not in to:
+        return {"ok": False, "mode": "real-handler", "error": "invalid_recipient"}
+    if not subject:
+        return {"ok": False, "mode": "real-handler", "error": "missing_subject"}
+
+    max_subject_len = int(action_cfg.get("maxSubjectLength", 120))
+    if len(subject) > max_subject_len:
+        return {"ok": False, "mode": "real-handler", "error": "subject_too_long"}
+
+    allowed_templates = [str(x) for x in action_cfg.get("allowedTemplateIds", [])]
+    if allowed_templates:
+        if not template_id:
+            return {"ok": False, "mode": "real-handler", "error": "missing_template_id"}
+        if template_id not in allowed_templates:
+            return {"ok": False, "mode": "real-handler", "error": "template_not_allowed", "templateId": template_id}
+
+    max_body_len = int(action_cfg.get("maxBodyLength", 4000))
+    if body and len(body) > max_body_len:
+        return {"ok": False, "mode": "real-handler", "error": "body_too_long"}
+
+    return {
+        "ok": True,
+        "mode": "real-handler",
+        "result": "queued",
+        "to": to,
+        "subject": subject,
+        "templateId": template_id or None,
+        "note": "Message accepted by policy gates. Mail transport hook not yet attached.",
+    }
+
+
 @app.get("/health")
 def health():
     return {
@@ -239,6 +276,25 @@ def run(req: RunRequest, x_runner_token: Optional[str] = Header(default=None)):
             "action": req.action,
             "result_ok": bool(result.get("ok")),
             "workflowId": (req.payload or {}).get("workflowId"),
+        })
+        return {
+            "runner": RUNNER_NAME,
+            "skill": req.skill,
+            "action": req.action,
+            **result,
+        }
+
+    if req.skill == "agentmail" and req.action == "send":
+        result = _handle_agentmail_send(req.payload or {}, action_cfg)
+        audit({
+            "ts": now,
+            "runner": RUNNER_NAME,
+            "event": "executed",
+            "skill": req.skill,
+            "action": req.action,
+            "result_ok": bool(result.get("ok")),
+            "to": (req.payload or {}).get("to"),
+            "templateId": (req.payload or {}).get("templateId"),
         })
         return {
             "runner": RUNNER_NAME,

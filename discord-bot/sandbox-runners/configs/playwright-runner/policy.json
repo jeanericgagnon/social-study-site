@@ -14,7 +14,15 @@
           "withjoy.com",
           "appycouple.com",
           "blissandbone.com",
-          "rileyandgrey.com"
+          "rileyandgrey.com",
+          "minted.com",
+          "hitched.co.uk",
+          "weddingchicks.com",
+          "greenvelope.com",
+          "sayido.com",
+          "joyfulwedding.co",
+          "wedsites.com",
+          "weddingwoo.com"
         ],
         "maxPayloadKeys": 5
       }
@@ -31,7 +39,15 @@
           "withjoy.com",
           "appycouple.com",
           "blissandbone.com",
-          "rileyandgrey.com"
+          "rileyandgrey.com",
+          "minted.com",
+          "hitched.co.uk",
+          "weddingchicks.com",
+          "greenvelope.com",
+          "sayido.com",
+          "joyfulwedding.co",
+          "wedsites.com",
+          "weddingwoo.com"
         ],
         "requiredFields": ["url"],
         "maxPayloadKeys": 8

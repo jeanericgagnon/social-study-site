@@ -142,11 +142,44 @@ def _classify_url(url: str) -> str:
     p = (urlparse(url).path or "").lower()
     if any(k in p for k in ["registry", "gift-registry", "wedding-registry"]):
         return "registry"
-    if any(k in p for k in ["template", "design", "themes", "gallery", "examples", "showcase"]):
+    if any(k in p for k in ["template", "templates", "design", "designs", "themes", "gallery", "examples", "showcase", "inspiration"]):
         return "templates"
-    if any(k in p for k in ["website-builder", "build", "website", "create", "maker", "features"]):
+    if any(k in p for k in ["website-builder", "build", "website", "create", "maker", "features", "wedding-planning/website"]):
         return "builder"
     return "other"
+
+
+def _probe_known_paths(start_url: str, timeout_s: int) -> list[dict]:
+    host = f"{urlparse(start_url).scheme}://{urlparse(start_url).netloc}"
+    candidates = [
+        "/templates",
+        "/template",
+        "/designs",
+        "/themes",
+        "/gallery",
+        "/showcase",
+        "/wedding-website/templates",
+        "/wedding-websites/templates",
+        "/wedding-planning/website/templates",
+        "/wedding-planning/website/designs",
+        "/wedding-registry",
+        "/registry",
+        "/wedding-planning/website",
+    ]
+    out = []
+    seen = set()
+    for p in candidates:
+        u = host + p
+        if u in seen:
+            continue
+        seen.add(u)
+        try:
+            pg = _fetch_page(u, timeout_s)
+            if pg.get("status") == 200:
+                out.append({"url": pg["finalUrl"], "status": pg["status"], "title": pg["title"], "contentType": pg["contentType"]})
+        except Exception:
+            continue
+    return out
 
 
 def _same_domain(a: str, b: str) -> bool:
@@ -254,6 +287,15 @@ def _handle_playwright_scrape(payload: Dict[str, Any], action_cfg: Dict[str, Any
             pages.append({"url": url, "status": int(e.code), "error": "http_error"})
         except Exception:
             pages.append({"url": url, "error": "fetch_failed"})
+
+    # fallback probes for common template/registry/builder paths
+    probed = _probe_known_paths(start_url, timeout_s)
+    for p in probed:
+        cls = _classify_url(p["url"])
+        if cls in discovered and p["url"] not in discovered[cls]:
+            discovered[cls].append(p["url"])
+        if not any(existing.get("url") == p["url"] for existing in pages):
+            pages.append(p)
 
     return {
         "ok": True,

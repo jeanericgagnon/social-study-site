@@ -13,7 +13,9 @@ This is an isolated local runner layer for skills. Your chat agents stay as-is; 
 cd sandbox-runners
 cp .env.example .env
 # Replace tokens in .env with long random values
+# If you have Docker Compose plugin:
 docker compose --env-file .env up -d --build
+# If plugin is unavailable on this host, use direct docker run (see below commands).
 ```
 
 ## Health check

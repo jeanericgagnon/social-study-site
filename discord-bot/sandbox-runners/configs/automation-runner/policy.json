@@ -1,15 +1,16 @@
 {
-  "allowedSkills": ["automation-workflows", "agentmail"],
+  "allowedSkills": ["automation-workflows"],
   "actions": {
     "automation-workflows": {
-      "run": { "enabled": true }
-    },
-    "agentmail": {
-      "send": { "enabled": true }
+      "run": {
+        "enabled": true,
+        "requiredFields": ["workflowId"],
+        "maxPayloadKeys": 10
+      }
     }
   },
   "network": {
     "egressMode": "allowlist",
-    "notes": "Use host firewall or egress proxy to enforce domain allowlist"
+    "notes": "Enforce with host firewall/proxy."
   }
 }

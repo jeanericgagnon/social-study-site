@@ -6,17 +6,21 @@ services:
       RUNNER_NAME: playwright-runner
       RUNNER_POLICY: /config/policy.json
       RUNNER_API_TOKEN: ${PLAYWRIGHT_RUNNER_TOKEN}
+      RUNNER_RATE_LIMIT_PER_MIN: 120
     volumes:
       - ./configs/playwright-runner:/config:ro
     ports:
       - "127.0.0.1:19081:8080"
     read_only: true
     tmpfs:
-      - /tmp
+      - /tmp:rw,noexec,nosuid,nodev,size=64m
     security_opt:
       - no-new-privileges:true
     cap_drop:
       - ALL
+    pids_limit: 128
+    mem_limit: 256m
+    cpus: 0.50
     restart: unless-stopped
 
   automation-runner:
@@ -26,17 +30,21 @@ services:
       RUNNER_NAME: automation-runner
       RUNNER_POLICY: /config/policy.json
       RUNNER_API_TOKEN: ${AUTOMATION_RUNNER_TOKEN}
+      RUNNER_RATE_LIMIT_PER_MIN: 120
     volumes:
       - ./configs/automation-runner:/config:ro
     ports:
       - "127.0.0.1:19082:8080"
     read_only: true
     tmpfs:
-      - /tmp
+      - /tmp:rw,noexec,nosuid,nodev,size=64m
     security_opt:
       - no-new-privileges:true
     cap_drop:
       - ALL
+    pids_limit: 128
+    mem_limit: 256m
+    cpus: 0.50
     restart: unless-stopped
 
   agentmail-runner:
@@ -46,15 +54,19 @@ services:
       RUNNER_NAME: agentmail-runner
       RUNNER_POLICY: /config/policy.json
       RUNNER_API_TOKEN: ${AGENTMAIL_RUNNER_TOKEN}
+      RUNNER_RATE_LIMIT_PER_MIN: 60
     volumes:
       - ./configs/agentmail-runner:/config:ro
     ports:
       - "127.0.0.1:19083:8080"
     read_only: true
     tmpfs:
-      - /tmp
+      - /tmp:rw,noexec,nosuid,nodev,size=64m
     security_opt:
       - no-new-privileges:true
     cap_drop:
       - ALL
+    pids_limit: 128
+    mem_limit: 256m
+    cpus: 0.50
     restart: unless-stopped

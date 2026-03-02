@@ -1,0 +1,15 @@
+{
+  "allowedSkills": ["playwright-mcp", "playwright-scraper-skill"],
+  "actions": {
+    "playwright-mcp": {
+      "smoke": { "enabled": true }
+    },
+    "playwright-scraper-skill": {
+      "scrape": { "enabled": true }
+    }
+  },
+  "network": {
+    "egressMode": "allowlist",
+    "notes": "Use host firewall or egress proxy to enforce domain allowlist"
+  }
+}

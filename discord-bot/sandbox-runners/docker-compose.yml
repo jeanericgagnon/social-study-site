@@ -1,0 +1,60 @@
+services:
+  playwright-runner:
+    build: ./runner-base
+    container_name: playwright-runner
+    environment:
+      RUNNER_NAME: playwright-runner
+      RUNNER_POLICY: /config/policy.json
+      RUNNER_API_TOKEN: ${PLAYWRIGHT_RUNNER_TOKEN}
+    volumes:
+      - ./configs/playwright-runner:/config:ro
+    ports:
+      - "127.0.0.1:19081:8080"
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    restart: unless-stopped
+
+  automation-runner:
+    build: ./runner-base
+    container_name: automation-runner
+    environment:
+      RUNNER_NAME: automation-runner
+      RUNNER_POLICY: /config/policy.json
+      RUNNER_API_TOKEN: ${AUTOMATION_RUNNER_TOKEN}
+    volumes:
+      - ./configs/automation-runner:/config:ro
+    ports:
+      - "127.0.0.1:19082:8080"
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    restart: unless-stopped
+
+  agentmail-runner:
+    build: ./runner-base
+    container_name: agentmail-runner
+    environment:
+      RUNNER_NAME: agentmail-runner
+      RUNNER_POLICY: /config/policy.json
+      RUNNER_API_TOKEN: ${AGENTMAIL_RUNNER_TOKEN}
+    volumes:
+      - ./configs/agentmail-runner:/config:ro
+    ports:
+      - "127.0.0.1:19083:8080"
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    restart: unless-stopped

@@ -1,0 +1,12 @@
+{
+  "allowedSkills": ["agentmail"],
+  "actions": {
+    "agentmail": {
+      "send": { "enabled": true }
+    }
+  },
+  "network": {
+    "egressMode": "allowlist",
+    "notes": "Use host firewall or egress proxy to enforce domain allowlist"
+  }
+}

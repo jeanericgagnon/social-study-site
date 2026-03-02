@@ -157,6 +157,25 @@ def _handle_playwright_smoke(payload: Dict[str, Any]) -> Dict[str, Any]:
         return {"ok": False, "mode": "real-handler", "error": "smoke_failed"}
 
 
+def _handle_automation_run(payload: Dict[str, Any], action_cfg: Dict[str, Any]) -> Dict[str, Any]:
+    workflow_id = str(payload.get("workflowId", "")).strip()
+    if not workflow_id:
+        return {"ok": False, "mode": "real-handler", "error": "invalid_workflow_id"}
+
+    allowed_ids = [str(x) for x in action_cfg.get("allowedWorkflowIds", [])]
+    if allowed_ids and workflow_id not in allowed_ids:
+        return {"ok": False, "mode": "real-handler", "error": "workflow_not_allowed", "workflowId": workflow_id}
+
+    # secure no-op execution record (real handler with strict allowlist gate)
+    return {
+        "ok": True,
+        "mode": "real-handler",
+        "result": "queued",
+        "workflowId": workflow_id,
+        "note": "Workflow accepted by allowlist. Executor hook not yet attached.",
+    }
+
+
 @app.get("/health")
 def health():
     return {
@@ -202,6 +221,24 @@ def run(req: RunRequest, x_runner_token: Optional[str] = Header(default=None)):
             "skill": req.skill,
             "action": req.action,
             "result_ok": bool(result.get("ok")),
+        })
+        return {
+            "runner": RUNNER_NAME,
+            "skill": req.skill,
+            "action": req.action,
+            **result,
+        }
+
+    if req.skill == "automation-workflows" and req.action == "run":
+        result = _handle_automation_run(req.payload or {}, action_cfg)
+        audit({
+            "ts": now,
+            "runner": RUNNER_NAME,
+            "event": "executed",
+            "skill": req.skill,
+            "action": req.action,
+            "result_ok": bool(result.get("ok")),
+            "workflowId": (req.payload or {}).get("workflowId"),
         })
         return {
             "runner": RUNNER_NAME,

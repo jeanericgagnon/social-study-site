@@ -105,8 +105,6 @@ def local_time_label(value: str) -> str:
 def is_eventship(ev: dict) -> bool:
     organizer = ((ev.get("organizer") or {}).get("email") or "").lower()
     creator = ((ev.get("creator") or {}).get("email") or "").lower()
-    if organizer == "events@eventship.com" or creator == "events@eventship.com":
-        return True
     hay = " ".join(
         [
             ev.get("summary", "") or "",
@@ -115,7 +113,15 @@ def is_eventship(ev: dict) -> bool:
             ev.get("htmlLink", "") or "",
         ]
     ).lower()
-    return "eventship" in hay
+    eventship_source = (
+        organizer == "events@eventship.com"
+        or creator == "events@eventship.com"
+        or "eventship" in hay
+    )
+    if not eventship_source:
+        return False
+    # Only include ticket-release related events.
+    return "ticket release" in hay or "release tickets" in hay
 
 
 def get_target_events(cal_service, days_out=3):
@@ -198,7 +204,7 @@ def ensure_chat_space(chat_service, can_create_space: bool) -> str:
 
 def build_message(events):
     lines = [
-        "Heads up: these Eventship events are 3 days out.",
+        "Heads up: The Social Study events are 3 days out.",
         "Please confirm ticket release time, venue, and speaker for each:",
         "",
     ]

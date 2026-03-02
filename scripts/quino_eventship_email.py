@@ -205,7 +205,8 @@ def build_message(events):
         "",
     ]
     for e in events:
-        venue = e.get("venue") or "(venue missing — confirm venue)"
+        raw_venue = (e.get("venue") or "").strip()
+        venue = raw_venue.split(",", 1)[0].strip() if raw_venue else "(venue missing — confirm venue)"
         lines.append(f"• {e['title']}")
         lines.append(f"  - Date/Time: {e['date']} • {e['time']}")
         lines.append("  - Release returned tickets")

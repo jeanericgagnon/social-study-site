@@ -3,6 +3,7 @@ import argparse
 import base64
 import datetime as dt
 import json
+from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from pathlib import Path
 from zoneinfo import ZoneInfo
@@ -145,6 +146,7 @@ def get_target_events(cal_service, days_out=3):
                     "date": str(target_day),
                     "time": local_time_label(raw),
                     "venue": (ev.get("location") or "").strip(),
+                    "link": ev.get("htmlLink") or "",
                 }
             )
 
@@ -163,16 +165,43 @@ def build_message(events):
         venue = raw_venue.split(",", 1)[0].strip() if raw_venue else "(venue missing — confirm venue)"
         lines.append(f"• {e['title']}")
         lines.append(f"  - Date/Time: {e['date']} • {e['time']}")
+        if e.get("link"):
+            lines.append(f"  - Calendar link: {e['link']}")
         lines.append("  - Release returned tickets")
         lines.append("  - Confirm speaker")
         lines.append(f"  - Confirm venue: {venue}")
     return "\n".join(lines)
 
 
-def send_email(gmail_service, to_addr: str, subject: str, body: str):
-    msg = MIMEText(body)
+def build_message_html(events):
+    html = [
+        f"<p><strong>Heads up: The Social Study events are 3 days out ({len(events)} total).</strong><br>"
+        "Remember to release returned tickets, confirm speaker, and confirm venue:</p>",
+        "<ul>",
+    ]
+    for e in events:
+        raw_venue = (e.get("venue") or "").strip()
+        venue = raw_venue.split(",", 1)[0].strip() if raw_venue else "(venue missing — confirm venue)"
+        title = e.get("title", "(no title)")
+        link = e.get("link") or ""
+        title_html = f'<a href="{link}">{title}</a>' if link else title
+        html.append("<li>")
+        html.append(f"<div><strong>{title_html}</strong></div>")
+        html.append(f"<div>Date/Time: {e['date']} • {e['time']}</div>")
+        html.append("<div>Release returned tickets</div>")
+        html.append("<div>Confirm speaker</div>")
+        html.append(f"<div>Confirm venue: {venue}</div>")
+        html.append("</li>")
+    html.append("</ul>")
+    return "\n".join(html)
+
+
+def send_email(gmail_service, to_addr: str, subject: str, body_text: str, body_html: str):
+    msg = MIMEMultipart("alternative")
     msg["to"] = to_addr
     msg["subject"] = subject
+    msg.attach(MIMEText(body_text, "plain"))
+    msg.attach(MIMEText(body_html, "html"))
     raw = base64.urlsafe_b64encode(msg.as_bytes()).decode("utf-8")
     gmail_service.users().messages().send(userId="me", body={"raw": raw}).execute()
 
@@ -194,6 +223,7 @@ def main():
         return
 
     text = build_message(events)
+    html = build_message_html(events)
     if args.dry_run:
         print(text)
         return
@@ -201,7 +231,7 @@ def main():
     subject = f"[3-day check] The Social Study events for {target_day.isoformat()}"
     recipients = [args.test_to] if args.test_to else RECIPIENTS
     for r in recipients:
-        send_email(gmail, r, subject, text)
+        send_email(gmail, r, subject, text, html)
     print(f"SENT {len(events)} event(s) to {', '.join(recipients)}")
 
 

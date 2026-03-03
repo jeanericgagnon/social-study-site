@@ -2,16 +2,28 @@
 import argparse
 import base64
 import datetime as dt
+import io
 import json
+import re
+import zipfile
+import xml.etree.ElementTree as ET
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from pathlib import Path
+from urllib.parse import quote
 from zoneinfo import ZoneInfo
 
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 from google.auth.exceptions import RefreshError
+
+SPEAKER_SHEET_IDS = {
+    "denver": "1YSm5-vQpLO3UXbyGnD_GiKLHyW_aYllt4eygQvNsR7s",
+    "san_diego": "1QwuvyafuH70TRiMTRsx1sWVq4BQcWjuWdwDzAX0fAg8",
+    "orange_county": "17bWdWuWCm1ngX3A1MK5Dzccu3RMUxrtO2F4GX5h-YAk",
+}
+DISCLAIMER = "Note: If the spreadsheet hasn’t been updated, speaker names and venues may be outdated."
 
 LA = ZoneInfo("America/Los_Angeles")
 GCAL_DIR = Path("/Users/ericsysclaw/.openclaw/workspace/gcal")
@@ -108,6 +120,120 @@ def is_eventship(ev: dict) -> bool:
     return organizer == "events@eventship.com" or creator == "events@eventship.com" or "eventship" in hay
 
 
+def _normalize(s: str) -> str:
+    return re.sub(r"[^a-z0-9]+", "", (s or "").lower())
+
+
+def _parse_event_day(value: str):
+    if not value:
+        return None
+    v = value.strip().replace("st", "").replace("nd", "").replace("rd", "").replace("th", "")
+    for fmt in ("%B %d", "%b %d", "%B %d, %Y", "%b %d, %Y"):
+        try:
+            d = dt.datetime.strptime(v, fmt).date()
+            if d.year == 1900:
+                d = d.replace(year=dt.datetime.now(LA).year)
+            return d
+        except ValueError:
+            continue
+    return None
+
+
+def _read_calendar_rows_from_xlsx_bytes(xlsx_bytes: bytes):
+    z = zipfile.ZipFile(io.BytesIO(xlsx_bytes))
+    sst = []
+    if "xl/sharedStrings.xml" in z.namelist():
+        root = ET.fromstring(z.read("xl/sharedStrings.xml"))
+        ns = {"a": "http://schemas.openxmlformats.org/spreadsheetml/2006/main"}
+        for si in root.findall("a:si", ns):
+            sst.append("".join((t.text or "") for t in si.findall(".//a:t", ns)))
+
+    wb = ET.fromstring(z.read("xl/workbook.xml"))
+    ns = {
+        "a": "http://schemas.openxmlformats.org/spreadsheetml/2006/main",
+        "r": "http://schemas.openxmlformats.org/officeDocument/2006/relationships",
+    }
+    rid = None
+    for s in wb.findall("a:sheets/a:sheet", ns):
+        if s.attrib.get("name") == "Calendar":
+            rid = s.attrib.get("{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id")
+            break
+    if not rid:
+        return []
+
+    rels = ET.fromstring(z.read("xl/_rels/workbook.xml.rels"))
+    nsr = {"a": "http://schemas.openxmlformats.org/package/2006/relationships"}
+    id_to_target = {r.attrib["Id"]: r.attrib["Target"] for r in rels.findall("a:Relationship", nsr)}
+    target = "xl/" + id_to_target[rid].lstrip("/")
+
+    root = ET.fromstring(z.read(target))
+    ns2 = {"a": "http://schemas.openxmlformats.org/spreadsheetml/2006/main"}
+
+    def col_to_idx(col: str) -> int:
+        n = 0
+        for c in col:
+            n = n * 26 + ord(c) - 64
+        return n - 1
+
+    rows = []
+    for row in root.findall(".//a:sheetData/a:row", ns2):
+        vals = {}
+        for c in row.findall("a:c", ns2):
+            ref = c.attrib.get("r", "A1")
+            m = re.match(r"([A-Z]+)", ref)
+            idx = col_to_idx(m.group(1)) if m else 0
+            t = c.attrib.get("t")
+            v = c.find("a:v", ns2)
+            val = ""
+            if v is not None:
+                raw = v.text or ""
+                if t == "s" and raw.isdigit() and int(raw) < len(sst):
+                    val = sst[int(raw)]
+                else:
+                    val = raw
+            vals[idx] = val.strip()
+        if vals:
+            maxc = max(vals)
+            rows.append([vals.get(i, "") for i in range(maxc + 1)])
+    return rows
+
+
+def get_speaker_lookup(drive_service):
+    rows = []
+    for _, fid in SPEAKER_SHEET_IDS.items():
+        try:
+            data = (
+                drive_service.files()
+                .export_media(
+                    fileId=fid,
+                    mimeType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                )
+                .execute()
+            )
+            rows.extend(_read_calendar_rows_from_xlsx_bytes(data))
+        except Exception:
+            continue
+
+    out = []
+    for r in rows[1:]:
+        pad = r + [""] * max(0, 10 - len(r))
+        event_date = _parse_event_day(pad[2] if len(pad) > 2 else "")
+        speaker = (pad[3] if len(pad) > 3 else "").strip()
+        venue = (pad[5] if len(pad) > 5 and pad[5] else (pad[4] if len(pad) > 4 else "")).strip()
+        title = (pad[9] if len(pad) > 9 and pad[9] else (pad[8] if len(pad) > 8 else "")).strip()
+        if not event_date:
+            continue
+        out.append({
+            "date": event_date,
+            "speaker": speaker,
+            "venue": venue,
+            "title": title,
+            "title_n": _normalize(title),
+            "venue_n": _normalize(venue),
+        })
+    return out
+
+
 def get_target_events(cal_service, days_out=3):
     now = dt.datetime.now(LA)
     target_day = now.date() + dt.timedelta(days=days_out)
@@ -147,11 +273,40 @@ def get_target_events(cal_service, days_out=3):
                     "time": local_time_label(raw),
                     "venue": (ev.get("location") or "").strip(),
                     "link": ev.get("htmlLink") or "",
+                    "speaker": "",
                 }
             )
 
     events.sort(key=lambda x: (x["date"], x["time"], x["title"]))
     return target_day, events
+
+
+def attach_speakers_from_sheet(events, speaker_rows):
+    for e in events:
+        t = _normalize(e.get("title", ""))
+        v = _normalize((e.get("venue") or "").split(",", 1)[0])
+        event_date = dt.date.fromisoformat(e["date"])
+        match = None
+        for row in speaker_rows:
+            if row.get("date") != event_date:
+                continue
+            if row.get("title_n") and row["title_n"] == t:
+                match = row
+                break
+            if row.get("venue_n") and row["venue_n"] and row["venue_n"] == v:
+                match = row
+        if match:
+            if match.get("speaker"):
+                e["speaker"] = match["speaker"]
+            if match.get("venue"):
+                e["venue"] = match["venue"]
+
+
+def _gmail_compose_url(subject: str, body: str) -> str:
+    return (
+        "https://mail.google.com/mail/?view=cm&fs=1"
+        f"&su={quote(subject)}&body={quote(body)}"
+    )
 
 
 def build_message(events):
@@ -163,13 +318,32 @@ def build_message(events):
     for e in events:
         raw_venue = (e.get("venue") or "").strip()
         venue = raw_venue.split(",", 1)[0].strip() if raw_venue else "(venue missing — confirm venue)"
+        speaker = (e.get("speaker") or "(speaker missing — confirm speaker)").strip()
+
+        venue_subject = f"Venue Check-In | {e['date']} | {venue}"
+        venue_body = (
+            f"Hi there,\n\nQuick check-in for The Social Study event on {e['date']} at {venue}. "
+            "Can you confirm everything is set on your end?\n\nThanks!"
+        )
+        speaker_subject = f"Speaker Check-In | {e['date']} | {e['title']}"
+        speaker_body = (
+            f"Hi {speaker.split()[0] if speaker and '(' not in speaker else ''},\n\n"
+            f"Quick check-in for your The Social Study talk on {e['date']} at {venue}. "
+            "Looking forward to having you.\n\nThanks!"
+        ).strip()
+
         lines.append(f"• {e['title']}")
         lines.append(f"  - Date/Time: {e['date']} • {e['time']}")
+        lines.append(f"  - Speaker: {speaker}")
         if e.get("link"):
             lines.append(f"  - Calendar link: {e['link']}")
         lines.append("  - Release returned tickets")
         lines.append("  - Confirm speaker")
         lines.append(f"  - Confirm venue: {venue}")
+        lines.append(f"  - Venue draft link: {_gmail_compose_url(venue_subject, venue_body)}")
+        lines.append(f"  - Speaker draft link: {_gmail_compose_url(speaker_subject, speaker_body)}")
+        lines.append("")
+    lines.append(DISCLAIMER)
     return "\n".join(lines)
 
 
@@ -182,17 +356,33 @@ def build_message_html(events):
     for e in events:
         raw_venue = (e.get("venue") or "").strip()
         venue = raw_venue.split(",", 1)[0].strip() if raw_venue else "(venue missing — confirm venue)"
+        speaker = (e.get("speaker") or "(speaker missing — confirm speaker)").strip()
         title = e.get("title", "(no title)")
         link = e.get("link") or ""
         title_html = f'<a href="{link}">{title}</a>' if link else title
+        venue_subject = f"Venue Check-In | {e['date']} | {venue}"
+        venue_body = (
+            f"Hi there,\n\nQuick check-in for The Social Study event on {e['date']} at {venue}. "
+            "Can you confirm everything is set on your end?\n\nThanks!"
+        )
+        speaker_subject = f"Speaker Check-In | {e['date']} | {e['title']}"
+        speaker_body = (
+            f"Hi {speaker.split()[0] if speaker and '(' not in speaker else ''},\n\n"
+            f"Quick check-in for your The Social Study talk on {e['date']} at {venue}. "
+            "Looking forward to having you.\n\nThanks!"
+        ).strip()
         html.append("<li>")
         html.append(f"<div><strong>{title_html}</strong></div>")
         html.append(f"<div>Date/Time: {e['date']} • {e['time']}</div>")
+        html.append(f"<div>Speaker: {speaker}</div>")
         html.append("<div>Release returned tickets</div>")
         html.append("<div>Confirm speaker</div>")
         html.append(f"<div>Confirm venue: {venue}</div>")
+        html.append(f"<div><a href=\"{_gmail_compose_url(venue_subject, venue_body)}\">Venue draft link</a></div>")
+        html.append(f"<div><a href=\"{_gmail_compose_url(speaker_subject, speaker_body)}\">Speaker draft link</a></div>")
         html.append("</li>")
     html.append("</ul>")
+    html.append(f"<p><em>{DISCLAIMER}</em></p>")
     return "\n".join(html)
 
 
@@ -215,12 +405,19 @@ def main():
     cal_creds = load_calendar_creds()
     send_creds = load_send_creds()
     cal = build("calendar", "v3", credentials=cal_creds, cache_discovery=False)
+    drive = build("drive", "v3", credentials=cal_creds, cache_discovery=False)
     gmail = build("gmail", "v1", credentials=send_creds, cache_discovery=False)
 
     target_day, events = get_target_events(cal, days_out=3)
     if not events:
         print("NO_REPLY")
         return
+
+    try:
+        speaker_rows = get_speaker_lookup(drive)
+        attach_speakers_from_sheet(events, speaker_rows)
+    except Exception:
+        pass
 
     text = build_message(events)
     html = build_message_html(events)

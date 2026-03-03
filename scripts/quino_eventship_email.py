@@ -397,9 +397,9 @@ def build_message(events):
         county = _infer_county(e)
 
         event_day = dt.date.fromisoformat(e["date"]).strftime("%A")
-        venue_subject = f"Looking forward to {event_day} at {venue}"
+        venue_subject = f"Looking forward to {event_day}"
         venue_body = (
-            f"Hi there,\n\nReminder for \"{e['title']}\" on {e['date']} at {venue}. Looking forward to {event_day}!\n\n"
+            f"Hey (fill in name),\n\nLooking forward to {event_day}!\n\n"
             "As a reminder:\n"
             "- Our team will be there around 5:00 PM\n"
             "- Doors open at 6:00 PM\n"
@@ -451,9 +451,9 @@ def build_message_html(events):
         link = e.get("link") or ""
         title_html = f'<a href="{link}">{title}</a>' if link else title
         event_day = dt.date.fromisoformat(e["date"]).strftime("%A")
-        venue_subject = f"Looking forward to {event_day} at {venue}"
+        venue_subject = f"Looking forward to {event_day}"
         venue_body = (
-            f"Hi there,\n\nReminder for \"{e['title']}\" on {e['date']} at {venue}. Looking forward to {event_day}!\n\n"
+            f"Hey (fill in name),\n\nLooking forward to {event_day}!\n\n"
             "As a reminder:\n"
             "- Our team will be there around 5:00 PM\n"
             "- Doors open at 6:00 PM\n"

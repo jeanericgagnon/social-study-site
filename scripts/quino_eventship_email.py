@@ -40,7 +40,8 @@ CITY_TO_COUNTY = {
     "englewood": "Arapahoe County",
     "arvada": "Jefferson County",
 }
-DISCLAIMER = "Note: If the spreadsheet hasn’t been updated, speaker names and venues may be outdated."
+DISCLAIMER = "Note: If the spreadsheet hasn't been updated, speaker names and venues may be outdated."
+VENUE_REGISTER_ID = "1RBr8ei6HvrxY5BKgL9niQ9Xk5Bv49HoBU_NYAF0wUyE"
 
 LA = ZoneInfo("America/Los_Angeles")
 GCAL_DIR = Path("/Users/ericsysclaw/.openclaw/workspace/gcal")
@@ -156,7 +157,7 @@ def _parse_event_day(value: str):
     return None
 
 
-def _read_calendar_rows_from_xlsx_bytes(xlsx_bytes: bytes):
+def _read_calendar_rows_from_xlsx_bytes(xlsx_bytes: bytes, sheet_name: str = "Calendar"):
     z = zipfile.ZipFile(io.BytesIO(xlsx_bytes))
     sst = []
     if "xl/sharedStrings.xml" in z.namelist():
@@ -172,7 +173,7 @@ def _read_calendar_rows_from_xlsx_bytes(xlsx_bytes: bytes):
     }
     rid = None
     for s in wb.findall("a:sheets/a:sheet", ns):
-        if s.attrib.get("name") == "Calendar":
+        if s.attrib.get("name") == sheet_name:
             rid = s.attrib.get("{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id")
             break
     if not rid:
@@ -253,6 +254,31 @@ def get_speaker_lookup(drive_service):
     return out
 
 
+def get_venue_address_lookup(drive_service):
+    try:
+        data = (
+            drive_service.files()
+            .export_media(
+                fileId=VENUE_REGISTER_ID,
+                mimeType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            )
+            .execute()
+        )
+    except Exception:
+        return {}
+
+    lookup = {}
+    for tab in ("San Diego", "OC", "Denver"):
+        sheets = _read_calendar_rows_from_xlsx_bytes(data, sheet_name=tab)
+        for r in sheets[1:]:
+            pad = r + [""] * max(0, 5 - len(r))
+            venue = (pad[0] if len(pad) > 0 else "").strip()
+            address = (pad[4] if len(pad) > 4 else "").strip()
+            if venue and address:
+                lookup[_normalize(venue)] = address
+    return lookup
+
+
 def get_target_events(cal_service, days_out=3):
     now = dt.datetime.now(LA)
     target_day = now.date() + dt.timedelta(days=days_out)
@@ -326,6 +352,14 @@ def attach_speakers_from_sheet(events, speaker_rows):
                 e["city"] = match["city"]
 
 
+def attach_addresses_from_sheet(events, venue_lookup):
+    for e in events:
+        venue = (e.get("venue") or "").split(",", 1)[0].strip()
+        address = venue_lookup.get(_normalize(venue))
+        if address:
+            e["address"] = address
+
+
 def _gmail_compose_url(subject: str, body: str) -> str:
     return (
         "https://mail.google.com/mail/?view=cm&fs=1"
@@ -357,28 +391,32 @@ def build_message(events):
     ]
     for e in events:
         raw_venue = (e.get("venue") or "").strip()
-        venue = raw_venue.split(",", 1)[0].strip() if raw_venue else "(venue missing — confirm venue)"
+        venue = raw_venue.split(",", 1)[0].strip() if raw_venue else "(venue missing - confirm venue)"
         speaker_raw = (e.get("speaker") or "").strip()
-        speaker = _speaker_titlecase(speaker_raw) if speaker_raw else "(speaker missing — confirm speaker)"
+        speaker = _speaker_titlecase(speaker_raw) if speaker_raw else "(speaker missing - confirm speaker)"
         county = _infer_county(e)
 
         event_day = dt.date.fromisoformat(e["date"]).strftime("%A")
         venue_subject = f"Venue Reminder | {e['title']} | {e['date']}"
         venue_body = (
-            f"Hi there,\n\nReminder for \"{e['title']}\" on {e['date']} at {venue}. "
-            f"Looking forward to {event_day}! "
-            "As a reminder, our team will be there around 5:00 PM, doors open at 6:00 PM, "
-            "lecture starts at 7:00 PM, and will wrap up around 8:00–8:15 PM.\n\n"
+            f"Hi there,\n\nReminder for \"{e['title']}\" on {e['date']} at {venue}. Looking forward to {event_day}!\n\n"
+            "As a reminder:\n"
+            "- Our team will be there around 5:00 PM\n"
+            "- Doors open at 6:00 PM\n"
+            "- Lecture starts at 7:00 PM\n"
+            "- Wrap up is around 8:00-8:15 PM\n\n"
             "Please reply to confirm.\n\nThanks!"
         )
         speaker_subject = f"Speaker Check-In | {e['title']} | {e['date']}"
         first_name = speaker.split()[0] if speaker and "(" not in speaker else "there"
+        address = (e.get("address") or "").strip()
         speaker_body = (
-            f"Hi {first_name},\n\n"
-            f"Just a reminder that {event_day} is the big day! "
-            "Please plan to arrive at 6:00 PM for sound check and AV setup. "
-            "Let me know if you have any questions beforehand.\n\n"
-            "Looking forward to it!"
+            f"Hey {first_name},\n\n"
+            f"Just a reminder that {event_day} is the big day!\n\n"
+            "- Please arrive at 6:00 PM for sound check and AV setup\n"
+            + (f"- Address: {address}\n" if address else "")
+            + "- Let me know if you have any questions beforehand\n\n"
+            + "Looking forward to it!"
         ).strip()
 
         lines.append(f"• {e['title']}")
@@ -405,9 +443,9 @@ def build_message_html(events):
     ]
     for e in events:
         raw_venue = (e.get("venue") or "").strip()
-        venue = raw_venue.split(",", 1)[0].strip() if raw_venue else "(venue missing — confirm venue)"
+        venue = raw_venue.split(",", 1)[0].strip() if raw_venue else "(venue missing - confirm venue)"
         speaker_raw = (e.get("speaker") or "").strip()
-        speaker = _speaker_titlecase(speaker_raw) if speaker_raw else "(speaker missing — confirm speaker)"
+        speaker = _speaker_titlecase(speaker_raw) if speaker_raw else "(speaker missing - confirm speaker)"
         county = _infer_county(e)
         title = e.get("title", "(no title)")
         link = e.get("link") or ""
@@ -415,20 +453,24 @@ def build_message_html(events):
         event_day = dt.date.fromisoformat(e["date"]).strftime("%A")
         venue_subject = f"Venue Reminder | {e['title']} | {e['date']}"
         venue_body = (
-            f"Hi there,\n\nReminder for \"{e['title']}\" on {e['date']} at {venue}. "
-            f"Looking forward to {event_day}! "
-            "As a reminder, our team will be there around 5:00 PM, doors open at 6:00 PM, "
-            "lecture starts at 7:00 PM, and will wrap up around 8:00–8:15 PM.\n\n"
+            f"Hi there,\n\nReminder for \"{e['title']}\" on {e['date']} at {venue}. Looking forward to {event_day}!\n\n"
+            "As a reminder:\n"
+            "- Our team will be there around 5:00 PM\n"
+            "- Doors open at 6:00 PM\n"
+            "- Lecture starts at 7:00 PM\n"
+            "- Wrap up is around 8:00-8:15 PM\n\n"
             "Please reply to confirm.\n\nThanks!"
         )
         speaker_subject = f"Speaker Check-In | {e['title']} | {e['date']}"
         first_name = speaker.split()[0] if speaker and "(" not in speaker else "there"
+        address = (e.get("address") or "").strip()
         speaker_body = (
-            f"Hi {first_name},\n\n"
-            f"Just a reminder that {event_day} is the big day! "
-            "Please plan to arrive at 6:00 PM for sound check and AV setup. "
-            "Let me know if you have any questions beforehand.\n\n"
-            "Looking forward to it!"
+            f"Hey {first_name},\n\n"
+            f"Just a reminder that {event_day} is the big day!\n\n"
+            "- Please arrive at 6:00 PM for sound check and AV setup\n"
+            + (f"- Address: {address}\n" if address else "")
+            + "- Let me know if you have any questions beforehand\n\n"
+            + "Looking forward to it!"
         ).strip()
         html.append("<li>")
         html.append(f"<div><strong>{title_html}</strong></div>")
@@ -476,6 +518,8 @@ def main():
     try:
         speaker_rows = get_speaker_lookup(drive)
         attach_speakers_from_sheet(events, speaker_rows)
+        venue_lookup = get_venue_address_lookup(drive)
+        attach_addresses_from_sheet(events, venue_lookup)
     except Exception:
         pass
 

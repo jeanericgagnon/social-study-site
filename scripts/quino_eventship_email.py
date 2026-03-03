@@ -362,16 +362,22 @@ def build_message(events):
         speaker = _speaker_titlecase(speaker_raw) if speaker_raw else "(speaker missing — confirm speaker)"
         county = _infer_county(e)
 
-        venue_subject = f"Venue Check-In | {e['date']} | {venue}"
+        event_day = dt.date.fromisoformat(e["date"]).strftime("%A")
+        venue_subject = f"Venue Reminder | {e['title']} | {e['date']}"
         venue_body = (
-            f"Hi there,\n\nQuick check-in for The Social Study event on {e['date']} at {venue}. "
-            "Can you confirm everything is set on your end?\n\nThanks!"
+            f"Hi there,\n\nReminder for \"{e['title']}\" on {e['date']} at {venue}. "
+            "As a reminder, our team will be there around 5:00 PM, doors open at 6:00 PM, "
+            "lecture starts at 7:00 PM, and will wrap up around 8:00–8:15 PM.\n\n"
+            "Please let us know if anything has changed on your end.\n\nThanks!"
         )
-        speaker_subject = f"Speaker Check-In | {e['date']} | {e['title']}"
+        speaker_subject = f"Speaker Check-In | {e['title']} | {e['date']}"
+        first_name = speaker.split()[0] if speaker and "(" not in speaker else "there"
         speaker_body = (
-            f"Hi {speaker.split()[0] if speaker and '(' not in speaker else ''},\n\n"
-            f"Quick check-in for your The Social Study talk on {e['date']} at {venue}. "
-            "Looking forward to having you.\n\nThanks!"
+            f"Hi {first_name},\n\n"
+            f"Just a reminder that {event_day} is the big day! "
+            "Please plan to arrive at 6:00 PM for sound check and AV setup. "
+            "Let me know if you have any questions beforehand.\n\n"
+            "Looking forward to it!"
         ).strip()
 
         lines.append(f"• {e['title']}")
@@ -405,16 +411,22 @@ def build_message_html(events):
         title = e.get("title", "(no title)")
         link = e.get("link") or ""
         title_html = f'<a href="{link}">{title}</a>' if link else title
-        venue_subject = f"Venue Check-In | {e['date']} | {venue}"
+        event_day = dt.date.fromisoformat(e["date"]).strftime("%A")
+        venue_subject = f"Venue Reminder | {e['title']} | {e['date']}"
         venue_body = (
-            f"Hi there,\n\nQuick check-in for The Social Study event on {e['date']} at {venue}. "
-            "Can you confirm everything is set on your end?\n\nThanks!"
+            f"Hi there,\n\nReminder for \"{e['title']}\" on {e['date']} at {venue}. "
+            "As a reminder, our team will be there around 5:00 PM, doors open at 6:00 PM, "
+            "lecture starts at 7:00 PM, and will wrap up around 8:00–8:15 PM.\n\n"
+            "Please let us know if anything has changed on your end.\n\nThanks!"
         )
-        speaker_subject = f"Speaker Check-In | {e['date']} | {e['title']}"
+        speaker_subject = f"Speaker Check-In | {e['title']} | {e['date']}"
+        first_name = speaker.split()[0] if speaker and "(" not in speaker else "there"
         speaker_body = (
-            f"Hi {speaker.split()[0] if speaker and '(' not in speaker else ''},\n\n"
-            f"Quick check-in for your The Social Study talk on {e['date']} at {venue}. "
-            "Looking forward to having you.\n\nThanks!"
+            f"Hi {first_name},\n\n"
+            f"Just a reminder that {event_day} is the big day! "
+            "Please plan to arrive at 6:00 PM for sound check and AV setup. "
+            "Let me know if you have any questions beforehand.\n\n"
+            "Looking forward to it!"
         ).strip()
         html.append("<li>")
         html.append(f"<div><strong>{title_html}</strong></div>")

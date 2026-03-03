@@ -366,9 +366,10 @@ def build_message(events):
         venue_subject = f"Venue Reminder | {e['title']} | {e['date']}"
         venue_body = (
             f"Hi there,\n\nReminder for \"{e['title']}\" on {e['date']} at {venue}. "
+            f"Looking forward to {event_day}! "
             "As a reminder, our team will be there around 5:00 PM, doors open at 6:00 PM, "
             "lecture starts at 7:00 PM, and will wrap up around 8:00–8:15 PM.\n\n"
-            "Please let us know if anything has changed on your end.\n\nThanks!"
+            "Please reply to confirm.\n\nThanks!"
         )
         speaker_subject = f"Speaker Check-In | {e['title']} | {e['date']}"
         first_name = speaker.split()[0] if speaker and "(" not in speaker else "there"
@@ -415,9 +416,10 @@ def build_message_html(events):
         venue_subject = f"Venue Reminder | {e['title']} | {e['date']}"
         venue_body = (
             f"Hi there,\n\nReminder for \"{e['title']}\" on {e['date']} at {venue}. "
+            f"Looking forward to {event_day}! "
             "As a reminder, our team will be there around 5:00 PM, doors open at 6:00 PM, "
             "lecture starts at 7:00 PM, and will wrap up around 8:00–8:15 PM.\n\n"
-            "Please let us know if anything has changed on your end.\n\nThanks!"
+            "Please reply to confirm.\n\nThanks!"
         )
         speaker_subject = f"Speaker Check-In | {e['title']} | {e['date']}"
         first_name = speaker.split()[0] if speaker and "(" not in speaker else "there"

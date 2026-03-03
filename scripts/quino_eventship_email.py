@@ -397,7 +397,7 @@ def build_message(events):
         county = _infer_county(e)
 
         event_day = dt.date.fromisoformat(e["date"]).strftime("%A")
-        venue_subject = f"Venue Reminder | {e['title']} | {e['date']}"
+        venue_subject = f"Looking forward to {event_day} at {venue}"
         venue_body = (
             f"Hi there,\n\nReminder for \"{e['title']}\" on {e['date']} at {venue}. Looking forward to {event_day}!\n\n"
             "As a reminder:\n"
@@ -407,7 +407,7 @@ def build_message(events):
             "- Wrap up is around 8:00-8:15 PM\n\n"
             "Please reply to confirm.\n\nThanks!"
         )
-        speaker_subject = f"Speaker Check-In | {e['title']} | {e['date']}"
+        speaker_subject = f"Quick check-in for {event_day}: {e['title']}"
         first_name = speaker.split()[0] if speaker and "(" not in speaker else "there"
         address = (e.get("address") or "").strip()
         speaker_body = (
@@ -424,7 +424,7 @@ def build_message(events):
         lines.append(f"  - Speaker: {speaker}")
         lines.append(f"  - County: {county}")
         if e.get("link"):
-            lines.append(f"  - Calendar link: {e['link']}")
+            lines.append(f"  - Event link: {e['link']}")
         lines.append("  - Release returned tickets")
         lines.append("  - Confirm speaker")
         lines.append(f"  - Confirm venue: {venue}")
@@ -451,7 +451,7 @@ def build_message_html(events):
         link = e.get("link") or ""
         title_html = f'<a href="{link}">{title}</a>' if link else title
         event_day = dt.date.fromisoformat(e["date"]).strftime("%A")
-        venue_subject = f"Venue Reminder | {e['title']} | {e['date']}"
+        venue_subject = f"Looking forward to {event_day} at {venue}"
         venue_body = (
             f"Hi there,\n\nReminder for \"{e['title']}\" on {e['date']} at {venue}. Looking forward to {event_day}!\n\n"
             "As a reminder:\n"
@@ -461,7 +461,7 @@ def build_message_html(events):
             "- Wrap up is around 8:00-8:15 PM\n\n"
             "Please reply to confirm.\n\nThanks!"
         )
-        speaker_subject = f"Speaker Check-In | {e['title']} | {e['date']}"
+        speaker_subject = f"Quick check-in for {event_day}: {e['title']}"
         first_name = speaker.split()[0] if speaker and "(" not in speaker else "there"
         address = (e.get("address") or "").strip()
         speaker_body = (
@@ -475,6 +475,8 @@ def build_message_html(events):
         html.append("<li>")
         html.append(f"<div><strong>{title_html}</strong></div>")
         html.append(f"<div>Date/Time: {e['date']} • {e['time']}</div>")
+        if link:
+            html.append(f'<div>Event link: <a href="{link}">Open in Google Calendar</a></div>')
         html.append(f"<div>Speaker: {speaker}</div>")
         html.append(f"<div>County: {county}</div>")
         html.append("<div>Release returned tickets</div>")
@@ -529,7 +531,7 @@ def main():
         print(text)
         return
 
-    subject = f"[3-day check] The Social Study events for {target_day.isoformat()}"
+    subject = f"This week’s Social Study check-ins for {target_day.strftime('%A, %b %-d')}"
     recipients = [args.test_to] if args.test_to else RECIPIENTS
     for r in recipients:
         send_email(gmail, r, subject, text, html)

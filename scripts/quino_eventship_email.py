@@ -427,7 +427,7 @@ def build_message(events):
             "- Doors open at 6:00 PM\n"
             "- Lecture starts at 7:00 PM\n"
             "- Wrap up is around 8:00-8:15 PM\n\n"
-            "Please reply to confirm.\n\nThanks!"
+            "If you wouldn't mind responding to this just to confirm we are all set up.\n\nThanks!"
         )
         speaker_subject = f"Quick check-in for {event_day}: {e['title']}"
         first_name = speaker.split()[0] if speaker and "(" not in speaker else "there"
@@ -435,7 +435,7 @@ def build_message(events):
         speaker_body = (
             f"Hey {first_name},\n\n"
             f"Just a reminder that {event_day} is the big day!\n\n"
-            "- Please arrive at 6:00 PM for sound check and AV setup\n"
+            "- Please arrive at 6:30 PM for sound check and AV setup\n"
             + (f"- Address: {address}\n" if address else "")
             + "- If you wouldn't mind responding to this just to confirm we are all set up\n- Let me know if you have any questions beforehand\n\n"
             + "Looking forward to it!"
@@ -481,7 +481,7 @@ def build_message_html(events):
             "- Doors open at 6:00 PM\n"
             "- Lecture starts at 7:00 PM\n"
             "- Wrap up is around 8:00-8:15 PM\n\n"
-            "Please reply to confirm.\n\nThanks!"
+            "If you wouldn't mind responding to this just to confirm we are all set up.\n\nThanks!"
         )
         speaker_subject = f"Quick check-in for {event_day}: {e['title']}"
         first_name = speaker.split()[0] if speaker and "(" not in speaker else "there"
@@ -489,7 +489,7 @@ def build_message_html(events):
         speaker_body = (
             f"Hey {first_name},\n\n"
             f"Just a reminder that {event_day} is the big day!\n\n"
-            "- Please arrive at 6:00 PM for sound check and AV setup\n"
+            "- Please arrive at 6:30 PM for sound check and AV setup\n"
             + (f"- Address: {address}\n" if address else "")
             + "- If you wouldn't mind responding to this just to confirm we are all set up\n- Let me know if you have any questions beforehand\n\n"
             + "Looking forward to it!"

@@ -138,6 +138,28 @@ def is_eventship(ev: dict) -> bool:
     return organizer == "events@eventship.com" or creator == "events@eventship.com" or "eventship" in hay
 
 
+def _extract_event_link(ev: dict) -> str:
+    """Prefer the event/ticket URL from event content over Google Calendar links."""
+    text = "\n".join(
+        [
+            ev.get("description", "") or "",
+            ev.get("location", "") or "",
+            ev.get("summary", "") or "",
+        ]
+    )
+    urls = re.findall(r'https?://[^\s<>"\)]+', text)
+    # Prefer Eventship / direct ticketing URLs
+    for u in urls:
+        lu = u.lower()
+        if "eventship.com" in lu or "/tickets" in lu or "ticket" in lu:
+            return u.rstrip(".,)")
+    # Fallback to first URL in event content
+    if urls:
+        return urls[0].rstrip(".,)")
+    # Last resort: calendar html link
+    return ev.get("htmlLink") or ""
+
+
 def _normalize(s: str) -> str:
     return re.sub(r"[^a-z0-9]+", "", (s or "").lower())
 
@@ -320,7 +342,7 @@ def get_target_events(cal_service, days_out=3):
                     "time": local_time_label(raw),
                     "venue": raw_loc,
                     "city": loc_parts[1] if len(loc_parts) > 1 else "",
-                    "link": ev.get("htmlLink") or "",
+                    "link": _extract_event_link(ev),
                     "speaker": "",
                 }
             )
@@ -415,7 +437,7 @@ def build_message(events):
             f"Just a reminder that {event_day} is the big day!\n\n"
             "- Please arrive at 6:00 PM for sound check and AV setup\n"
             + (f"- Address: {address}\n" if address else "")
-            + "- Let me know if you have any questions beforehand\n\n"
+            + "- If you wouldn't mind responding to this just to confirm we are all set up\n- Let me know if you have any questions beforehand\n\n"
             + "Looking forward to it!"
         ).strip()
 
@@ -469,7 +491,7 @@ def build_message_html(events):
             f"Just a reminder that {event_day} is the big day!\n\n"
             "- Please arrive at 6:00 PM for sound check and AV setup\n"
             + (f"- Address: {address}\n" if address else "")
-            + "- Let me know if you have any questions beforehand\n\n"
+            + "- If you wouldn't mind responding to this just to confirm we are all set up\n- Let me know if you have any questions beforehand\n\n"
             + "Looking forward to it!"
         ).strip()
         html.append("<li>")

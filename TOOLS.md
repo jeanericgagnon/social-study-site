@@ -62,8 +62,7 @@ Add whatever helps you do your job. This is your cheat sheet.
 
 ## Skill sandbox safety notes
 
-### Transcribee
-- Installed skill path: `~/.openclaw/workspace/.agents/skills/transcribee`
-- Safe wrapper: `sandbox-runners/transcribee/run-safe.sh`
-- Policy doc: `sandbox-runners/transcribee/SECURITY-POLICY.md`
+### Whisper (OpenAI)
+- Safe wrapper: `sandbox-runners/whisper/run-safe.sh`
+- Policy doc: `sandbox-runners/whisper/SECURITY-POLICY.md`
 - Shared reference file: `~/Desktop/OPENCLAW_TOOL_SAFETY_REFERENCE.md`

@@ -23,6 +23,23 @@ SPEAKER_SHEET_IDS = {
     "san_diego": "1QwuvyafuH70TRiMTRsx1sWVq4BQcWjuWdwDzAX0fAg8",
     "orange_county": "17bWdWuWCm1ngX3A1MK5Dzccu3RMUxrtO2F4GX5h-YAk",
 }
+CITY_TO_COUNTY = {
+    "mission valley": "San Diego County",
+    "old town": "San Diego County",
+    "normal heights": "San Diego County",
+    "north park": "San Diego County",
+    "miramar": "San Diego County",
+    "santa ana": "Orange County",
+    "huntington beach": "Orange County",
+    "costa mesa": "Orange County",
+    "anaheim": "Orange County",
+    "placentia": "Orange County",
+    "lodo": "Denver County",
+    "downtown": "Denver County",
+    "north park hill": "Denver County",
+    "englewood": "Arapahoe County",
+    "arvada": "Jefferson County",
+}
 DISCLAIMER = "Note: If the spreadsheet hasn’t been updated, speaker names and venues may be outdated."
 
 LA = ZoneInfo("America/Los_Angeles")
@@ -223,10 +240,12 @@ def get_speaker_lookup(drive_service):
         title = (pad[9] if len(pad) > 9 and pad[9] else (pad[8] if len(pad) > 8 else "")).strip()
         if not event_date:
             continue
+        city = (pad[8] if len(pad) > 8 and pad[8] else (pad[6] if len(pad) > 6 else "")).strip()
         out.append({
             "date": event_date,
             "speaker": speaker,
             "venue": venue,
+            "city": city,
             "title": title,
             "title_n": _normalize(title),
             "venue_n": _normalize(venue),
@@ -266,12 +285,15 @@ def get_target_events(cal_service, days_out=3):
                 continue
             if not is_eventship(ev):
                 continue
+            raw_loc = (ev.get("location") or "").strip()
+            loc_parts = [p.strip() for p in raw_loc.split(",") if p.strip()]
             events.append(
                 {
                     "title": ev.get("summary", "(no title)"),
                     "date": str(target_day),
                     "time": local_time_label(raw),
-                    "venue": (ev.get("location") or "").strip(),
+                    "venue": raw_loc,
+                    "city": loc_parts[1] if len(loc_parts) > 1 else "",
                     "link": ev.get("htmlLink") or "",
                     "speaker": "",
                 }
@@ -297,9 +319,11 @@ def attach_speakers_from_sheet(events, speaker_rows):
                 match = row
         if match:
             if match.get("speaker"):
-                e["speaker"] = match["speaker"]
+                e["speaker"] = _speaker_titlecase(match["speaker"])
             if match.get("venue"):
                 e["venue"] = match["venue"]
+            if match.get("city"):
+                e["city"] = match["city"]
 
 
 def _gmail_compose_url(subject: str, body: str) -> str:
@@ -307,6 +331,22 @@ def _gmail_compose_url(subject: str, body: str) -> str:
         "https://mail.google.com/mail/?view=cm&fs=1"
         f"&su={quote(subject)}&body={quote(body)}"
     )
+
+
+def _speaker_titlecase(name: str) -> str:
+    return " ".join(w.capitalize() for w in (name or "").split())
+
+
+def _infer_county(e: dict) -> str:
+    city_area = (e.get("city") or "").strip().lower()
+    if city_area in CITY_TO_COUNTY:
+        return CITY_TO_COUNTY[city_area]
+    venue = (e.get("venue") or "").lower()
+    if "club 616" in venue or "novo" in venue or "societe" in venue:
+        return "San Diego County" if "societe" in venue or "novo" in venue else "Orange County"
+    if "station 26" in venue or "wynkoop" in venue:
+        return "Denver County"
+    return "County unknown"
 
 
 def build_message(events):
@@ -318,7 +358,9 @@ def build_message(events):
     for e in events:
         raw_venue = (e.get("venue") or "").strip()
         venue = raw_venue.split(",", 1)[0].strip() if raw_venue else "(venue missing — confirm venue)"
-        speaker = (e.get("speaker") or "(speaker missing — confirm speaker)").strip()
+        speaker_raw = (e.get("speaker") or "").strip()
+        speaker = _speaker_titlecase(speaker_raw) if speaker_raw else "(speaker missing — confirm speaker)"
+        county = _infer_county(e)
 
         venue_subject = f"Venue Check-In | {e['date']} | {venue}"
         venue_body = (
@@ -335,6 +377,7 @@ def build_message(events):
         lines.append(f"• {e['title']}")
         lines.append(f"  - Date/Time: {e['date']} • {e['time']}")
         lines.append(f"  - Speaker: {speaker}")
+        lines.append(f"  - County: {county}")
         if e.get("link"):
             lines.append(f"  - Calendar link: {e['link']}")
         lines.append("  - Release returned tickets")
@@ -356,7 +399,9 @@ def build_message_html(events):
     for e in events:
         raw_venue = (e.get("venue") or "").strip()
         venue = raw_venue.split(",", 1)[0].strip() if raw_venue else "(venue missing — confirm venue)"
-        speaker = (e.get("speaker") or "(speaker missing — confirm speaker)").strip()
+        speaker_raw = (e.get("speaker") or "").strip()
+        speaker = _speaker_titlecase(speaker_raw) if speaker_raw else "(speaker missing — confirm speaker)"
+        county = _infer_county(e)
         title = e.get("title", "(no title)")
         link = e.get("link") or ""
         title_html = f'<a href="{link}">{title}</a>' if link else title
@@ -375,6 +420,7 @@ def build_message_html(events):
         html.append(f"<div><strong>{title_html}</strong></div>")
         html.append(f"<div>Date/Time: {e['date']} • {e['time']}</div>")
         html.append(f"<div>Speaker: {speaker}</div>")
+        html.append(f"<div>County: {county}</div>")
         html.append("<div>Release returned tickets</div>")
         html.append("<div>Confirm speaker</div>")
         html.append(f"<div>Confirm venue: {venue}</div>")

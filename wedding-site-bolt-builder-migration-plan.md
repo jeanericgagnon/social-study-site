@@ -157,3 +157,18 @@
 - Variant add/apply action still routes through existing `onSelect` behavior.
 - No changes to variant data definitions or adapters.
 - No persistence/service changes.
+
+## Batch 7 — Control flow hardening (completed)
+
+### Implemented
+- Added `Escape` key handling in `TemplateGalleryPanel` to close the top-most layer first:
+  - confirm modal
+  - details modal
+  - compare modal
+  - apply-result modal
+  - then the gallery panel
+- Hardened `VariantPicker` keyboard navigation so it ignores key commands while typing in inputs/textareas/selects/contenteditable targets.
+
+### Safety notes
+- No business logic changes in template apply or variant selection flows.
+- Changes are interaction safety/UX only.

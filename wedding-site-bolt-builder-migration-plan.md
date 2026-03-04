@@ -133,3 +133,14 @@
 - No changes to preload/apply business logic.
 - No changes to template data source.
 - Existing content-preservation + undo behavior remains intact.
+
+## Batch 5 — Variant browsing skin refresh (completed)
+
+### Implemented
+- Updated variant selection UI in `src/builder/components/BuilderInspectorPanel.tsx` from a compact dropdown to pill-style variant chips.
+- Chips are now directly clickable and visibly reflect active variant state, aligning with gallery-style variant browsing patterns.
+
+### Safety notes
+- Variant source remains Bolt canonical manifests (`manifest.variantMeta`).
+- `handleChangeVariant` action unchanged (same state update path).
+- No data or service contract changes.

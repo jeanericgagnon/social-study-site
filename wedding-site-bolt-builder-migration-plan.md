@@ -273,3 +273,20 @@
 - Variant apply flow unchanged (`onSelect`).
 - No schema/store/service changes.
 - Preserves existing canonical Bolt variants.
+
+## Big Batch D — Hardening + functional lock (completed)
+
+### Implemented
+- Added robust gallery close handler in `TemplateGalleryPanel` that clears transient UI state on close:
+  - confirm/details/compare modal states
+  - compare selections
+  - panel close action
+- Unified close paths (overlay click, close button, Escape flow, post-apply handoff) to use the same close handler.
+- Locked workspace tab behavior in `BuilderShell`:
+  - selecting Variants now closes Template Gallery intentionally
+  - added in-context variants mode guidance banner to avoid dead-end state perception
+
+### Safety notes
+- No changes to apply-template or publish/save logic.
+- No data contract or schema changes.
+- Flow reliability improved for modal stack + tab transitions.

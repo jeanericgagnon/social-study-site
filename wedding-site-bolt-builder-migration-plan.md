@@ -172,3 +172,18 @@
 ### Safety notes
 - No business logic changes in template apply or variant selection flows.
 - Changes are interaction safety/UX only.
+
+## Batch 8 — Adapter/state hardening pass (completed)
+
+### Implemented
+- Hardened template search matching in `TemplateGalleryPanel` by introducing a normalized searchable text composition over:
+  - `displayName`
+  - `description` (safe optional fallback)
+  - mood tags
+  - template id
+- This reduces UI fragility if optional fields are missing and improves search resilience without changing data contracts.
+
+### Safety notes
+- No changes to store shape or adapter contracts.
+- No template application logic changes.
+- Filtering behavior remains additive to existing mood/color/season filters.

@@ -217,3 +217,21 @@
 
 ### QA execution note
 - Next phase: run typecheck/build plus targeted functional smoke through builder tab flows.
+
+## Big Batch A — Full UI surface port (completed)
+
+### Implemented
+- Reworked Builder workspace macro header in `BuilderShell` to better match a gallery-driven app frame:
+  - segmented tab-style controls (Editor / Templates / Variants) with active-state styling
+  - integrated tab behavior for opening/closing Template Gallery from workspace controls
+  - passive Variants tab state retained for progressive wiring
+- Added a compact metrics strip under the workspace controls to mirror dashboard-like information hierarchy:
+  - template count
+  - active page section count
+  - total section count
+- Improved copy and framing language to reflect template-driven editing context.
+
+### Safety notes
+- No changes to save/publish/business logic.
+- No changes to canonical template or variant data sources.
+- Existing editor and inspector flows remain intact.

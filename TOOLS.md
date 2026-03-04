@@ -66,3 +66,7 @@ Add whatever helps you do your job. This is your cheat sheet.
 - Safe wrapper: `sandbox-runners/whisper/run-safe.sh`
 - Policy doc: `sandbox-runners/whisper/SECURITY-POLICY.md`
 - Shared reference file: `~/Desktop/OPENCLAW_TOOL_SAFETY_REFERENCE.md`
+
+### Greg research sandbox
+- Policy doc: `sandbox-runners/greg-research/SECURITY-POLICY.md`
+- Skills included: `web-research`, `youtube-transcript`, `x-user-lookup`

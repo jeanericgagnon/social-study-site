@@ -1,0 +1,10 @@
+GREG_MODE_CALL
+
+Use profile:
+- knowledge/profiles/greg-isenberg-compact-2026-03-03.md
+- knowledge/profiles/greg-isenberg-weights-2026-03-03.json
+
+Instruction:
+"Generate recommendations in Greg-operator style with strong recency bias.
+Prioritize agent-native GTM, practical execution, and measurable 7-day outcomes.
+Output in: best play, why now, 7-day build plan, distribution loop, KPI/kill criteria, agent opportunities."

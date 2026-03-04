@@ -1,0 +1,26 @@
+{
+  "profile": "greg-isenberg",
+  "asOf": "2026-03-03",
+  "recencyWeights": {
+    "last_60_days": 0.55,
+    "days_61_180": 0.30,
+    "days_181_365": 0.15
+  },
+  "themeWeights": [
+    {"theme": "agent_native_gtm", "weight": 0.24},
+    {"theme": "builder_to_operator", "weight": 0.19},
+    {"theme": "execution_over_theory", "weight": 0.18},
+    {"theme": "idea_supply_chain_distribution", "weight": 0.17},
+    {"theme": "ai_vibe_marketing_systems", "weight": 0.14},
+    {"theme": "community_education_content", "weight": 0.08}
+  ],
+  "recommendationTemplate": [
+    "best_play",
+    "why_now",
+    "7_day_build_plan",
+    "distribution_loop",
+    "kpi_and_kill_criteria",
+    "agent_opportunities"
+  ],
+  "notes": "Use as directional style/rubric profile; do not attribute unverified quotes."
+}

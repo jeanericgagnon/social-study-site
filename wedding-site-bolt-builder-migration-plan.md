@@ -144,3 +144,16 @@
 - Variant source remains Bolt canonical manifests (`manifest.variantMeta`).
 - `handleChangeVariant` action unchanged (same state update path).
 - No data or service contract changes.
+
+## Batch 6 — Variant picker navigation polish (completed)
+
+### Implemented
+- Enhanced `VariantPicker` in `src/builder/components/BuilderSidebarLibrary.tsx` with keyboard navigation:
+  - `ArrowDown`/`ArrowUp` to move through variant cards
+  - `Enter` to apply the currently active variant
+- Added keyboard-active visual highlighting on variant cards so pointer and keyboard interactions share the same selection affordance.
+
+### Safety notes
+- Variant add/apply action still routes through existing `onSelect` behavior.
+- No changes to variant data definitions or adapters.
+- No persistence/service changes.

@@ -106,3 +106,18 @@
 - No service/backend changes.
 - Existing canvas/editor/publish/save flows unchanged.
 - Existing template data source and apply logic unchanged.
+
+## Batch 3 — Template Gallery Skin Swap (completed)
+
+### Implemented
+- Upgraded template gallery panel UX in `src/builder/components/TemplateGalleryPanel.tsx` with a top search row aligned to `wedding-site-builder` browsing patterns.
+- Added template search support over:
+  - display name
+  - description
+  - mood tags
+- Added live result count badge in the search row.
+
+### Safety notes
+- Existing Bolt template source remains unchanged.
+- Existing template apply flow and content-preservation logic unchanged.
+- Existing mood/color/season filters preserved and now compose with search.

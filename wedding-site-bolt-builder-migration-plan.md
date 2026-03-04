@@ -235,3 +235,23 @@
 - No changes to save/publish/business logic.
 - No changes to canonical template or variant data sources.
 - Existing editor and inspector flows remain intact.
+
+## Big Batch B — Template experience parity (completed)
+
+### Implemented
+- Refined Template Gallery panel framing in `TemplateGalleryPanel`:
+  - widened panel to `max-w-5xl`
+  - upgraded header with gradient backdrop and dashboard-style summary tiles (total/filtered/active)
+- Improved search row and controls for stronger visual hierarchy:
+  - larger rounded search control
+  - stronger count badge affordance
+- Updated gallery density/responsiveness:
+  - moved to `1/2/3` responsive card grid (`mobile / md / xl`)
+- Visual polish updates across template browsing surfaces:
+  - compare bar gradient treatment
+  - card container consistency with white surface baseline
+
+### Safety notes
+- No template apply logic changes.
+- No data model/service changes.
+- Existing preserve-content behavior remains untouched.

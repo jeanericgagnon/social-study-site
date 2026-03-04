@@ -201,3 +201,19 @@
 ### Safety notes
 - UI-only updates.
 - No state shape, service, or business logic changes.
+
+## Batch 10 — Regression sweep prep (completed)
+
+### Frozen parity checklist for QA/smoke
+1. Template gallery opens/closes from builder shell controls.
+2. Template search + mood/color/season filters compose correctly.
+3. Use Template flow applies selected template and returns to editor context.
+4. Existing content-preservation behavior still works on template apply.
+5. Variant selection in inspector works via chip UI.
+6. Variant picker supports hover/click + keyboard (↑/↓ + Enter).
+7. Escape key closes top-most builder modal layer in template gallery.
+8. Publish/save/top bar controls remain intact and reachable.
+9. No changes to template/variant canonical Bolt data sources.
+
+### QA execution note
+- Next phase: run typecheck/build plus targeted functional smoke through builder tab flows.

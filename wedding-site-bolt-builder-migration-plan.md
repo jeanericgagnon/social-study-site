@@ -187,3 +187,17 @@
 - No changes to store shape or adapter contracts.
 - No template application logic changes.
 - Filtering behavior remains additive to existing mood/color/season filters.
+
+## Batch 9 — Visual polish + responsive UX (completed)
+
+### Implemented
+- Polished Builder workspace sub-header responsiveness in `BuilderShell`:
+  - better wrap behavior on narrow widths
+  - horizontally scroll-safe control pills
+- Improved Template Gallery empty state UX:
+  - clearer message copy
+  - `Reset filters` quick action that clears search + mood/color/season filters
+
+### Safety notes
+- UI-only updates.
+- No state shape, service, or business logic changes.

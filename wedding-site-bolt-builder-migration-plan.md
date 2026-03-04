@@ -255,3 +255,21 @@
 - No template apply logic changes.
 - No data model/service changes.
 - Existing preserve-content behavior remains untouched.
+
+## Big Batch C — Variant experience parity (completed)
+
+### Implemented
+- Upgraded variant picker header and control framing in `BuilderSidebarLibrary`:
+  - gradient-style intro surface
+  - explicit variant count chip
+- Added variant browser status band and keyboard guide strip above variant cards:
+  - current index (`n / total`)
+  - interaction hint (`↑ ↓` + `Enter`)
+- Increased variant card visual emphasis for preview-first browsing:
+  - stronger top gradient accent treatment
+  - improved gallery-style scanability for selection flow
+
+### Safety notes
+- Variant apply flow unchanged (`onSelect`).
+- No schema/store/service changes.
+- Preserves existing canonical Bolt variants.

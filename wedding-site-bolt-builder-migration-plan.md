@@ -121,3 +121,15 @@
 - Existing Bolt template source remains unchanged.
 - Existing template apply flow and content-preservation logic unchanged.
 - Existing mood/color/season filters preserved and now compose with search.
+
+## Batch 4 — “Use Template” flow wiring (completed)
+
+### Implemented
+- Standardized CTA wording to `Use Template` across the template gallery and confirmation flows for clearer parity with intended user behavior.
+- Updated post-apply action in success modal:
+  - `Use template and continue editing` now closes the template gallery and returns user to editor context.
+
+### Safety notes
+- No changes to preload/apply business logic.
+- No changes to template data source.
+- Existing content-preservation + undo behavior remains intact.

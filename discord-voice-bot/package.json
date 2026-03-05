@@ -7,7 +7,9 @@
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
-    "dev": "node --watch src/index.js"
+    "dev": "node --watch src/index.js",
+    "start:pm2": "pm2 start ecosystem.config.cjs",
+    "logs": "pm2 logs discord-voice-bot"
   },
   "dependencies": {
     "@discordjs/voice": "^0.19.0",

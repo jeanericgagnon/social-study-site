@@ -49,6 +49,12 @@ const listenState = new Map(); // guildId -> { enabled:boolean, textChannelId:st
 const audioPlayers = new Map(); // guildId -> AudioPlayer
 const lastTurnAt = new Map(); // key userId -> epoch ms
 
+const LOG_PREFIX = '[voice-bot]';
+function log(event, meta = {}) {
+  const line = JSON.stringify({ ts: new Date().toISOString(), event, ...meta });
+  console.log(`${LOG_PREFIX} ${line}`);
+}
+
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
@@ -277,6 +283,7 @@ async function joinChannel(message, channel) {
     await message.reply('I can only join voice channels.');
     return null;
   }
+  log('voice_join_attempt', { guildId: message.guild.id, channelId: channel.id, channelName: channel.name });
 
   const me = message.guild.members.me;
   const perms = channel.permissionsFor(me);
@@ -294,11 +301,31 @@ async function joinChannel(message, channel) {
   });
 
   await entersState(connection, VoiceConnectionStatus.Ready, 15_000);
+  log('voice_join_ready', { guildId: message.guild.id, channelId: channel.id });
+
+  connection.on('stateChange', (oldState, newState) => {
+    if (oldState.status !== newState.status) {
+      log('voice_state_change', { guildId: message.guild.id, from: oldState.status, to: newState.status });
+    }
+  });
+
   return connection;
 }
 
 client.once(Events.ClientReady, (c) => {
-  console.log(`Voice bot online as ${c.user.tag}`);
+  log('ready', { user: c.user.tag });
+});
+
+client.on(Events.Error, (err) => {
+  log('client_error', { message: err.message });
+});
+
+client.on(Events.ShardDisconnect, (event, id) => {
+  log('shard_disconnect', { code: event.code, shardId: id });
+});
+
+client.on(Events.ShardReconnecting, (id) => {
+  log('shard_reconnecting', { shardId: id });
 });
 
 client.on(Events.MessageCreate, async (message) => {
@@ -437,6 +464,14 @@ client.on(Events.MessageCreate, async (message) => {
     await message.reply('Left voice channel.');
     return;
   }
+});
+
+process.on('uncaughtException', (err) => {
+  log('uncaught_exception', { message: err.message });
+});
+
+process.on('unhandledRejection', (err) => {
+  log('unhandled_rejection', { message: err?.message || String(err) });
 });
 
 client.login(token);

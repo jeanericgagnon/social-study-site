@@ -2,61 +2,93 @@
 set -euo pipefail
 
 # Safe wrapper for Playwright scraping tasks.
-# Usage:
+#
+# Default mode = validate only (no scraping).
+# To execute, pass --execute and provide explicit approval flag.
+#
+# Examples:
 #   ALLOWLIST="example.com,docs.example.com" \
 #   sandbox-runners/playwright-scraper/run-safe.sh "https://example.com/docs"
+#
+#   ALLOWLIST="example.com" \
+#   sandbox-runners/playwright-scraper/run-safe.sh --file urls.txt
+#
+#   ALLOWLIST="example.com" \
+#   sandbox-runners/playwright-scraper/run-safe.sh --execute --approve-live-fetch "https://example.com"
 
-URL="${1:-}"
-if [[ -z "$URL" ]]; then
-  echo "Usage: ALLOWLIST=domain1,domain2 $0 <url>" >&2
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+VALIDATOR="$SCRIPT_DIR/validate_targets.py"
+
+EXECUTE=0
+APPROVED=0
+TARGET_URL=""
+URL_FILE=""
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --execute) EXECUTE=1; shift ;;
+    --approve-live-fetch) APPROVED=1; shift ;;
+    --file) URL_FILE="${2:-}"; shift 2 ;;
+    -h|--help)
+      sed -n '1,40p' "$0"
+      exit 0
+      ;;
+    *)
+      if [[ -z "$TARGET_URL" ]]; then TARGET_URL="$1"; shift; else echo "Unexpected arg: $1" >&2; exit 2; fi
+      ;;
+  esac
+done
+
+if [[ ! -x "$VALIDATOR" ]]; then
+  echo "Missing validator: $VALIDATOR" >&2
   exit 2
 fi
 
-ALLOWLIST="${ALLOWLIST:-}"
-if [[ -z "$ALLOWLIST" ]]; then
+if [[ -z "${ALLOWLIST:-}" ]]; then
   echo "Blocked: ALLOWLIST env var required (comma-separated domains)." >&2
   exit 3
 fi
 
-python3 - "$URL" "$ALLOWLIST" <<'PY'
-import ipaddress, socket, sys
-from urllib.parse import urlparse
+if [[ -z "$TARGET_URL" && -z "$URL_FILE" ]]; then
+  echo "Usage: ALLOWLIST=domain1,domain2 $0 [--file urls.txt] [--execute --approve-live-fetch] <url>" >&2
+  exit 2
+fi
 
-url = sys.argv[1]
-allow = [d.strip().lower() for d in sys.argv[2].split(',') if d.strip()]
-
-p = urlparse(url)
-if p.scheme not in ("http", "https"):
-    raise SystemExit("Blocked: only http/https URLs are allowed")
-
-host = (p.hostname or "").lower().strip('.')
-if not host:
-    raise SystemExit("Blocked: invalid host")
-
-if not any(host == d or host.endswith("." + d) for d in allow):
-    raise SystemExit(f"Blocked: host '{host}' is not in ALLOWLIST")
-
-# Resolve and block private/local ranges.
-try:
-    addrs = {ai[4][0] for ai in socket.getaddrinfo(host, None)}
-except Exception as e:
-    raise SystemExit(f"Blocked: DNS resolution failed: {e}")
-
-for a in addrs:
-    ip = ipaddress.ip_address(a)
-    if (ip.is_private or ip.is_loopback or ip.is_link_local or ip.is_reserved or ip.is_multicast):
-        raise SystemExit(f"Blocked: resolved IP {ip} is private/local/reserved")
-
-print("OK")
-PY
+# Validate targets first
+if [[ -n "$URL_FILE" ]]; then
+  "$VALIDATOR" --file "$URL_FILE"
+else
+  "$VALIDATOR" "$TARGET_URL"
+fi
 
 mkdir -p .scrapes
 TS="$(date +%Y%m%d-%H%M%S)"
-OUT=".scrapes/scrape-${TS}.md"
+LOG=".scrapes/run-${TS}.log"
 
-# Uses OpenClaw built-in fetch tool equivalent via curl as fallback would violate policy,
-# so here we just print the approved target and expected output path.
-# This wrapper is primarily a safety gate + run metadata recorder.
-echo "Approved target: $URL"
-echo "Output path: $OUT"
-echo "Next step: run scraper against this URL using Playwright workflow."
+echo "[$(date -Is)] validated targets" | tee -a "$LOG"
+echo "allowlist=$ALLOWLIST" | tee -a "$LOG"
+[[ -n "$TARGET_URL" ]] && echo "target=$TARGET_URL" | tee -a "$LOG"
+[[ -n "$URL_FILE" ]] && echo "target_file=$URL_FILE" | tee -a "$LOG"
+
+if [[ "$EXECUTE" -eq 0 ]]; then
+  echo "Validation complete. Dry-run only (no network fetch executed)." | tee -a "$LOG"
+  echo "To execute a live fetch, rerun with: --execute --approve-live-fetch" | tee -a "$LOG"
+  exit 0
+fi
+
+if [[ "$APPROVED" -ne 1 ]]; then
+  echo "Blocked: --execute requires explicit --approve-live-fetch" >&2
+  exit 4
+fi
+
+# Execution stub: keeps guardrails while allowing future scraper integration.
+OUT=".scrapes/scrape-${TS}.md"
+{
+  echo "# Safe Scrape Run"
+  echo "time: $(date -Is)"
+  echo "mode: execute-approved"
+  echo "targets: ${TARGET_URL:-$URL_FILE}"
+  echo "note: hook your Playwright extraction command here after validation gate"
+} > "$OUT"
+
+echo "Execute mode approved. Output scaffold written to: $OUT" | tee -a "$LOG"

@@ -5,6 +5,9 @@ import {
   GatewayIntentBits,
   ChannelType,
   PermissionsBitField,
+  REST,
+  Routes,
+  SlashCommandBuilder,
 } from 'discord.js';
 import {
   joinVoiceChannel,
@@ -312,8 +315,26 @@ async function joinChannel(message, channel) {
   return connection;
 }
 
-client.once(Events.ClientReady, (c) => {
+async function registerSlashCommands(clientUserId) {
+  if (!guildId) return;
+  const commands = [
+    new SlashCommandBuilder().setName('voice-status').setDescription('Check voice bot status'),
+    new SlashCommandBuilder().setName('voice-join').setDescription('Join your current voice channel'),
+    new SlashCommandBuilder().setName('voice-listen').setDescription('Start transcribing voice chunks'),
+    new SlashCommandBuilder().setName('voice-stop').setDescription('Stop transcribing voice chunks'),
+    new SlashCommandBuilder().setName('voice-leave').setDescription('Leave voice channel'),
+    new SlashCommandBuilder().setName('voice-say').setDescription('Speak text in voice channel')
+      .addStringOption(o => o.setName('text').setDescription('Text to speak').setRequired(true)),
+  ].map(c => c.toJSON());
+
+  const rest = new REST({ version: '10' }).setToken(token);
+  await rest.put(Routes.applicationGuildCommands(clientUserId, guildId), { body: commands });
+  log('slash_registered', { guildId, count: commands.length });
+}
+
+client.once(Events.ClientReady, async (c) => {
   log('ready', { user: c.user.tag });
+  try { await registerSlashCommands(c.user.id); } catch (e) { log('slash_register_error', { message: e.message }); }
 });
 
 client.on(Events.Error, (err) => {
@@ -326,6 +347,82 @@ client.on(Events.ShardDisconnect, (event, id) => {
 
 client.on(Events.ShardReconnecting, (id) => {
   log('shard_reconnecting', { shardId: id });
+});
+
+client.on(Events.InteractionCreate, async (interaction) => {
+  if (!interaction.isChatInputCommand()) return;
+  if (!interaction.guild) return;
+  if (guildId && interaction.guild.id !== guildId) return;
+  if (!isAllowedTextChannel(interaction.channelId)) return;
+  if (!isAllowedUser(interaction.user.id)) return;
+
+  const cmd = interaction.commandName;
+
+  if (cmd === 'voice-status') {
+    const conn = getVoiceConnection(interaction.guild.id);
+    const state = listenState.get(interaction.guild.id);
+    await interaction.reply(conn
+      ? `Connected. State: **${conn.state.status}** | Listening: **${state?.enabled ? 'on' : 'off'}**`
+      : 'Not connected to any voice channel.');
+    return;
+  }
+
+  if (cmd === 'voice-join') {
+    const channel = interaction.member?.voice?.channel;
+    if (!channel || !isAllowedVoiceChannel(channel.id)) {
+      await interaction.reply('Join an allowlisted voice channel first.');
+      return;
+    }
+    try {
+      await joinChannel({ guild: interaction.guild, member: interaction.member, reply: (t) => interaction.followUp?.(t) }, channel);
+      await interaction.reply(`Joined **${channel.name}**.`);
+    } catch (err) {
+      await interaction.reply(`Failed to join: ${err.message}`);
+    }
+    return;
+  }
+
+  if (cmd === 'voice-listen') {
+    const conn = getVoiceConnection(interaction.guild.id);
+    if (!conn) return interaction.reply('Join a voice channel first with /voice-join.');
+    const currently = listenState.get(interaction.guild.id);
+    if (currently?.enabled) return interaction.reply('Already listening.');
+    listenState.set(interaction.guild.id, { enabled: true, textChannelId: interaction.channelId });
+    await startReceiver(conn, interaction.guild, interaction.channel);
+    await interaction.reply('🎧 Listening started.');
+    return;
+  }
+
+  if (cmd === 'voice-stop') {
+    const st = listenState.get(interaction.guild.id);
+    if (!st?.enabled) return interaction.reply('Listening is not active.');
+    listenState.set(interaction.guild.id, { ...st, enabled: false });
+    await interaction.reply('🛑 Listening stopped.');
+    return;
+  }
+
+  if (cmd === 'voice-leave') {
+    const conn = getVoiceConnection(interaction.guild.id);
+    if (!conn) return interaction.reply('I am not in a voice channel.');
+    listenState.delete(interaction.guild.id);
+    audioPlayers.delete(interaction.guild.id);
+    conn.destroy();
+    await interaction.reply('Left voice channel.');
+    return;
+  }
+
+  if (cmd === 'voice-say') {
+    const text = interaction.options.getString('text', true);
+    const conn = getVoiceConnection(interaction.guild.id);
+    if (!conn) return interaction.reply('Join voice first with /voice-join.');
+    try {
+      await speakInCall(conn, interaction.guild.id, text);
+      await interaction.reply('🔊 Speaking in call.');
+    } catch (err) {
+      await interaction.reply(`TTS playback error: ${err.message}`);
+    }
+    return;
+  }
 });
 
 client.on(Events.MessageCreate, async (message) => {

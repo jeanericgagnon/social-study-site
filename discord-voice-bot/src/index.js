@@ -22,6 +22,9 @@ const token = process.env.DISCORD_BOT_TOKEN;
 const guildId = process.env.DISCORD_GUILD_ID;
 const whisperBin = process.env.WHISPER_BIN || path.resolve('../.venv-whisper/bin/whisper');
 const whisperModel = process.env.WHISPER_MODEL || 'base';
+const routerUrl = process.env.OPENCLAW_ROUTER_URL || '';
+const routerToken = process.env.OPENCLAW_ROUTER_TOKEN || '';
+const autoReply = String(process.env.VOICE_AGENT_AUTO_REPLY || 'false').toLowerCase() === 'true';
 
 if (!token) {
   console.error('Missing DISCORD_BOT_TOKEN');
@@ -92,6 +95,26 @@ async function transcribeWav(filePath) {
   });
 }
 
+async function askOpenClawRouter({ transcript, userId, userName, guildId, textChannelId }) {
+  if (!routerUrl) return null;
+  const headers = { 'content-type': 'application/json' };
+  if (routerToken) headers.authorization = `Bearer ${routerToken}`;
+
+  const res = await fetch(routerUrl, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({ transcript, userId, userName, guildId, textChannelId, source: 'discord-voice-bot' }),
+  });
+
+  if (!res.ok) {
+    const body = await res.text().catch(() => '');
+    throw new Error(`router ${res.status}: ${body.slice(0, 200)}`);
+  }
+
+  const data = await res.json().catch(() => ({}));
+  return data.reply || data.message || data.output || null;
+}
+
 async function startReceiver(connection, guild, textChannel) {
   const receiver = connection.receiver;
 
@@ -141,6 +164,21 @@ async function startReceiver(connection, guild, textChannel) {
         const user = await guild.members.fetch(userId).catch(() => null);
         const name = user?.displayName || user?.user?.username || userId;
         await textChannel.send(`🎙️ **${name}**: ${transcript}`);
+
+        if (autoReply) {
+          try {
+            const reply = await askOpenClawRouter({
+              transcript,
+              userId,
+              userName: name,
+              guildId: guild.id,
+              textChannelId: textChannel.id,
+            });
+            if (reply) await textChannel.send(`🤖 ${reply}`);
+          } catch (routerErr) {
+            await textChannel.send(`Router error: ${routerErr.message}`);
+          }
+        }
       } catch (err) {
         await textChannel.send(`STT error for <@${userId}>: ${err.message}`);
       }
@@ -251,6 +289,31 @@ client.on(Events.MessageCreate, async (message) => {
     }
     listenState.set(message.guild.id, { ...st, enabled: false });
     await message.reply('🛑 Listening stopped.');
+    return;
+  }
+
+  if (cmd === '!voice-ask') {
+    const prompt = args.join(' ').trim();
+    if (!prompt) {
+      await message.reply('Usage: `!voice-ask <text>`');
+      return;
+    }
+    if (!routerUrl) {
+      await message.reply('OPENCLAW_ROUTER_URL is not configured.');
+      return;
+    }
+    try {
+      const reply = await askOpenClawRouter({
+        transcript: prompt,
+        userId: message.author.id,
+        userName: message.member?.displayName || message.author.username,
+        guildId: message.guild.id,
+        textChannelId: message.channel.id,
+      });
+      await message.reply(reply ? `🤖 ${reply}` : 'Router returned no reply payload.');
+    } catch (err) {
+      await message.reply(`Router error: ${err.message}`);
+    }
     return;
   }
 

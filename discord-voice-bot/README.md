@@ -13,6 +13,7 @@ This is the Batch 1+2 foundation for live voice streaming:
 - `!voice-status` → check connection/listen state
 - `!voice-listen` → start transcribing voice chunks to current text channel
 - `!voice-stop` → stop transcription
+- `!voice-ask <text>` → send text to OpenClaw router endpoint
 - `!voice-leave` → disconnect
 
 ## Setup
@@ -29,6 +30,9 @@ cp .env.example .env
 - `DISCORD_GUILD_ID` (optional but recommended)
 - `WHISPER_BIN` (optional; default `../.venv-whisper/bin/whisper`)
 - `WHISPER_MODEL` (optional; default `base`)
+- `OPENCLAW_ROUTER_URL` (HTTP endpoint that accepts transcript payload and returns `{ reply }`)
+- `OPENCLAW_ROUTER_TOKEN` (optional bearer token)
+- `VOICE_AGENT_AUTO_REPLY=true|false` (auto-call router after each voice transcript)
 
 3. Install + run:
 

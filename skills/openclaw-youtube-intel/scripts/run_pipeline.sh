@@ -62,7 +62,13 @@ python3 ../../skills/openclaw-youtube-intel/scripts/normalize_vtt.py transcripts
 echo "[4/5] Chunk transcripts"
 python3 ../../skills/openclaw-youtube-intel/scripts/chunk_transcripts.py normalized chunks
 
-echo "[5/5] Write summary"
+echo "[5/7] Build manifest"
+python3 ../../skills/openclaw-youtube-intel/scripts/build_manifest.py
+
+echo "[6/7] Build query index"
+python3 ../../skills/openclaw-youtube-intel/scripts/build_query_index.py
+
+echo "[7/7] Write summary"
 python3 - <<'PY'
 import json
 from pathlib import Path
@@ -70,7 +76,9 @@ summary={
   'videos_indexed': len(json.loads(Path('openclaw-videos.json').read_text())),
   'vtt_files': len(list(Path('transcripts').glob('*.vtt'))),
   'normalized_files': len(list(Path('normalized').glob('*.txt'))),
-  'chunk_files': len(list(Path('chunks').glob('*.txt')))
+  'chunk_files': len(list(Path('chunks').glob('*.txt'))),
+  'manifest_exists': Path('manifest.json').exists(),
+  'query_index_exists': Path('query-index.jsonl').exists()
 }
 Path('summary.json').write_text(json.dumps(summary,indent=2),encoding='utf-8')
 print(summary)

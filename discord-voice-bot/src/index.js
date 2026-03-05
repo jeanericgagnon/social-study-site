@@ -12,6 +12,10 @@ import {
   EndBehaviorType,
   VoiceConnectionStatus,
   entersState,
+  createAudioPlayer,
+  createAudioResource,
+  AudioPlayerStatus,
+  StreamType,
 } from '@discordjs/voice';
 import prism from 'prism-media';
 import { spawn } from 'node:child_process';
@@ -25,6 +29,8 @@ const whisperModel = process.env.WHISPER_MODEL || 'base';
 const routerUrl = process.env.OPENCLAW_ROUTER_URL || '';
 const routerToken = process.env.OPENCLAW_ROUTER_TOKEN || '';
 const autoReply = String(process.env.VOICE_AGENT_AUTO_REPLY || 'false').toLowerCase() === 'true';
+const ttsEnabled = String(process.env.VOICE_TTS_ENABLED || 'true').toLowerCase() === 'true';
+const ttsVoice = process.env.VOICE_TTS_VOICE || 'Samantha';
 
 if (!token) {
   console.error('Missing DISCORD_BOT_TOKEN');
@@ -35,6 +41,7 @@ const audioDir = path.resolve('./recordings');
 fs.mkdirSync(audioDir, { recursive: true });
 
 const listenState = new Map(); // guildId -> { enabled:boolean, textChannelId:string }
+const audioPlayers = new Map(); // guildId -> AudioPlayer
 
 const client = new Client({
   intents: [
@@ -115,6 +122,42 @@ async function askOpenClawRouter({ transcript, userId, userName, guildId, textCh
   return data.reply || data.message || data.output || null;
 }
 
+function ensureAudioPlayer(guildId, connection) {
+  let player = audioPlayers.get(guildId);
+  if (!player) {
+    player = createAudioPlayer();
+    player.on('error', (e) => console.error('audio player error', e.message));
+    player.on(AudioPlayerStatus.Idle, () => {});
+    audioPlayers.set(guildId, player);
+  }
+  connection.subscribe(player);
+  return player;
+}
+
+async function speakInCall(connection, guildId, text) {
+  if (!ttsEnabled || !text?.trim()) return;
+  const ts = Date.now();
+  const aiffPath = path.join(audioDir, `${guildId}-${ts}.aiff`);
+  const wavPath = path.join(audioDir, `${guildId}-${ts}.wav`);
+
+  await new Promise((resolve, reject) => {
+    const p = spawn('say', ['-v', ttsVoice, '-o', aiffPath, text.slice(0, 1200)]);
+    p.on('close', (code) => (code === 0 ? resolve() : reject(new Error(`say exit ${code}`))));
+  });
+
+  await new Promise((resolve, reject) => {
+    const p = spawn('ffmpeg', ['-y', '-i', aiffPath, '-ar', '48000', '-ac', '2', wavPath]);
+    p.on('close', (code) => (code === 0 ? resolve() : reject(new Error(`ffmpeg exit ${code}`))));
+  });
+
+  const player = ensureAudioPlayer(guildId, connection);
+  const resource = createAudioResource(wavPath, {
+    inputType: StreamType.Arbitrary,
+    inlineVolume: true,
+  });
+  player.play(resource);
+}
+
 async function startReceiver(connection, guild, textChannel) {
   const receiver = connection.receiver;
 
@@ -174,7 +217,11 @@ async function startReceiver(connection, guild, textChannel) {
               guildId: guild.id,
               textChannelId: textChannel.id,
             });
-            if (reply) await textChannel.send(`🤖 ${reply}`);
+            if (reply) {
+              await textChannel.send(`🤖 ${reply}`);
+              const conn = getVoiceConnection(guild.id);
+              if (conn) await speakInCall(conn, guild.id, reply).catch(() => {});
+            }
           } catch (routerErr) {
             await textChannel.send(`Router error: ${routerErr.message}`);
           }
@@ -317,6 +364,26 @@ client.on(Events.MessageCreate, async (message) => {
     return;
   }
 
+  if (cmd === '!voice-say') {
+    const text = args.join(' ').trim();
+    if (!text) {
+      await message.reply('Usage: `!voice-say <text>`');
+      return;
+    }
+    const conn = getVoiceConnection(message.guild.id);
+    if (!conn) {
+      await message.reply('Join voice first with `!voice-join`.');
+      return;
+    }
+    try {
+      await speakInCall(conn, message.guild.id, text);
+      await message.reply('🔊 Speaking in call.');
+    } catch (err) {
+      await message.reply(`TTS playback error: ${err.message}`);
+    }
+    return;
+  }
+
   if (cmd === '!voice-leave') {
     const conn = getVoiceConnection(message.guild.id);
     if (!conn) {
@@ -324,6 +391,7 @@ client.on(Events.MessageCreate, async (message) => {
       return;
     }
     listenState.delete(message.guild.id);
+    audioPlayers.delete(message.guild.id);
     conn.destroy();
     await message.reply('Left voice channel.');
     return;

@@ -41,9 +41,18 @@ skills/openclaw-youtube-intel/scripts/run_pipeline.sh "OpenClaw" exports/opencla
 - `transcripts/*.vtt` (raw subtitle tracks)
 - `normalized/*.txt` (clean per-video transcript)
 - `chunks/*.txt` (Q&A-ready chunks)
+- `manifest.json` / `manifest.csv` (metadata + quality + multi-topic tags)
+- `query-index.jsonl` (chunk-level retrieval index)
 - `summary.json` (counts + coverage)
 
-## Analysis usage
+## Query mode
 
-For deep analysis, read from `chunks/` and cite video IDs/URLs from `openclaw-videos.csv`.
+Build and query index:
+
+```bash
+python skills/openclaw-youtube-intel/scripts/build_query_index.py
+python skills/openclaw-youtube-intel/scripts/ask_index.py "onboarding pain points"
+```
+
+For deep analysis, read from `query-index.jsonl`/`chunks/` and cite video URLs.
 Prefer chunked files for speed/token efficiency; use `normalized/*.txt` only when needed.

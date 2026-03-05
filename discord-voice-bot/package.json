@@ -1,0 +1,17 @@
+{
+  "name": "discord-voice-bot",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Batch 1 skeleton: Discord voice join/leave bot for live streaming assistant",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js"
+  },
+  "dependencies": {
+    "@discordjs/voice": "^0.17.0",
+    "discord.js": "^14.21.0",
+    "dotenv": "^16.4.5"
+  }
+}

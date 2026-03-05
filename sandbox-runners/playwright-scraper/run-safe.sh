@@ -65,7 +65,7 @@ mkdir -p .scrapes
 TS="$(date +%Y%m%d-%H%M%S)"
 LOG=".scrapes/run-${TS}.log"
 
-echo "[$(date -Is)] validated targets" | tee -a "$LOG"
+echo "[$(date -u +%Y-%m-%dT%H:%M:%SZ)] validated targets" | tee -a "$LOG"
 echo "allowlist=$ALLOWLIST" | tee -a "$LOG"
 [[ -n "$TARGET_URL" ]] && echo "target=$TARGET_URL" | tee -a "$LOG"
 [[ -n "$URL_FILE" ]] && echo "target_file=$URL_FILE" | tee -a "$LOG"
@@ -85,7 +85,7 @@ fi
 OUT=".scrapes/scrape-${TS}.md"
 {
   echo "# Safe Scrape Run"
-  echo "time: $(date -Is)"
+  echo "time: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
   echo "mode: execute-approved"
   echo "targets: ${TARGET_URL:-$URL_FILE}"
   echo "note: hook your Playwright extraction command here after validation gate"

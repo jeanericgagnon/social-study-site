@@ -36,6 +36,11 @@ cp .env.example .env
 - `VOICE_AGENT_AUTO_REPLY=true|false` (auto-call router after each voice transcript)
 - `VOICE_TTS_ENABLED=true|false` (speak replies into call)
 - `VOICE_TTS_VOICE=Samantha` (macOS `say` voice)
+- `VOICE_ALLOWED_TEXT_CHANNEL_IDS=...` (comma-separated allowlist; blank = all)
+- `VOICE_ALLOWED_VOICE_CHANNEL_IDS=...` (comma-separated allowlist; blank = all)
+- `VOICE_ALLOWED_USER_IDS=...` (comma-separated allowlist; blank = all)
+- `VOICE_MAX_REPLY_CHARS=500` (truncate long responses)
+- `VOICE_MIN_SECONDS_BETWEEN_TURNS=2` (rate-limit per speaker)
 
 3. Install + run:
 

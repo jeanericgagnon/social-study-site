@@ -31,6 +31,11 @@ const routerToken = process.env.OPENCLAW_ROUTER_TOKEN || '';
 const autoReply = String(process.env.VOICE_AGENT_AUTO_REPLY || 'false').toLowerCase() === 'true';
 const ttsEnabled = String(process.env.VOICE_TTS_ENABLED || 'true').toLowerCase() === 'true';
 const ttsVoice = process.env.VOICE_TTS_VOICE || 'Samantha';
+const maxReplyChars = Number(process.env.VOICE_MAX_REPLY_CHARS || 500);
+const minSecondsBetweenTurns = Number(process.env.VOICE_MIN_SECONDS_BETWEEN_TURNS || 2);
+const allowedTextChannels = new Set((process.env.VOICE_ALLOWED_TEXT_CHANNEL_IDS || '').split(',').map(s => s.trim()).filter(Boolean));
+const allowedVoiceChannels = new Set((process.env.VOICE_ALLOWED_VOICE_CHANNEL_IDS || '').split(',').map(s => s.trim()).filter(Boolean));
+const allowedUsers = new Set((process.env.VOICE_ALLOWED_USER_IDS || '').split(',').map(s => s.trim()).filter(Boolean));
 
 if (!token) {
   console.error('Missing DISCORD_BOT_TOKEN');
@@ -42,6 +47,7 @@ fs.mkdirSync(audioDir, { recursive: true });
 
 const listenState = new Map(); // guildId -> { enabled:boolean, textChannelId:string }
 const audioPlayers = new Map(); // guildId -> AudioPlayer
+const lastTurnAt = new Map(); // key userId -> epoch ms
 
 const client = new Client({
   intents: [
@@ -55,6 +61,31 @@ const client = new Client({
 function parseArgs(content) {
   const parts = content.trim().split(/\s+/);
   return { cmd: parts[0]?.toLowerCase(), args: parts.slice(1) };
+}
+
+function isAllowedTextChannel(channelId) {
+  return allowedTextChannels.size === 0 || allowedTextChannels.has(channelId);
+}
+
+function isAllowedVoiceChannel(channelId) {
+  return allowedVoiceChannels.size === 0 || allowedVoiceChannels.has(channelId);
+}
+
+function isAllowedUser(userId) {
+  return allowedUsers.size === 0 || allowedUsers.has(userId);
+}
+
+function withinRateLimit(userId) {
+  const now = Date.now();
+  const last = lastTurnAt.get(userId) || 0;
+  if (now - last < minSecondsBetweenTurns * 1000) return false;
+  lastTurnAt.set(userId, now);
+  return true;
+}
+
+function clampReply(text) {
+  if (!text) return text;
+  return text.length > maxReplyChars ? `${text.slice(0, maxReplyChars)}…` : text;
 }
 
 function writeWavHeader(fd, dataLength, sampleRate = 48000, channels = 2, bitsPerSample = 16) {
@@ -164,6 +195,8 @@ async function startReceiver(connection, guild, textChannel) {
   receiver.speaking.on('start', (userId) => {
     const state = listenState.get(guild.id);
     if (!state?.enabled) return;
+    if (!isAllowedUser(userId)) return;
+    if (!withinRateLimit(userId)) return;
 
     const opusStream = receiver.subscribe(userId, {
       end: {
@@ -218,9 +251,10 @@ async function startReceiver(connection, guild, textChannel) {
               textChannelId: textChannel.id,
             });
             if (reply) {
-              await textChannel.send(`🤖 ${reply}`);
+              const safeReply = clampReply(reply);
+              await textChannel.send(`🤖 ${safeReply}`);
               const conn = getVoiceConnection(guild.id);
-              if (conn) await speakInCall(conn, guild.id, reply).catch(() => {});
+              if (conn) await speakInCall(conn, guild.id, safeReply).catch(() => {});
             }
           } catch (routerErr) {
             await textChannel.send(`Router error: ${routerErr.message}`);
@@ -271,6 +305,8 @@ client.on(Events.MessageCreate, async (message) => {
   if (message.author.bot) return;
   if (!message.guild) return;
   if (guildId && message.guild.id !== guildId) return;
+  if (!isAllowedTextChannel(message.channel.id)) return;
+  if (!isAllowedUser(message.author.id)) return;
 
   const { cmd, args } = parseArgs(message.content);
 
@@ -295,6 +331,11 @@ client.on(Events.MessageCreate, async (message) => {
 
     const fromUser = message.member?.voice?.channel;
     const channel = byName || fromUser;
+
+    if (!channel || !isAllowedVoiceChannel(channel.id)) {
+      await message.reply('Voice channel is not allowlisted for this bot.');
+      return;
+    }
 
     try {
       await joinChannel(message, channel);
@@ -357,7 +398,7 @@ client.on(Events.MessageCreate, async (message) => {
         guildId: message.guild.id,
         textChannelId: message.channel.id,
       });
-      await message.reply(reply ? `🤖 ${reply}` : 'Router returned no reply payload.');
+      await message.reply(reply ? `🤖 ${clampReply(reply)}` : 'Router returned no reply payload.');
     } catch (err) {
       await message.reply(`Router error: ${err.message}`);
     }

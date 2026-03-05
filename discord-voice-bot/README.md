@@ -57,9 +57,29 @@ npm run start
 - Speak
 - Use Voice Activity (optional)
 
-## Next batches
+## Production run options
 
+### PM2
+
+```bash
+mkdir -p logs
+npm run start:pm2
+npm run logs
+```
+
+### launchd (macOS)
+
+```bash
+mkdir -p ~/Library/LaunchAgents logs
+cp launchd/com.openclaw.discord-voice-bot.plist ~/Library/LaunchAgents/
+launchctl load -w ~/Library/LaunchAgents/com.openclaw.discord-voice-bot.plist
+```
+
+## Status
+
+- Batch 1: join/leave/status
 - Batch 2: audio ingest + Whisper STT
-- Batch 3: OpenClaw turn router
+- Batch 3: OpenClaw router hooks
 - Batch 4: TTS back into call
-- Batch 5+: safety/hardening
+- Batch 5: safety controls
+- Batch 6: process hardening + structured logs + service run configs

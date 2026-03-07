@@ -405,6 +405,10 @@ ui <- page_navbar(
 
   nav_panel(
     "Swim Overlays",
+    card(
+      card_header("Swim Filters"),
+      dateRangeInput("swim_date_window", "Swim date range", start = Sys.Date() - 30, end = Sys.Date())
+    ),
     layout_columns(
       card(
         card_header("Today Swim"),
@@ -471,8 +475,14 @@ server <- function(input, output, session) {
       filter(day >= as.Date(input$date_window[1]), day <= as.Date(input$date_window[2]))
   })
 
+  filtered_swim <- reactive({
+    req(input$swim_date_window)
+    swim() %>%
+      filter(day >= as.Date(input$swim_date_window[1]), day <= as.Date(input$swim_date_window[2]))
+  })
+
   tiles <- reactive(metric_tiles(filtered_raw()))
-  swim_metrics <- reactive(swim_overlay_metrics(swim()))
+  swim_metrics <- reactive(swim_overlay_metrics(filtered_swim()))
 
   output$recovery_latest <- renderText(glue("{tiles()$recovery_latest}"))
   output$recovery_7d <- renderText(glue("{tiles()$recovery_7d}"))

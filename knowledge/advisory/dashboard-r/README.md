@@ -9,6 +9,10 @@ A high-visual dashboard for WHOOP metrics stored in:
 - Layered trend chart (Recovery, Sleep %, Strain scaled, Recovery 7d)
 - Correlation view (Sleep vs Recovery, colored by Strain)
 - Auto insight callouts
+- Executive Insights tab:
+  - Readiness composite score
+  - Anomaly detection table
+  - Weekly coaching cards
 - Live auto-refresh (every 10s)
 - Data preview tab
 

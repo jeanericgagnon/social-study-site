@@ -47,6 +47,6 @@ Install once:
 ```r
 install.packages(c(
   'shiny','bslib','DBI','RSQLite','dplyr','tidyr','lubridate',
-  'ggplot2','plotly','leaflet','scales','glue','purrr'
+  'ggplot2','plotly','scales','glue','purrr'
 ))
 ```

@@ -11,7 +11,6 @@ suppressPackageStartupMessages({
   library(scales)
   library(glue)
   library(purrr)
-  library(leaflet)
 })
 
 DB_PATH <- normalizePath(
@@ -415,7 +414,7 @@ ui <- page_navbar(
     ),
     card(
       card_header("Catalina → Long Beach Swim Map"),
-      leafletOutput("swim_map", height = "520px")
+      plotlyOutput("swim_map", height = "520px")
     )
   ),
 
@@ -498,45 +497,43 @@ server <- function(input, output, session) {
   output$projected_date <- renderText(format(TARGET_CROSSING_DATE, "%B %d, %Y"))
   output$swim_progress <- renderText(glue("{round(swim_metrics()$route_progress * 100, 1)}%"))
 
-  output$swim_map <- renderLeaflet({
-    # Route reference points
-    catalina <- c(lat = 33.3455, lng = -118.3278)  # Avalon-ish
+  output$swim_map <- renderPlotly({
+    catalina <- c(lat = 33.3455, lng = -118.3278)
     long_beach <- c(lat = 33.7701, lng = -118.1937)
 
     p <- swim_metrics()$route_progress
     prog_lat <- catalina[["lat"]] + (long_beach[["lat"]] - catalina[["lat"]]) * p
     prog_lng <- catalina[["lng"]] + (long_beach[["lng"]] - catalina[["lng"]]) * p
 
-    leaflet() %>%
-      addProviderTiles(providers$CartoDB.DarkMatterNoLabels) %>%
-      addPolylines(
-        lng = c(catalina[["lng"]], long_beach[["lng"]]),
+    plot_ly(type = "scattergeo", mode = "lines") %>%
+      add_trace(
+        lon = c(catalina[["lng"]], long_beach[["lng"]]),
         lat = c(catalina[["lat"]], long_beach[["lat"]]),
-        color = "#60a5fa",
-        weight = 5,
-        opacity = 0.85,
-        label = "Catalina → Long Beach reference line"
+        line = list(color = "#60a5fa", width = 5),
+        name = "Route"
       ) %>%
-      addCircleMarkers(
-        lng = catalina[["lng"]], lat = catalina[["lat"]],
-        radius = 8, color = "#22c55e", fillOpacity = 1,
-        label = "Catalina"
+      add_markers(
+        lon = c(catalina[["lng"]], long_beach[["lng"]], prog_lng),
+        lat = c(catalina[["lat"]], long_beach[["lat"]], prog_lat),
+        marker = list(size = c(10, 10, 14), color = c("#22c55e", "#f97316", "#a78bfa")),
+        text = c("Catalina", "Long Beach", glue("Progress {round(p*100,1)}%")),
+        hoverinfo = "text",
+        name = "Points"
       ) %>%
-      addCircleMarkers(
-        lng = long_beach[["lng"]], lat = long_beach[["lat"]],
-        radius = 8, color = "#f97316", fillOpacity = 1,
-        label = "Long Beach"
-      ) %>%
-      addCircleMarkers(
-        lng = prog_lng, lat = prog_lat,
-        radius = 11, color = "#a78bfa", fillOpacity = 1,
-        label = glue("Your cumulative progress point ({round(p*100,1)}%)")
-      ) %>%
-      fitBounds(
-        lng1 = min(catalina[["lng"]], long_beach[["lng"]]) - 0.08,
-        lat1 = min(catalina[["lat"]], long_beach[["lat"]]) - 0.04,
-        lng2 = max(catalina[["lng"]], long_beach[["lng"]]) + 0.08,
-        lat2 = max(catalina[["lat"]], long_beach[["lat"]]) + 0.04
+      layout(
+        paper_bgcolor = "rgba(0,0,0,0)",
+        geo = list(
+          projection = list(type = "mercator"),
+          showcountries = FALSE,
+          showland = TRUE,
+          landcolor = "#0f172a",
+          showocean = TRUE,
+          oceancolor = "#020617",
+          bgcolor = "rgba(0,0,0,0)",
+          lataxis = list(range = c(min(catalina[["lat"]], long_beach[["lat"]]) - 0.05, max(catalina[["lat"]], long_beach[["lat"]]) + 0.05)),
+          lonaxis = list(range = c(min(catalina[["lng"]], long_beach[["lng"]]) - 0.10, max(catalina[["lng"]], long_beach[["lng"]]) + 0.10))
+        ),
+        legend = list(orientation = "h", y = -0.15)
       )
   })
 

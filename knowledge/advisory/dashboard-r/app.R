@@ -327,7 +327,8 @@ ui <- page_navbar(
         dateRangeInput("date_window", "Date range", start = Sys.Date() - 30, end = Sys.Date()),
         selectizeInput("focus_metric", "Focus metric", choices = c("Recovery", "Sleep", "Strain"), selected = "Recovery"),
         checkboxInput("show_smooth", "Show 7-day smoothing", value = TRUE),
-        col_widths = c(12, 12, 12)
+        radioButtons("date_preset", "Quick range", choices = c("3D","7D","14D","30D","90D","ALL","CUSTOM"), selected = "30D", inline = TRUE),
+        col_widths = c(12, 12, 12, 12)
       )
     ),
     layout_columns(
@@ -407,7 +408,8 @@ ui <- page_navbar(
     "Swim Overlays",
     card(
       card_header("Swim Filters"),
-      dateRangeInput("swim_date_window", "Swim date range", start = Sys.Date() - 30, end = Sys.Date())
+      dateRangeInput("swim_date_window", "Swim date range", start = Sys.Date() - 30, end = Sys.Date()),
+      radioButtons("swim_date_preset", "Quick range", choices = c("3D","7D","14D","30D","90D","ALL","CUSTOM"), selected = "30D", inline = TRUE)
     ),
     layout_columns(
       card(
@@ -469,6 +471,37 @@ server <- function(input, output, session) {
     }
   )
 
+  apply_preset <- function(preset, data_min, data_max) {
+    end <- as.Date(Sys.Date())
+    if (!is.null(data_max) && !is.na(data_max)) end <- min(end, as.Date(data_max))
+    start <- switch(preset,
+      "3D" = end - days(2),
+      "7D" = end - days(6),
+      "14D" = end - days(13),
+      "30D" = end - days(29),
+      "90D" = end - days(89),
+      "ALL" = as.Date(data_min),
+      "CUSTOM" = NULL,
+      end - days(29)
+    )
+    if (is.null(start)) return(NULL)
+    c(max(as.Date(data_min), start), as.Date(data_max))
+  }
+
+  observeEvent(input$date_preset, {
+    r <- raw()
+    req(nrow(r) > 0)
+    rg <- apply_preset(input$date_preset, min(r$day, na.rm = TRUE), max(r$day, na.rm = TRUE))
+    if (!is.null(rg)) updateDateRangeInput(session, "date_window", start = rg[1], end = rg[2])
+  }, ignoreInit = FALSE)
+
+  observeEvent(input$swim_date_preset, {
+    r <- swim()
+    req(nrow(r) > 0)
+    rg <- apply_preset(input$swim_date_preset, min(r$day, na.rm = TRUE), max(r$day, na.rm = TRUE))
+    if (!is.null(rg)) updateDateRangeInput(session, "swim_date_window", start = rg[1], end = rg[2])
+  }, ignoreInit = FALSE)
+
   filtered_raw <- reactive({
     req(input$date_window)
     raw() %>%
@@ -481,7 +514,11 @@ server <- function(input, output, session) {
       filter(day >= as.Date(input$swim_date_window[1]), day <= as.Date(input$swim_date_window[2]))
   })
 
-  tiles <- reactive(metric_tiles(filtered_raw()))
+  tiles <- reactive({
+    d <- filtered_raw()
+    if (nrow(d) == 0) return(list(recovery_latest = "N/A", recovery_7d = "N/A", sleep_latest = "N/A", strain_7d = "N/A", span = "No data in selected range"))
+    metric_tiles(d)
+  })
   swim_metrics <- reactive(swim_overlay_metrics(filtered_swim()))
 
   output$recovery_latest <- renderText(glue("{tiles()$recovery_latest}"))
@@ -490,10 +527,17 @@ server <- function(input, output, session) {
   output$strain_7d <- renderText(glue("{tiles()$strain_7d}"))
   output$data_span <- renderText(tiles()$span)
 
-  output$layered_plot <- renderPlotly(
-    layered_time_plot(filtered_raw(), focus_metric = input$focus_metric, show_smooth = input$show_smooth)
-  )
-  output$cor_plot <- renderPlotly(cor_plot(filtered_raw()))
+  output$layered_plot <- renderPlotly({
+    d <- filtered_raw()
+    validate(need(nrow(d) > 0, "No data in selected range"))
+    layered_time_plot(d, focus_metric = input$focus_metric, show_smooth = input$show_smooth) %>%
+      config(displayModeBar = FALSE, responsive = TRUE)
+  })
+  output$cor_plot <- renderPlotly({
+    d <- filtered_raw()
+    validate(need(nrow(d) > 2, "Need more data points for correlation"))
+    cor_plot(d) %>% config(displayModeBar = FALSE, responsive = TRUE)
+  })
 
   output$insights <- renderUI({
     tags$ul(
@@ -534,6 +578,7 @@ server <- function(input, output, session) {
     long_beach <- c(lat = 33.7701, lng = -118.1937)
 
     p <- swim_metrics()$route_progress
+    if (!is.finite(p)) p <- 0
     prog_lat <- catalina[["lat"]] + (long_beach[["lat"]] - catalina[["lat"]]) * p
     prog_lng <- catalina[["lng"]] + (long_beach[["lng"]] - catalina[["lng"]]) * p
 
@@ -566,7 +611,8 @@ server <- function(input, output, session) {
           lonaxis = list(range = c(min(catalina[["lng"]], long_beach[["lng"]]) - 0.10, max(catalina[["lng"]], long_beach[["lng"]]) + 0.10))
         ),
         legend = list(orientation = "h", y = -0.15)
-      )
+      ) %>%
+      config(displayModeBar = FALSE, responsive = TRUE)
   })
 
   output$preview <- renderTable({

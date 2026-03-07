@@ -4,6 +4,7 @@ suppressPackageStartupMessages({
   library(DBI)
   library(RSQLite)
   library(dplyr)
+  library(tidyr)
   library(lubridate)
   library(ggplot2)
   library(plotly)
@@ -68,8 +69,13 @@ ui <- page_navbar(
   nav_panel(
     "Overview",
     card(
-      card_header("Range"),
-      selectInput("overview_range", NULL, choices = c("3D","7D","14D","30D","90D","ALL"), selected = "30D")
+      card_header("Range + Overlay Controls"),
+      layout_columns(
+        selectInput("overview_range", "Range", choices = c("3D","7D","14D","30D","90D","ALL"), selected = "30D"),
+        checkboxGroupInput("overlay_metrics", "Overlay lines", choices = c("Recovery" = "recovery", "Sleep" = "sleep"), selected = c("recovery", "sleep")),
+        checkboxInput("show_mean", "Show strain mean", value = TRUE),
+        col_widths = c(5, 5, 2)
+      )
     ),
     layout_columns(
       card(card_header("Recovery (latest)"), h2(textOutput("recovery_latest"))),
@@ -78,8 +84,8 @@ ui <- page_navbar(
       col_widths = c(12, 12, 12)
     ),
     card(
-      card_header("Trend"),
-      plotlyOutput("trend_plot", height = "380px")
+      card_header("Daily Strain Bars + Overlays"),
+      plotlyOutput("trend_plot", height = "420px")
     )
   ),
 
@@ -140,17 +146,35 @@ server <- function(input, output, session) {
   })
 
   output$trend_plot <- renderPlotly({
-    d <- whoop() %>% filter(!is.na(recovery_score) | !is.na(sleep_performance) | !is.na(strain))
+    d <- whoop() %>%
+      filter(!is.na(strain)) %>%
+      mutate(
+        strain_norm = pmin(1, pmax(0, strain / 20)),
+        recovery_norm = pmin(1, pmax(0, recovery_score / 100)),
+        sleep_norm = pmin(1, pmax(0, sleep_performance / 100))
+      )
+
     validate(need(nrow(d) > 0, "No data in selected range"))
 
-    p <- ggplot(d, aes(day)) +
-      geom_line(aes(y = recovery_score / 100, color = "Recovery"), linewidth = 1.1) +
-      geom_line(aes(y = sleep_performance / 100, color = "Sleep"), linewidth = 1.1) +
-      geom_line(aes(y = strain / 20, color = "Strain"), linewidth = 1.0, linetype = "22") +
-      scale_y_continuous(labels = percent_format()) +
-      scale_color_manual(values = c(Recovery = "#22c55e", Sleep = "#38bdf8", Strain = "#f97316")) +
+    p <- ggplot(d, aes(x = day)) +
+      geom_col(aes(y = strain_norm), fill = "#f97316", alpha = 0.85, width = 0.8) +
+      scale_y_continuous(labels = percent_format(), limits = c(0, 1.05)) +
       theme_minimal(base_size = 13) +
       theme(legend.position = "bottom", axis.title = element_blank())
+
+    if ("recovery" %in% input$overlay_metrics) {
+      p <- p + geom_line(aes(y = recovery_norm, color = "Recovery"), linewidth = 1.2)
+    }
+    if ("sleep" %in% input$overlay_metrics) {
+      p <- p + geom_line(aes(y = sleep_norm, color = "Sleep"), linewidth = 1.2)
+    }
+    if (isTRUE(input$show_mean)) {
+      mean_strain <- mean(d$strain_norm, na.rm = TRUE)
+      p <- p + geom_hline(yintercept = mean_strain, linetype = "dashed", color = "#a78bfa", linewidth = 1) +
+        annotate("text", x = min(d$day, na.rm = TRUE), y = mean_strain + 0.03, label = glue("Mean strain: {round(mean_strain*20,1)}"), color = "#a78bfa", hjust = 0, size = 3.5)
+    }
+
+    p <- p + scale_color_manual(values = c(Recovery = "#22c55e", Sleep = "#38bdf8"))
 
     ggplotly(p) %>% config(displayModeBar = FALSE, responsive = TRUE)
   })

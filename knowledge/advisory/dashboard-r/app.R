@@ -66,6 +66,19 @@ range_filter <- function(df, preset) {
 ui <- page_navbar(
   title = "Health Dashboard v1",
   theme = bs_theme(version = 5, bg = "#0b1020", fg = "#dbeafe", primary = "#60a5fa"),
+  header = tags$style(HTML("
+    .glass-card {
+      background: linear-gradient(145deg, rgba(30,41,59,.75), rgba(15,23,42,.55));
+      border: 1px solid rgba(148,163,184,.22);
+      border-radius: 16px;
+      padding: 14px 16px;
+      box-shadow: 0 10px 26px rgba(2,6,23,.35);
+    }
+    .glass-label { color:#93c5fd; font-size:.82rem; text-transform:uppercase; letter-spacing:.08em; }
+    .glass-value { font-size:2rem; font-weight:700; line-height:1.1; margin:6px 0; }
+    .glass-row { display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
+    .chip { background: rgba(148,163,184,.18); border:1px solid rgba(148,163,184,.3); border-radius:999px; padding:4px 10px; font-size:.8rem; }
+  ")),
 
   nav_panel(
     "Overview",
@@ -79,12 +92,7 @@ ui <- page_navbar(
       )
     ),
     p(class = "text-secondary", textOutput("overview_window")),
-    layout_columns(
-      card(card_header("Recovery (latest)"), h2(textOutput("recovery_latest"))),
-      card(card_header("Sleep % (latest)"), h2(textOutput("sleep_latest"))),
-      card(card_header("Strain (latest)"), h2(textOutput("strain_latest"))),
-      col_widths = c(12, 12, 12)
-    ),
+    uiOutput("overview_hero"),
     card(
       card_header("Daily Strain Bars + Overlays"),
       plotlyOutput("trend_plot", height = "420px")
@@ -98,12 +106,7 @@ ui <- page_navbar(
       selectInput("swim_range", NULL, choices = c("3D","7D","14D","30D","90D","ALL"), selected = "30D")
     ),
     p(class = "text-secondary", textOutput("swim_window")),
-    layout_columns(
-      card(card_header("Week Swim"), h2(textOutput("swim_week"))),
-      card(card_header("Route Progress"), h2(textOutput("swim_progress"))),
-      card(card_header("Target Date"), h2(textOutput("target_date"))),
-      col_widths = c(12, 12, 12)
-    ),
+    uiOutput("swim_hero"),
     card(
       card_header("Catalina → Long Beach"),
       plotlyOutput("swim_map", height = "430px")
@@ -145,6 +148,40 @@ server <- function(input, output, session) {
     d <- swim()
     if (!nrow(d)) return(glue("Swim range: {input$swim_range} (no data)"))
     glue("Swim range: {input$swim_range} • {min(d$day)} → {max(d$day)} • {nrow(d)} day(s)")
+  })
+
+  snapshot_vals <- reactive({
+    d <- whoop()
+    list(
+      recovery = if (!nrow(d)) "N/A" else as.character(round(dplyr::last(na.omit(d$recovery_score)),1)),
+      sleep = if (!nrow(d)) "N/A" else paste0(round(dplyr::last(na.omit(d$sleep_performance)),1), "%"),
+      strain = if (!nrow(d)) "N/A" else as.character(round(dplyr::last(na.omit(d$strain)),1))
+    )
+  })
+
+  output$overview_hero <- renderUI({
+    v <- snapshot_vals()
+    tags$div(class = "glass-card",
+      tags$div(class = "glass-label", "Today Snapshot"),
+      tags$div(class = "glass-value", glue("Strain {v$strain}")),
+      tags$div(class = "glass-row",
+        tags$span(class = "chip", glue("Recovery {v$recovery}")),
+        tags$span(class = "chip", glue("Sleep {v$sleep}")),
+        tags$span(class = "chip", glue("{input$overview_range}"))
+      )
+    )
+  })
+
+  output$swim_hero <- renderUI({
+    tags$div(class = "glass-card",
+      tags$div(class = "glass-label", "Swim Session"),
+      tags$div(class = "glass-value", if (!nrow(swim())) "0 yd" else { end <- max(swim()$day, na.rm = TRUE); paste0(comma(round(sum(swim()$yards[swim()$day >= end - days(6)], na.rm = TRUE),0)), " yd") }),
+      tags$div(class = "glass-row",
+        tags$span(class = "chip", if (!nrow(swim())) "0%" else paste0(round(min(1, sum(swim()$yards, na.rm = TRUE)/(22*1760))*100,1), "%")),
+        tags$span(class = "chip", format(TARGET_CROSSING_DATE, "%b %d, %Y")),
+        tags$span(class = "chip", glue("{input$swim_range}"))
+      )
+    )
   })
 
   output$recovery_latest <- renderText({

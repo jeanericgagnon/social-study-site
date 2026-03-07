@@ -221,10 +221,10 @@ server <- function(input, output, session) {
         mode = "markers+text",
         lon = c(catalina[["lng"]], long_beach[["lng"]], prog_lng),
         lat = c(catalina[["lat"]], long_beach[["lat"]], prog_lat),
-        text = c("Avalon, Catalina", "Long Beach", glue("You ({round(pct*100,1)}%)")),
+        text = c("Avalon, Catalina", "", glue("You ({round(pct*100,1)}%)")),
         textposition = c("top right", "top right", "bottom right"),
         marker = list(size = c(10, 10, 14), color = c("#22c55e", "#f97316", "#a78bfa")),
-        hovertemplate = "%{text}<extra></extra>",
+        hovertemplate = c("Avalon, Catalina<extra></extra>", "Long Beach<extra></extra>", glue("You ({round(pct*100,1)}%)<extra></extra>")),
         showlegend = FALSE
       ) %>%
       layout(

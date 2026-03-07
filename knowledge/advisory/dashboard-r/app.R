@@ -176,7 +176,9 @@ server <- function(input, output, session) {
 
     p <- p + scale_color_manual(values = c(Recovery = "#22c55e", Sleep = "#38bdf8"))
 
-    ggplotly(p) %>% config(displayModeBar = FALSE, responsive = TRUE)
+    ggplotly(p) %>%
+      layout(dragmode = FALSE) %>%
+      config(displayModeBar = FALSE, responsive = TRUE, scrollZoom = FALSE)
   })
 
   output$swim_week <- renderText({
@@ -226,7 +228,8 @@ server <- function(input, output, session) {
         ),
         legend = list(orientation = "h", y = -0.15)
       ) %>%
-      config(displayModeBar = FALSE, responsive = TRUE)
+      layout(dragmode = FALSE) %>%
+      config(displayModeBar = FALSE, responsive = TRUE, scrollZoom = FALSE)
   })
 
   output$insights <- renderUI({

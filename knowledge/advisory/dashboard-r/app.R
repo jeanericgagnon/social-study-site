@@ -229,6 +229,26 @@ coach_cards <- function(df) {
   cards
 }
 
+weekly_narrative <- function(df) {
+  clean <- df %>% filter(!is.na(recovery_score), !is.na(sleep_performance), !is.na(strain))
+  if (nrow(clean) < 10) return("Collect a bit more data and I’ll generate a stronger weekly narrative.")
+
+  latest_day <- max(clean$day, na.rm = TRUE)
+  wk <- clean %>% filter(day >= latest_day - days(6))
+  prev <- clean %>% filter(day < latest_day - days(6), day >= latest_day - days(13))
+
+  rec_delta <- mean(wk$recovery_score, na.rm = TRUE) - mean(prev$recovery_score, na.rm = TRUE)
+  slp_delta <- mean(wk$sleep_performance, na.rm = TRUE) - mean(prev$sleep_performance, na.rm = TRUE)
+  str_delta <- mean(wk$strain, na.rm = TRUE) - mean(prev$strain, na.rm = TRUE)
+
+  glue(
+    "This week, recovery is {ifelse(rec_delta >= 0, 'up', 'down')} {abs(round(rec_delta,1))} points, ",
+    "sleep performance is {ifelse(slp_delta >= 0, 'up', 'down')} {abs(round(slp_delta,1))} points, and ",
+    "strain is {ifelse(str_delta >= 0, 'up', 'down')} {abs(round(str_delta,2))}. ",
+    "Interpretation: {ifelse(rec_delta >= 0 && slp_delta >= 0, 'adaptation is trending positive — keep pressure measured.', 'fatigue pressure may be outrunning recovery — bias toward consistency and sleep quality this week.')}"
+  )
+}
+
 ui <- page_navbar(
   title = div(icon("chart-line"), " WHOOP x R Insight Layers"),
   theme = bs_theme(
@@ -239,6 +259,9 @@ ui <- page_navbar(
     secondary = "#a78bfa",
     success = "#22c55e",
     base_font = font_google("Inter")
+  ),
+  header = tagList(
+    tags$style(HTML("\n      .card {\n        background: linear-gradient(135deg, rgba(30,41,59,.55), rgba(15,23,42,.45)) !important;\n        border: 1px solid rgba(148,163,184,.20) !important;\n        backdrop-filter: blur(10px);\n        box-shadow: 0 8px 30px rgba(2, 6, 23, .35);\n      }\n      .card-header {\n        font-weight: 700;\n        letter-spacing: .2px;\n      }\n      .pulse {\n        animation: pulseGlow 2.4s ease-in-out infinite;\n      }\n      @keyframes pulseGlow {\n        0%, 100% { text-shadow: 0 0 0 rgba(96,165,250,.0); }\n        50% { text-shadow: 0 0 14px rgba(96,165,250,.45); }\n      }\n      .narrative-box {\n        padding: 14px 16px;\n        border-radius: 12px;\n        background: rgba(15,23,42,.55);\n        border: 1px solid rgba(96,165,250,.25);\n        line-height: 1.45;\n      }\n    "))
   ),
 
   nav_panel(
@@ -289,7 +312,7 @@ ui <- page_navbar(
     layout_columns(
       card(
         card_header("Readiness Score"),
-        h1(textOutput("readiness_score"), class = "m-0"),
+        h1(textOutput("readiness_score"), class = "m-0 pulse"),
         p(class = "text-secondary", "Composite of Recovery + Sleep - Strain pressure")
       ),
       card(
@@ -309,6 +332,10 @@ ui <- page_navbar(
         uiOutput("coach_cards")
       ),
       col_widths = c(7, 5)
+    ),
+    card(
+      card_header("What Changed This Week"),
+      div(class = "narrative-box", textOutput("weekly_narrative"))
     )
   ),
 
@@ -370,6 +397,10 @@ server <- function(input, output, session) {
     tags$ul(
       lapply(coach_cards(raw()), function(x) tags$li(style = "margin-bottom:10px;", x))
     )
+  })
+
+  output$weekly_narrative <- renderText({
+    weekly_narrative(raw())
   })
 
   output$preview <- renderTable({

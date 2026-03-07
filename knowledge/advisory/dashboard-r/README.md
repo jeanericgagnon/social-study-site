@@ -10,9 +10,11 @@ A high-visual dashboard for WHOOP metrics stored in:
 - Correlation view (Sleep vs Recovery, colored by Strain)
 - Auto insight callouts
 - Executive Insights tab:
-  - Readiness composite score
+  - Readiness composite score (animated highlight)
   - Anomaly detection table
   - Weekly coaching cards
+  - "What changed this week" narrative panel
+- Glassmorphism-style cards + layered dark theme
 - Live auto-refresh (every 10s)
 - Data preview tab
 

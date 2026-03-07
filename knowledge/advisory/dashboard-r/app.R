@@ -121,7 +121,7 @@ insight_cards <- function(df) {
   notes
 }
 
-layered_time_plot <- function(df) {
+layered_time_plot <- function(df, focus_metric = "Recovery", show_smooth = TRUE) {
   base <- ggplot(df, aes(day)) +
     theme_minimal(base_size = 13) +
     theme(
@@ -132,12 +132,13 @@ layered_time_plot <- function(df) {
       axis.title = element_blank()
     )
 
+  focus_alpha <- function(name) ifelse(focus_metric == name, 1, 0.45)
+
   p <- base +
-    geom_area(aes(y = sleep_performance / 100, fill = "Sleep %"), alpha = 0.20) +
-    geom_line(aes(y = sleep_performance / 100, color = "Sleep %"), linewidth = 1.0) +
-    geom_line(aes(y = recovery_score / 100, color = "Recovery"), linewidth = 1.2) +
-    geom_line(aes(y = strain / 20, color = "Strain (scaled)"), linewidth = 1.0, linetype = "22") +
-    geom_line(aes(y = rolling_mean(recovery_score / 100, 7), color = "Recovery 7d"), linewidth = 1.5) +
+    geom_area(aes(y = sleep_performance / 100, fill = "Sleep %"), alpha = 0.20 * focus_alpha("Sleep")) +
+    geom_line(aes(y = sleep_performance / 100, color = "Sleep %"), linewidth = 1.0, alpha = focus_alpha("Sleep")) +
+    geom_line(aes(y = recovery_score / 100, color = "Recovery"), linewidth = 1.2, alpha = focus_alpha("Recovery")) +
+    geom_line(aes(y = strain / 20, color = "Strain (scaled)"), linewidth = 1.0, linetype = "22", alpha = focus_alpha("Strain")) +
     scale_y_continuous(labels = percent_format(accuracy = 1), limits = c(0, 1.05)) +
     scale_fill_manual(values = c("Sleep %" = "#60a5fa")) +
     scale_color_manual(values = c(
@@ -146,6 +147,10 @@ layered_time_plot <- function(df) {
       "Strain (scaled)" = "#f97316",
       "Recovery 7d" = "#a78bfa"
     ))
+
+  if (isTRUE(show_smooth)) {
+    p <- p + geom_line(aes(y = rolling_mean(recovery_score / 100, 7), color = "Recovery 7d"), linewidth = 1.5)
+  }
 
   ggplotly(p, tooltip = c("x", "y", "colour")) %>%
     layout(
@@ -316,6 +321,15 @@ ui <- page_navbar(
 
   nav_panel(
     "Dashboard",
+    card(
+      card_header("Mobile Controls"),
+      layout_columns(
+        dateRangeInput("date_window", "Date range", start = Sys.Date() - 30, end = Sys.Date()),
+        selectizeInput("focus_metric", "Focus metric", choices = c("Recovery", "Sleep", "Strain"), selected = "Recovery"),
+        checkboxInput("show_smooth", "Show 7-day smoothing", value = TRUE),
+        col_widths = c(6, 4, 2)
+      )
+    ),
     layout_columns(
       card(
         card_header("Recovery (latest)"),
@@ -333,7 +347,7 @@ ui <- page_navbar(
         card_header("Strain 7d avg"),
         h2(textOutput("strain_7d"), class = "m-0")
       ),
-      col_widths = c(3, 3, 3, 3)
+      col_widths = c(6, 6, 6, 6)
     ),
 
     card(
@@ -451,7 +465,13 @@ server <- function(input, output, session) {
     }
   )
 
-  tiles <- reactive(metric_tiles(raw()))
+  filtered_raw <- reactive({
+    req(input$date_window)
+    raw() %>%
+      filter(day >= as.Date(input$date_window[1]), day <= as.Date(input$date_window[2]))
+  })
+
+  tiles <- reactive(metric_tiles(filtered_raw()))
   swim_metrics <- reactive(swim_overlay_metrics(swim()))
 
   output$recovery_latest <- renderText(glue("{tiles()$recovery_latest}"))
@@ -460,36 +480,38 @@ server <- function(input, output, session) {
   output$strain_7d <- renderText(glue("{tiles()$strain_7d}"))
   output$data_span <- renderText(tiles()$span)
 
-  output$layered_plot <- renderPlotly(layered_time_plot(raw()))
-  output$cor_plot <- renderPlotly(cor_plot(raw()))
+  output$layered_plot <- renderPlotly(
+    layered_time_plot(filtered_raw(), focus_metric = input$focus_metric, show_smooth = input$show_smooth)
+  )
+  output$cor_plot <- renderPlotly(cor_plot(filtered_raw()))
 
   output$insights <- renderUI({
     tags$ul(
-      lapply(insight_cards(raw()), function(x) tags$li(style = "margin-bottom:10px;", x))
+      lapply(insight_cards(filtered_raw()), function(x) tags$li(style = "margin-bottom:10px;", x))
     )
   })
 
   output$readiness_score <- renderText({
-    v <- readiness_score(raw())
+    v <- readiness_score(filtered_raw())
     ifelse(is.na(v), "N/A", v)
   })
 
   output$anomaly_table <- renderTable({
-    anomaly_table(raw()) %>% head(15)
+    anomaly_table(filtered_raw()) %>% head(15)
   })
 
   output$anomaly_count <- renderText({
-    nrow(anomaly_table(raw()))
+    nrow(anomaly_table(filtered_raw()))
   })
 
   output$coach_cards <- renderUI({
     tags$ul(
-      lapply(coach_cards(raw()), function(x) tags$li(style = "margin-bottom:10px;", x))
+      lapply(coach_cards(filtered_raw()), function(x) tags$li(style = "margin-bottom:10px;", x))
     )
   })
 
   output$weekly_narrative <- renderText({
-    weekly_narrative(raw())
+    weekly_narrative(filtered_raw())
   })
 
   output$swim_today <- renderText(glue("{comma(swim_metrics()$today_yards)} yd"))
@@ -538,7 +560,7 @@ server <- function(input, output, session) {
   })
 
   output$preview <- renderTable({
-    raw() %>%
+    filtered_raw() %>%
       mutate(across(where(is.numeric), ~ round(.x, 2))) %>%
       tail(20)
   })

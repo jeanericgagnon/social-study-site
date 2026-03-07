@@ -198,37 +198,61 @@ server <- function(input, output, session) {
   output$swim_map <- renderPlotly({
     d <- swim()
     pct <- if (nrow(d)) min(1, sum(d$yards, na.rm = TRUE) / (22 * 1760)) else 0
+    if (!is.finite(pct)) pct <- 0
 
     catalina <- c(lat = 33.3455, lng = -118.3278)
     long_beach <- c(lat = 33.7701, lng = -118.1937)
     prog_lat <- catalina[["lat"]] + (long_beach[["lat"]] - catalina[["lat"]]) * pct
     prog_lng <- catalina[["lng"]] + (long_beach[["lng"]] - catalina[["lng"]]) * pct
 
-    plot_ly(type = "scattergeo", mode = "lines") %>%
+    route_df <- data.frame(
+      lon = c(catalina[["lng"]], long_beach[["lng"]]),
+      lat = c(catalina[["lat"]], long_beach[["lat"]])
+    )
+
+    points_df <- data.frame(
+      lon = c(catalina[["lng"]], long_beach[["lng"]], prog_lng),
+      lat = c(catalina[["lat"]], long_beach[["lat"]], prog_lat),
+      label = c("Catalina", "Long Beach", glue("Progress {round(pct * 100, 1)}%")),
+      color = c("#22c55e", "#f97316", "#a78bfa"),
+      size = c(9, 9, 13)
+    )
+
+    plot_geo() %>%
       add_trace(
-        lon = c(catalina[["lng"]], long_beach[["lng"]]),
-        lat = c(catalina[["lat"]], long_beach[["lat"]]),
+        data = route_df,
+        type = "scattergeo",
+        mode = "lines",
+        lon = ~lon,
+        lat = ~lat,
         line = list(color = "#60a5fa", width = 5),
-        name = "Route"
+        name = "Route",
+        hoverinfo = "skip"
       ) %>%
-      add_markers(
-        lon = c(catalina[["lng"]], long_beach[["lng"]], prog_lng),
-        lat = c(catalina[["lat"]], long_beach[["lat"]], prog_lat),
-        marker = list(size = c(9, 9, 13), color = c("#22c55e", "#f97316", "#a78bfa")),
-        text = c("Catalina", "Long Beach", glue("Progress {round(pct * 100, 1)}%")),
-        hoverinfo = "text"
+      add_trace(
+        data = points_df,
+        type = "scattergeo",
+        mode = "markers",
+        lon = ~lon,
+        lat = ~lat,
+        text = ~label,
+        hoverinfo = "text",
+        marker = list(color = points_df$color, size = points_df$size),
+        showlegend = FALSE
       ) %>%
       layout(
         paper_bgcolor = "rgba(0,0,0,0)",
         geo = list(
           projection = list(type = "mercator"),
-          showland = TRUE, landcolor = "#0f172a", showocean = TRUE, oceancolor = "#020617",
+          showland = TRUE,
+          landcolor = "#0f172a",
+          showocean = TRUE,
+          oceancolor = "#020617",
           lataxis = list(range = c(33.28, 33.84)),
           lonaxis = list(range = c(-118.42, -118.10))
         ),
-        legend = list(orientation = "h", y = -0.15)
+        dragmode = FALSE
       ) %>%
-      layout(dragmode = FALSE) %>%
       config(displayModeBar = FALSE, responsive = TRUE, scrollZoom = FALSE)
   })
 

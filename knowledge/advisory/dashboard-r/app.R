@@ -72,7 +72,7 @@ ui <- page_navbar(
       card_header("Range + Overlay Controls"),
       layout_columns(
         selectInput("overview_range", "Range", choices = c("3D","7D","14D","30D","90D","ALL"), selected = "30D"),
-        checkboxGroupInput("overlay_metrics", "Overlay lines", choices = c("Recovery" = "recovery", "Sleep" = "sleep"), selected = c("recovery", "sleep")),
+        checkboxGroupInput("overlay_metrics", "Overlay lines (off by default)", choices = c("Recovery" = "recovery", "Sleep" = "sleep"), selected = character(0)),
         checkboxInput("show_mean", "Show strain mean", value = TRUE),
         col_widths = c(5, 5, 2)
       )

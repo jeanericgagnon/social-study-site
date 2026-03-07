@@ -19,6 +19,8 @@ DB_PATH <- normalizePath(
   mustWork = FALSE
 )
 
+TARGET_CROSSING_DATE <- as.Date("2027-07-12")
+
 validate_db <- function(path) {
   if (!file.exists(path)) {
     stop(glue("DB not found at: {path}"), call. = FALSE)
@@ -400,11 +402,16 @@ ui <- page_navbar(
         h2(textOutput("swim_week"), class = "m-0")
       ),
       card(
+        card_header("Projected Crossing Date"),
+        h2(textOutput("projected_date"), class = "m-0"),
+        p(class = "text-secondary", "Pinned target date (manual override)")
+      ),
+      card(
         card_header("Catalina Route Progress"),
         h2(textOutput("swim_progress"), class = "m-0"),
         p(class = "text-secondary", "Cumulative swim distance mapped against Catalina → Long Beach reference line")
       ),
-      col_widths = c(3, 3, 6)
+      col_widths = c(3, 3, 3, 3)
     ),
     card(
       card_header("Catalina → Long Beach Swim Map"),
@@ -488,6 +495,7 @@ server <- function(input, output, session) {
 
   output$swim_today <- renderText(glue("{comma(swim_metrics()$today_yards)} yd"))
   output$swim_week <- renderText(glue("{comma(swim_metrics()$week_yards)} yd"))
+  output$projected_date <- renderText(format(TARGET_CROSSING_DATE, "%B %d, %Y"))
   output$swim_progress <- renderText(glue("{round(swim_metrics()$route_progress * 100, 1)}%"))
 
   output$swim_map <- renderLeaflet({

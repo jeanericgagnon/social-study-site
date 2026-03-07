@@ -153,6 +153,82 @@ metric_tiles <- function(df) {
   )
 }
 
+readiness_score <- function(df) {
+  clean <- df %>% filter(!is.na(recovery_score), !is.na(sleep_performance), !is.na(strain))
+  if (!nrow(clean)) return(NA_real_)
+  latest <- clean %>% slice_tail(n = 1)
+
+  # Weighted composite (0-100): recovery + sleep quality - strain pressure
+  score <- 0.55 * latest$recovery_score +
+    0.30 * latest$sleep_performance +
+    0.15 * pmax(0, 100 - (latest$strain * 5))
+
+  pmax(0, pmin(100, round(score, 1)))
+}
+
+anomaly_table <- function(df) {
+  clean <- df %>%
+    arrange(day) %>%
+    mutate(
+      rec_z = as.numeric(scale(recovery_score)),
+      sleep_z = as.numeric(scale(sleep_performance)),
+      strain_z = as.numeric(scale(strain))
+    ) %>%
+    mutate(
+      anomaly = if_else(
+        abs(rec_z) > 1.5 | abs(sleep_z) > 1.5 | abs(strain_z) > 1.5,
+        TRUE,
+        FALSE,
+        missing = FALSE
+      )
+    )
+
+  clean %>%
+    filter(anomaly) %>%
+    transmute(
+      day,
+      recovery = round(recovery_score, 1),
+      sleep = round(sleep_performance, 1),
+      strain = round(strain, 2),
+      trigger = case_when(
+        abs(rec_z) > 1.5 ~ "Recovery outlier",
+        abs(sleep_z) > 1.5 ~ "Sleep outlier",
+        abs(strain_z) > 1.5 ~ "Strain outlier",
+        TRUE ~ "Mixed"
+      )
+    ) %>%
+    arrange(desc(day))
+}
+
+coach_cards <- function(df) {
+  clean <- df %>% filter(!is.na(recovery_score), !is.na(sleep_performance), !is.na(strain))
+  if (!nrow(clean)) return(c("Not enough data yet for coaching cards."))
+
+  last3 <- clean %>% slice_tail(n = 3)
+  rec3 <- mean(last3$recovery_score, na.rm = TRUE)
+  slp3 <- mean(last3$sleep_performance, na.rm = TRUE)
+  str3 <- mean(last3$strain, na.rm = TRUE)
+
+  cards <- c()
+  cards <- c(cards, glue("3-day readiness profile: Recovery {round(rec3, 1)}, Sleep {round(slp3, 1)}%, Strain {round(str3, 2)}."))
+
+  cards <- c(cards, if (rec3 < 55 && str3 > 12) {
+    "Dial intensity down 10-20% tomorrow. Keep movement, cut top-end efforts."
+  } else if (rec3 > 75 && slp3 > 85) {
+    "Good window to push quality work — green-light for a harder session."
+  } else {
+    "Stay steady: maintain current volume and prioritize consistency over spikes."
+  })
+
+  cards <- c(cards, if (slp3 < 80) {
+    "Sleep consistency drift detected. Prioritize bedtime stability tonight for recovery lift."
+  } else {
+    "Sleep signal is supportive — keep pre-sleep routine unchanged."
+  })
+
+  cards
+}
+
 ui <- page_navbar(
   title = div(icon("chart-line"), " WHOOP x R Insight Layers"),
   theme = bs_theme(
@@ -209,6 +285,34 @@ ui <- page_navbar(
   ),
 
   nav_panel(
+    "Executive Insights",
+    layout_columns(
+      card(
+        card_header("Readiness Score"),
+        h1(textOutput("readiness_score"), class = "m-0"),
+        p(class = "text-secondary", "Composite of Recovery + Sleep - Strain pressure")
+      ),
+      card(
+        card_header("Anomaly Count"),
+        h1(textOutput("anomaly_count"), class = "m-0"),
+        p(class = "text-secondary", "Days flagged as statistically unusual")
+      ),
+      col_widths = c(6, 6)
+    ),
+    layout_columns(
+      card(
+        card_header("Anomaly Timeline"),
+        tableOutput("anomaly_table")
+      ),
+      card(
+        card_header("Weekly Coaching Cards"),
+        uiOutput("coach_cards")
+      ),
+      col_widths = c(7, 5)
+    )
+  ),
+
+  nav_panel(
     "Data",
     card(
       card_header("Data Window"),
@@ -246,6 +350,25 @@ server <- function(input, output, session) {
   output$insights <- renderUI({
     tags$ul(
       lapply(insight_cards(raw()), function(x) tags$li(style = "margin-bottom:10px;", x))
+    )
+  })
+
+  output$readiness_score <- renderText({
+    v <- readiness_score(raw())
+    ifelse(is.na(v), "N/A", v)
+  })
+
+  output$anomaly_table <- renderTable({
+    anomaly_table(raw()) %>% head(15)
+  })
+
+  output$anomaly_count <- renderText({
+    nrow(anomaly_table(raw()))
+  })
+
+  output$coach_cards <- renderUI({
+    tags$ul(
+      lapply(coach_cards(raw()), function(x) tags$li(style = "margin-bottom:10px;", x))
     )
   })
 

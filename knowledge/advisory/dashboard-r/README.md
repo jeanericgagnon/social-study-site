@@ -15,6 +15,10 @@ A high-visual dashboard for WHOOP metrics stored in:
   - Weekly coaching cards
   - "What changed this week" narrative panel
 - Glassmorphism-style cards + layered dark theme
+- Swim overlay tab:
+  - Today + week swim distance overlays
+  - Catalina → Long Beach route map
+  - Progress marker along route line
 - Live auto-refresh (every 10s)
 - Data preview tab
 
@@ -43,6 +47,6 @@ Install once:
 ```r
 install.packages(c(
   'shiny','bslib','DBI','RSQLite','dplyr','tidyr','lubridate',
-  'ggplot2','plotly','scales','glue','purrr'
+  'ggplot2','plotly','leaflet','scales','glue','purrr'
 ))
 ```

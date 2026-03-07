@@ -327,8 +327,7 @@ ui <- page_navbar(
         dateRangeInput("date_window", "Date range", start = Sys.Date() - 30, end = Sys.Date()),
         selectizeInput("focus_metric", "Focus metric", choices = c("Recovery", "Sleep", "Strain"), selected = "Recovery"),
         checkboxInput("show_smooth", "Show 7-day smoothing", value = TRUE),
-        radioButtons("date_preset", "Quick range", choices = c("3D","7D","14D","30D","90D","ALL","CUSTOM"), selected = "30D", inline = TRUE),
-        col_widths = c(12, 12, 12, 12)
+        col_widths = c(12, 12, 12)
       )
     ),
     layout_columns(
@@ -354,6 +353,7 @@ ui <- page_navbar(
     card(
       card_header("Layered Trend Engine"),
       card_body(
+        selectInput("layered_range", "Range", choices = c("3D","7D","14D","30D","90D","ALL","CUSTOM"), selected = "30D"),
         p(class = "text-secondary", "Overlay: Sleep %, Recovery, Strain (scaled), Recovery 7d smoothing"),
         plotlyOutput("layered_plot", height = "450px")
       )
@@ -362,7 +362,10 @@ ui <- page_navbar(
     layout_columns(
       card(
         card_header("Sleep vs Recovery vs Strain"),
-        plotlyOutput("cor_plot", height = "360px")
+        card_body(
+          selectInput("cor_range", "Range", choices = c("3D","7D","14D","30D","90D","ALL","CUSTOM"), selected = "30D"),
+          plotlyOutput("cor_plot", height = "360px")
+        )
       ),
       card(
         card_header("Auto Insight Callouts"),
@@ -409,7 +412,7 @@ ui <- page_navbar(
     card(
       card_header("Swim Filters"),
       dateRangeInput("swim_date_window", "Swim date range", start = Sys.Date() - 30, end = Sys.Date()),
-      radioButtons("swim_date_preset", "Quick range", choices = c("3D","7D","14D","30D","90D","ALL","CUSTOM"), selected = "30D", inline = TRUE)
+
     ),
     layout_columns(
       card(
@@ -434,7 +437,10 @@ ui <- page_navbar(
     ),
     card(
       card_header("Catalina → Long Beach Swim Map"),
-      plotlyOutput("swim_map", height = "520px")
+      card_body(
+        selectInput("swim_map_range", "Range", choices = c("3D","7D","14D","30D","90D","ALL","CUSTOM"), selected = "30D"),
+        plotlyOutput("swim_map", height = "520px")
+      )
     )
   ),
 
@@ -487,20 +493,20 @@ server <- function(input, output, session) {
     if (is.null(start)) return(NULL)
     c(max(as.Date(data_min), start), as.Date(data_max))
   }
-
-  observeEvent(input$date_preset, {
-    r <- raw()
-    req(nrow(r) > 0)
-    rg <- apply_preset(input$date_preset, min(r$day, na.rm = TRUE), max(r$day, na.rm = TRUE))
-    if (!is.null(rg)) updateDateRangeInput(session, "date_window", start = rg[1], end = rg[2])
-  }, ignoreInit = FALSE)
-
-  observeEvent(input$swim_date_preset, {
-    r <- swim()
-    req(nrow(r) > 0)
-    rg <- apply_preset(input$swim_date_preset, min(r$day, na.rm = TRUE), max(r$day, na.rm = TRUE))
-    if (!is.null(rg)) updateDateRangeInput(session, "swim_date_window", start = rg[1], end = rg[2])
-  }, ignoreInit = FALSE)
+  filter_by_preset <- function(df, preset) {
+    if (nrow(df) == 0 || preset == "CUSTOM") return(df)
+    end <- max(df$day, na.rm = TRUE)
+    start <- switch(preset,
+      "3D" = end - days(2),
+      "7D" = end - days(6),
+      "14D" = end - days(13),
+      "30D" = end - days(29),
+      "90D" = end - days(89),
+      "ALL" = min(df$day, na.rm = TRUE),
+      end - days(29)
+    )
+    df %>% filter(day >= start, day <= end)
+  }
 
   filtered_raw <- reactive({
     req(input$date_window)
@@ -514,8 +520,12 @@ server <- function(input, output, session) {
       filter(day >= as.Date(input$swim_date_window[1]), day <= as.Date(input$swim_date_window[2]))
   })
 
+  layered_data <- reactive(filter_by_preset(filtered_raw(), input$layered_range))
+  cor_data <- reactive(filter_by_preset(filtered_raw(), input$cor_range))
+  swim_map_data <- reactive(filter_by_preset(filtered_swim(), input$swim_map_range))
+
   tiles <- reactive({
-    d <- filtered_raw()
+    d <- layered_data()
     if (nrow(d) == 0) return(list(recovery_latest = "N/A", recovery_7d = "N/A", sleep_latest = "N/A", strain_7d = "N/A", span = "No data in selected range"))
     metric_tiles(d)
   })
@@ -528,13 +538,13 @@ server <- function(input, output, session) {
   output$data_span <- renderText(tiles()$span)
 
   output$layered_plot <- renderPlotly({
-    d <- filtered_raw()
+    d <- layered_data()
     validate(need(nrow(d) > 0, "No data in selected range"))
     layered_time_plot(d, focus_metric = input$focus_metric, show_smooth = input$show_smooth) %>%
       config(displayModeBar = FALSE, responsive = TRUE)
   })
   output$cor_plot <- renderPlotly({
-    d <- filtered_raw()
+    d <- cor_data()
     validate(need(nrow(d) > 2, "Need more data points for correlation"))
     cor_plot(d) %>% config(displayModeBar = FALSE, responsive = TRUE)
   })
@@ -577,7 +587,8 @@ server <- function(input, output, session) {
     catalina <- c(lat = 33.3455, lng = -118.3278)
     long_beach <- c(lat = 33.7701, lng = -118.1937)
 
-    p <- swim_metrics()$route_progress
+    sm <- swim_overlay_metrics(swim_map_data())
+    p <- sm$route_progress
     if (!is.finite(p)) p <- 0
     prog_lat <- catalina[["lat"]] + (long_beach[["lat"]] - catalina[["lat"]]) * p
     prog_lng <- catalina[["lng"]] + (long_beach[["lng"]] - catalina[["lng"]]) * p

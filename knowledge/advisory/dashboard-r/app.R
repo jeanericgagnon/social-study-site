@@ -48,6 +48,7 @@ load_swim <- function(path) {
 
 range_filter <- function(df, preset) {
   if (!nrow(df)) return(df)
+  if (is.null(preset) || !nzchar(preset)) preset <- "30D"
   end <- max(df$day, na.rm = TRUE)
   start <- switch(
     preset,
@@ -77,6 +78,7 @@ ui <- page_navbar(
         col_widths = c(5, 5, 2)
       )
     ),
+    p(class = "text-secondary", textOutput("overview_window")),
     layout_columns(
       card(card_header("Recovery (latest)"), h2(textOutput("recovery_latest"))),
       card(card_header("Sleep % (latest)"), h2(textOutput("sleep_latest"))),
@@ -95,6 +97,7 @@ ui <- page_navbar(
       card_header("Range"),
       selectInput("swim_range", NULL, choices = c("3D","7D","14D","30D","90D","ALL"), selected = "30D")
     ),
+    p(class = "text-secondary", textOutput("swim_window")),
     layout_columns(
       card(card_header("Week Swim"), h2(textOutput("swim_week"))),
       card(card_header("Route Progress"), h2(textOutput("swim_progress"))),
@@ -131,6 +134,18 @@ server <- function(input, output, session) {
 
   whoop <- reactive(range_filter(whoop_all(), input$overview_range))
   swim <- reactive(range_filter(swim_all(), input$swim_range))
+
+  output$overview_window <- renderText({
+    d <- whoop()
+    if (!nrow(d)) return(glue("Overview range: {input$overview_range} (no data)"))
+    glue("Overview range: {input$overview_range} • {min(d$day)} → {max(d$day)} • {nrow(d)} days")
+  })
+
+  output$swim_window <- renderText({
+    d <- swim()
+    if (!nrow(d)) return(glue("Swim range: {input$swim_range} (no data)"))
+    glue("Swim range: {input$swim_range} • {min(d$day)} → {max(d$day)} • {nrow(d)} day(s)")
+  })
 
   output$recovery_latest <- renderText({
     d <- whoop(); if (!nrow(d)) return("N/A")
@@ -174,7 +189,9 @@ server <- function(input, output, session) {
         annotate("text", x = min(d$day, na.rm = TRUE), y = mean_strain + 0.03, label = glue("Mean strain: {round(mean_strain*20,1)}"), color = "#a78bfa", hjust = 0, size = 3.5)
     }
 
-    p <- p + scale_color_manual(values = c(Recovery = "#22c55e", Sleep = "#38bdf8"))
+    if (length(input$overlay_metrics) > 0) {
+      p <- p + scale_color_manual(values = c(Recovery = "#22c55e", Sleep = "#38bdf8"))
+    }
 
     ggplotly(p) %>%
       layout(dragmode = FALSE) %>%

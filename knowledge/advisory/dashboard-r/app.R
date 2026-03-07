@@ -200,57 +200,40 @@ server <- function(input, output, session) {
     pct <- if (nrow(d)) min(1, sum(d$yards, na.rm = TRUE) / (22 * 1760)) else 0
     if (!is.finite(pct)) pct <- 0
 
-    catalina <- c(lat = 33.3455, lng = -118.3278)
-    long_beach <- c(lat = 33.7701, lng = -118.1937)
+    # Catalina Avalon Harbor -> Long Beach shoreline reference
+    catalina <- c(lat = 33.3436, lng = -118.3267)
+    long_beach <- c(lat = 33.7676, lng = -118.1956)
     prog_lat <- catalina[["lat"]] + (long_beach[["lat"]] - catalina[["lat"]]) * pct
     prog_lng <- catalina[["lng"]] + (long_beach[["lng"]] - catalina[["lng"]]) * pct
 
-    route_df <- data.frame(
-      lon = c(catalina[["lng"]], long_beach[["lng"]]),
-      lat = c(catalina[["lat"]], long_beach[["lat"]])
-    )
-
-    points_df <- data.frame(
-      lon = c(catalina[["lng"]], long_beach[["lng"]], prog_lng),
-      lat = c(catalina[["lat"]], long_beach[["lat"]], prog_lat),
-      label = c("Catalina", "Long Beach", glue("Progress {round(pct * 100, 1)}%")),
-      color = c("#22c55e", "#f97316", "#a78bfa"),
-      size = c(9, 9, 13)
-    )
-
-    plot_geo() %>%
+    plot_ly() %>%
       add_trace(
-        data = route_df,
-        type = "scattergeo",
+        type = "scattermapbox",
         mode = "lines",
-        lon = ~lon,
-        lat = ~lat,
-        line = list(color = "#60a5fa", width = 5),
-        name = "Route",
+        lon = c(catalina[["lng"]], long_beach[["lng"]]),
+        lat = c(catalina[["lat"]], long_beach[["lat"]]),
+        line = list(color = "#60a5fa", width = 4),
+        name = "Catalina → Long Beach",
         hoverinfo = "skip"
       ) %>%
       add_trace(
-        data = points_df,
-        type = "scattergeo",
-        mode = "markers",
-        lon = ~lon,
-        lat = ~lat,
-        text = ~label,
-        hoverinfo = "text",
-        marker = list(color = points_df$color, size = points_df$size),
+        type = "scattermapbox",
+        mode = "markers+text",
+        lon = c(catalina[["lng"]], long_beach[["lng"]], prog_lng),
+        lat = c(catalina[["lat"]], long_beach[["lat"]], prog_lat),
+        text = c("Avalon, Catalina", "Long Beach", glue("You ({round(pct*100,1)}%)")),
+        textposition = c("top right", "top right", "bottom right"),
+        marker = list(size = c(10, 10, 14), color = c("#22c55e", "#f97316", "#a78bfa")),
+        hovertemplate = "%{text}<extra></extra>",
         showlegend = FALSE
       ) %>%
       layout(
-        paper_bgcolor = "rgba(0,0,0,0)",
-        geo = list(
-          projection = list(type = "mercator"),
-          showland = TRUE,
-          landcolor = "#0f172a",
-          showocean = TRUE,
-          oceancolor = "#020617",
-          lataxis = list(range = c(33.28, 33.84)),
-          lonaxis = list(range = c(-118.42, -118.10))
+        mapbox = list(
+          style = "open-street-map",
+          zoom = 8.6,
+          center = list(lat = 33.56, lon = -118.26)
         ),
+        margin = list(l = 0, r = 0, t = 0, b = 0),
         dragmode = FALSE
       ) %>%
       config(displayModeBar = FALSE, responsive = TRUE, scrollZoom = FALSE)

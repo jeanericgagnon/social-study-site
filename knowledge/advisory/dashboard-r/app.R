@@ -316,7 +316,7 @@ ui <- page_navbar(
     base_font = font_google("Inter")
   ),
   header = tagList(
-    tags$style(HTML("\n      .card {\n        background: linear-gradient(135deg, rgba(30,41,59,.55), rgba(15,23,42,.45)) !important;\n        border: 1px solid rgba(148,163,184,.20) !important;\n        backdrop-filter: blur(10px);\n        box-shadow: 0 8px 30px rgba(2, 6, 23, .35);\n      }\n      .card-header {\n        font-weight: 700;\n        letter-spacing: .2px;\n      }\n      .pulse {\n        animation: pulseGlow 2.4s ease-in-out infinite;\n      }\n      @keyframes pulseGlow {\n        0%, 100% { text-shadow: 0 0 0 rgba(96,165,250,.0); }\n        50% { text-shadow: 0 0 14px rgba(96,165,250,.45); }\n      }\n      .narrative-box {\n        padding: 14px 16px;\n        border-radius: 12px;\n        background: rgba(15,23,42,.55);\n        border: 1px solid rgba(96,165,250,.25);\n        line-height: 1.45;\n      }\n    "))
+    tags$style(HTML("\n      .card {\n        background: linear-gradient(135deg, rgba(30,41,59,.55), rgba(15,23,42,.45)) !important;\n        border: 1px solid rgba(148,163,184,.20) !important;\n        backdrop-filter: blur(10px);\n        box-shadow: 0 8px 30px rgba(2, 6, 23, .35);\n      }\n      .card-header {\n        font-weight: 700;\n        letter-spacing: .2px;\n      }\n      .pulse {\n        animation: pulseGlow 2.4s ease-in-out infinite;\n      }\n      @keyframes pulseGlow {\n        0%, 100% { text-shadow: 0 0 0 rgba(96,165,250,.0); }\n        50% { text-shadow: 0 0 14px rgba(96,165,250,.45); }\n      }\n      .narrative-box {\n        padding: 14px 16px;\n        border-radius: 12px;\n        background: rgba(15,23,42,.55);\n        border: 1px solid rgba(96,165,250,.25);\n        line-height: 1.45;\n      }\n      @media (max-width: 768px) {\n        .navbar .nav-link { padding: 12px 14px; font-size: 16px; }\n        .card { border-radius: 14px; }\n        .card-body { padding: 14px !important; }\n        h1, h2 { font-size: 1.4rem !important; }\n        .form-control, .form-select, .selectize-input, .btn {\n          min-height: 46px;\n          font-size: 16px !important;\n        }\n        .plotly.html-widget { min-height: 340px !important; }\n      }\n    "))
   ),
 
   nav_panel(
@@ -327,7 +327,7 @@ ui <- page_navbar(
         dateRangeInput("date_window", "Date range", start = Sys.Date() - 30, end = Sys.Date()),
         selectizeInput("focus_metric", "Focus metric", choices = c("Recovery", "Sleep", "Strain"), selected = "Recovery"),
         checkboxInput("show_smooth", "Show 7-day smoothing", value = TRUE),
-        col_widths = c(6, 4, 2)
+        col_widths = c(12, 12, 12)
       )
     ),
     layout_columns(
@@ -347,7 +347,7 @@ ui <- page_navbar(
         card_header("Strain 7d avg"),
         h2(textOutput("strain_7d"), class = "m-0")
       ),
-      col_widths = c(6, 6, 6, 6)
+      col_widths = c(12, 12, 12, 12)
     ),
 
     card(
@@ -367,7 +367,7 @@ ui <- page_navbar(
         card_header("Auto Insight Callouts"),
         uiOutput("insights")
       ),
-      col_widths = c(8, 4)
+      col_widths = c(12, 12)
     )
   ),
 
@@ -384,7 +384,7 @@ ui <- page_navbar(
         h1(textOutput("anomaly_count"), class = "m-0"),
         p(class = "text-secondary", "Days flagged as statistically unusual")
       ),
-      col_widths = c(6, 6)
+      col_widths = c(12, 12)
     ),
     layout_columns(
       card(
@@ -395,7 +395,7 @@ ui <- page_navbar(
         card_header("Weekly Coaching Cards"),
         uiOutput("coach_cards")
       ),
-      col_widths = c(7, 5)
+      col_widths = c(12, 12)
     ),
     card(
       card_header("What Changed This Week"),
@@ -428,7 +428,7 @@ ui <- page_navbar(
         h2(textOutput("swim_progress"), class = "m-0"),
         p(class = "text-secondary", "Cumulative swim distance mapped against Catalina → Long Beach reference line")
       ),
-      col_widths = c(3, 3, 3, 3)
+      col_widths = c(12, 12, 12, 12)
     ),
     card(
       card_header("Catalina → Long Beach Swim Map"),

@@ -11,6 +11,7 @@ suppressPackageStartupMessages({
   library(scales)
   library(glue)
   library(purrr)
+  library(leaflet)
 })
 
 DB_PATH <- normalizePath(
@@ -43,6 +44,32 @@ load_whoop <- function(path) {
       across(where(is.numeric), as.numeric)
     ) %>%
     arrange(day)
+}
+
+load_swim <- function(path) {
+  validate_db(path)
+  con <- dbConnect(SQLite(), path)
+  on.exit(dbDisconnect(con), add = TRUE)
+
+  swim <- dbGetQuery(con, "
+    SELECT day, distance_value, unit, source
+    FROM swim_daily
+    ORDER BY day
+  ")
+
+  swim %>%
+    mutate(
+      day = as.Date(day),
+      distance_value = as.numeric(distance_value),
+      unit = tolower(unit),
+      yards = case_when(
+        unit %in% c('yd', 'yard', 'yards') ~ distance_value,
+        unit %in% c('m', 'meter', 'meters') ~ distance_value * 1.09361,
+        unit %in% c('mi', 'mile', 'miles') ~ distance_value * 1760,
+        TRUE ~ distance_value
+      ),
+      miles = yards / 1760
+    )
 }
 
 complete_daily <- function(df) {
@@ -249,6 +276,28 @@ weekly_narrative <- function(df) {
   )
 }
 
+swim_overlay_metrics <- function(swim_df) {
+  if (!nrow(swim_df)) {
+    return(list(today_yards = 0, week_yards = 0, total_yards = 0, route_progress = 0))
+  }
+
+  today <- max(swim_df$day, na.rm = TRUE)
+  today_yards <- swim_df %>% filter(day == today) %>% summarise(v = sum(yards, na.rm = TRUE)) %>% pull(v)
+  week_yards <- swim_df %>% filter(day >= today - days(6)) %>% summarise(v = sum(yards, na.rm = TRUE)) %>% pull(v)
+  total_yards <- sum(swim_df$yards, na.rm = TRUE)
+
+  # Catalina (Avalon) to Long Beach route proxy (~22 miles)
+  route_yards <- 22 * 1760
+  route_progress <- pmin(1, total_yards / route_yards)
+
+  list(
+    today_yards = round(today_yards, 0),
+    week_yards = round(week_yards, 0),
+    total_yards = round(total_yards, 0),
+    route_progress = route_progress
+  )
+}
+
 ui <- page_navbar(
   title = div(icon("chart-line"), " WHOOP x R Insight Layers"),
   theme = bs_theme(
@@ -340,6 +389,30 @@ ui <- page_navbar(
   ),
 
   nav_panel(
+    "Swim Overlays",
+    layout_columns(
+      card(
+        card_header("Today Swim"),
+        h2(textOutput("swim_today"), class = "m-0")
+      ),
+      card(
+        card_header("This Week Swim"),
+        h2(textOutput("swim_week"), class = "m-0")
+      ),
+      card(
+        card_header("Catalina Route Progress"),
+        h2(textOutput("swim_progress"), class = "m-0"),
+        p(class = "text-secondary", "Cumulative swim distance mapped against Catalina → Long Beach reference line")
+      ),
+      col_widths = c(3, 3, 6)
+    ),
+    card(
+      card_header("Catalina → Long Beach Swim Map"),
+      leafletOutput("swim_map", height = "520px")
+    )
+  ),
+
+  nav_panel(
     "Data",
     card(
       card_header("Data Window"),
@@ -363,7 +436,17 @@ server <- function(input, output, session) {
     }
   )
 
+  swim <- reactivePoll(
+    intervalMillis = 10000,
+    session = session,
+    checkFunc = function() file.info(DB_PATH)$mtime,
+    valueFunc = function() {
+      load_swim(DB_PATH)
+    }
+  )
+
   tiles <- reactive(metric_tiles(raw()))
+  swim_metrics <- reactive(swim_overlay_metrics(swim()))
 
   output$recovery_latest <- renderText(glue("{tiles()$recovery_latest}"))
   output$recovery_7d <- renderText(glue("{tiles()$recovery_7d}"))
@@ -401,6 +484,52 @@ server <- function(input, output, session) {
 
   output$weekly_narrative <- renderText({
     weekly_narrative(raw())
+  })
+
+  output$swim_today <- renderText(glue("{comma(swim_metrics()$today_yards)} yd"))
+  output$swim_week <- renderText(glue("{comma(swim_metrics()$week_yards)} yd"))
+  output$swim_progress <- renderText(glue("{round(swim_metrics()$route_progress * 100, 1)}%"))
+
+  output$swim_map <- renderLeaflet({
+    # Route reference points
+    catalina <- c(lat = 33.3455, lng = -118.3278)  # Avalon-ish
+    long_beach <- c(lat = 33.7701, lng = -118.1937)
+
+    p <- swim_metrics()$route_progress
+    prog_lat <- catalina[["lat"]] + (long_beach[["lat"]] - catalina[["lat"]]) * p
+    prog_lng <- catalina[["lng"]] + (long_beach[["lng"]] - catalina[["lng"]]) * p
+
+    leaflet() %>%
+      addProviderTiles(providers$CartoDB.DarkMatterNoLabels) %>%
+      addPolylines(
+        lng = c(catalina[["lng"]], long_beach[["lng"]]),
+        lat = c(catalina[["lat"]], long_beach[["lat"]]),
+        color = "#60a5fa",
+        weight = 5,
+        opacity = 0.85,
+        label = "Catalina → Long Beach reference line"
+      ) %>%
+      addCircleMarkers(
+        lng = catalina[["lng"]], lat = catalina[["lat"]],
+        radius = 8, color = "#22c55e", fillOpacity = 1,
+        label = "Catalina"
+      ) %>%
+      addCircleMarkers(
+        lng = long_beach[["lng"]], lat = long_beach[["lat"]],
+        radius = 8, color = "#f97316", fillOpacity = 1,
+        label = "Long Beach"
+      ) %>%
+      addCircleMarkers(
+        lng = prog_lng, lat = prog_lat,
+        radius = 11, color = "#a78bfa", fillOpacity = 1,
+        label = glue("Your cumulative progress point ({round(p*100,1)}%)")
+      ) %>%
+      fitBounds(
+        lng1 = min(catalina[["lng"]], long_beach[["lng"]]) - 0.08,
+        lat1 = min(catalina[["lat"]], long_beach[["lat"]]) - 0.04,
+        lng2 = max(catalina[["lng"]], long_beach[["lng"]]) + 0.08,
+        lat2 = max(catalina[["lat"]], long_beach[["lat"]]) + 0.04
+      )
   })
 
   output$preview <- renderTable({

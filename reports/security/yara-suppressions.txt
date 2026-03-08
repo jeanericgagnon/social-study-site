@@ -1,0 +1,5 @@
+Suspicious_Exec_Strings /Users/ericsysclaw/.openclaw/workspace/.agents/skills/incident-runbook-templates/SKILL.md
+Suspicious_Exec_Strings /Users/ericsysclaw/.openclaw/workspace/.agents/skills/secrets-management/SKILL.md
+Suspicious_Exec_Strings /Users/ericsysclaw/.openclaw/workspace/.agents/skills/x-user-lookup/scripts/lookup.sh
+Suspicious_Secret_Exfil_Patterns /Users/ericsysclaw/.openclaw/workspace/.agents/skills/x-user-lookup/scripts/lookup.sh
+Suspicious_Exec_Strings /Users/ericsysclaw/.openclaw/workspace/.agents/skills/backup-restore-runbook-generator/SKILL.md

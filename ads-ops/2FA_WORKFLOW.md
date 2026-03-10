@@ -2,8 +2,9 @@
 
 ## Status
 - Approval gate: **ENABLED**
-- OTP transport to iMessage: **PENDING** (blocked from Discord-bound context)
-- Write mode until resolved: **RECOMMENDATION-ONLY**
+- OTP transport to iMessage: **READY** (validated 2026-03-10)
+- OTP verification flow: **READY** (issue + return code validated 2026-03-10)
+- Write mode: **ENFORCED-GATE** (approval + OTP required)
 
 ## Required before any write
 1. Exact approval message from Eric:

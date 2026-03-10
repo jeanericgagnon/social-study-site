@@ -32,3 +32,4 @@ Example:
 - Total ad spend cap: **$100/day**.
 - No ad write changes without explicit approval + valid iMessage OTP.
 - OTP valid 5 min, single-use, bound to exact action text.
+- See `2FA_WORKFLOW.md` for verification rules + fail-closed checks.

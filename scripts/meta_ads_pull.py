@@ -13,7 +13,11 @@ CONF = OUTDIR / 'config.json'
 GRAPH_VERSION = 'v21.0'
 
 BASE_FIELDS = [
-    'date_start', 'date_stop', 'account_name', 'campaign_name', 'adset_name', 'ad_name',
+    'date_start', 'date_stop',
+    'account_id', 'account_name',
+    'campaign_id', 'campaign_name',
+    'adset_id', 'adset_name',
+    'ad_id', 'ad_name',
     'spend', 'impressions', 'reach', 'clicks', 'ctr', 'cpc', 'cpm',
     'actions', 'cost_per_action_type',
 ]
@@ -105,7 +109,11 @@ def normalize_rows(rows):
     extra_dims = set()
 
     base_cols = {
-        'date_start', 'date_stop', 'account_name', 'campaign_name', 'adset_name', 'ad_name',
+        'date_start', 'date_stop',
+        'account_id', 'account_name',
+        'campaign_id', 'campaign_name',
+        'adset_id', 'adset_name',
+        'ad_id', 'ad_name',
         'spend', 'impressions', 'reach', 'clicks', 'ctr', 'cpc', 'cpm',
         'actions', 'cost_per_action_type',
     }
@@ -122,7 +130,11 @@ def normalize_rows(rows):
     dim_cols = sorted(extra_dims)
 
     base_csv_cols = [
-        'date_start', 'date_stop', 'account_name', 'campaign_name', 'adset_name', 'ad_name',
+        'date_start', 'date_stop',
+        'account_id', 'account_name',
+        'campaign_id', 'campaign_name',
+        'adset_id', 'adset_name',
+        'ad_id', 'ad_name',
         'spend', 'impressions', 'reach', 'clicks', 'ctr', 'cpc', 'cpm',
         'follows', 'cost_per_follow',
         'actions_raw', 'cost_per_action_type_raw',

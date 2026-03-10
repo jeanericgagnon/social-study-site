@@ -87,7 +87,8 @@ def main():
     """)
 
     now = datetime.now(timezone.utc).isoformat()
-    levels = [x.strip() for x in os.getenv("META_PULL_LEVELS", "campaign").split(",") if x.strip()]
+    # Pull both campaign + ad levels by default so UI can drill campaign -> ads.
+    levels = [x.strip() for x in os.getenv("META_PULL_LEVELS", "campaign,ad").split(",") if x.strip()]
     for level in levels:
         since, until, rows = fetch(level)
         conn.execute(

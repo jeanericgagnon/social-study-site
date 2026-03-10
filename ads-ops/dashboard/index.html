@@ -113,19 +113,15 @@
         <article class="panel"><h3 class="h2">Placement Waste Index</h3><canvas id="diagPlacement"></canvas></article>
       </section>
       <section class="panel" style="margin-bottom:14px;" id="drillPanel">
-        <h3 class="h2">Drill-down KPI Table (Campaign → Ad Set → Ad)</h3>
+        <h3 class="h2" id="drillTitle">Ad Breakdown (Campaign → Ads)</h3>
         <table>
           <thead>
             <tr>
-              <th>Level</th><th>Name</th><th>Spend</th><th>Impr.</th><th>Clicks</th><th>CTR</th><th>CPC</th><th>CPM</th><th>Freq</th><th>Followers</th><th>CPF</th><th>ROAS</th>
+              <th>Ad</th><th>Ad Set</th><th>Spend</th><th>Impr.</th><th>Clicks</th><th>CTR</th><th>CPC</th><th>Status</th>
             </tr>
           </thead>
-          <tbody>
-            <tr><td>Campaign</td><td><a class="campaign-link" href="https://adsmanager.facebook.com/adsmanager/manage/campaigns" target="_blank" rel="noopener">Always-On IG Follows</a></td><td>$23.71</td><td>18,420</td><td>211</td><td>1.15%</td><td>$0.11</td><td>$12.87</td><td>1.82</td><td>38</td><td>$0.62</td><td>1.9x</td></tr>
-            <tr><td>└ Ad Set</td><td>Test - New Traffic Ad set with recommended settings</td><td>$11.92</td><td>9,210</td><td>125</td><td>1.36%</td><td>$0.10</td><td>$12.94</td><td>1.76</td><td>21</td><td>$0.57</td><td>2.1x</td></tr>
-            <tr><td>└└ Ad</td><td>Hook Variant A</td><td>$11.92</td><td>9,210</td><td>125</td><td>1.36%</td><td>$0.10</td><td>$12.94</td><td>1.76</td><td>21</td><td>$0.57</td><td>2.1x</td></tr>
-            <tr><td>└ Ad Set</td><td>New Traffic Ad set with recommended settings</td><td>$11.79</td><td>9,210</td><td>86</td><td>0.93%</td><td>$0.14</td><td>$12.80</td><td>1.88</td><td>17</td><td>$0.69</td><td>1.6x</td></tr>
-            <tr><td>└└ Ad</td><td>Hook Variant B</td><td>$11.79</td><td>9,210</td><td>86</td><td>0.93%</td><td>$0.14</td><td>$12.80</td><td>1.88</td><td>17</td><td>$0.69</td><td>1.6x</td></tr>
+          <tbody id="drillBody">
+            <tr><td colspan="8">Select a campaign from the table above to load ad breakdown.</td></tr>
           </tbody>
         </table>
       </section>
@@ -150,27 +146,60 @@
 
     const charts = [];
 
-    const adAccountId = 'act_1234567890';
-
-    function campaignUrl(campaignId){
-      return `https://adsmanager.facebook.com/adsmanager/manage/campaigns?act=${adAccountId.replace('act_','')}&selected_campaign_ids=${campaignId}`;
+    function renderDrilldown(campaign, adRows){
+      const body = document.getElementById('drillBody');
+      const title = document.getElementById('drillTitle');
+      const rows = adRows.filter(a => (a.campaign_id||'') === (campaign.id||''));
+      title.textContent = `Ad Breakdown · ${campaign.name || 'Campaign'}`;
+      if(!rows.length){
+        body.innerHTML = `<tr><td colspan="8">No ad-level rows for this campaign yet.</td></tr>`;
+        return;
+      }
+      body.innerHTML = rows.map(r=>`<tr>
+        <td>${r.ad_name || 'Unnamed Ad'}</td>
+        <td>${r.adset_name || '—'}</td>
+        <td>$${Number(r.spend||0).toFixed(2)}</td>
+        <td>${Number(r.impressions||0).toLocaleString()}</td>
+        <td>${Number(r.clicks||0).toLocaleString()}</td>
+        <td>${r.ctr ? Number(r.ctr).toFixed(2)+'%' : 'N/A'}</td>
+        <td>${r.cpc ? '$'+Number(r.cpc).toFixed(2) : 'N/A'}</td>
+        <td><span class="pill ${(r.cpc && Number(r.cpc)<=0.5)?'safe':'needs'}">${(r.cpc && Number(r.cpc)<=0.5)?'Efficient':'Needs Tuning'}</span></td>
+      </tr>`).join('');
     }
 
-    function renderCampaignTable(campaignRows){
+    function renderCampaignTable(campaignRows, adRows){
       const body = document.getElementById('campaignRankBody');
       if(!campaignRows?.length){
         body.innerHTML = `<tr><td colspan="5">No live campaign API data yet. Waiting for validated Meta API pull.</td></tr>`;
         return;
       }
-      body.innerHTML = campaignRows.map(r => `
+      body.innerHTML = campaignRows.map((r,idx) => `
         <tr>
-          <td><a class="campaign-link" href="${campaignUrl(r.id)}" target="_blank" rel="noopener">${r.name}</a></td>
+          <td><a href="#" class="campaign-link" data-cid="${r.id}">${r.name}</a></td>
           <td>$${Number(r.spend||0).toFixed(2)}</td>
           <td>${Number(r.clicks||0).toLocaleString()}</td>
           <td>${r.cpc!=null ? ('$'+Number(r.cpc).toFixed(2)) : 'N/A'}</td>
           <td><span class="pill ${r.safe?'safe':'needs'}">${r.status||'Review'}</span></td>
         </tr>
       `).join('');
+
+      body.querySelectorAll('.campaign-link').forEach(el=>{
+        el.addEventListener('click', (ev)=>{
+          ev.preventDefault();
+          const cid = el.getAttribute('data-cid');
+          const c = campaignRows.find(x=>x.id===cid);
+          if(c) {
+            renderDrilldown(c, adRows || []);
+            healthBoard.style.display='none';
+            kpiDiagnostics.style.display='block';
+            kpiBtn.classList.add('active');
+            healthBtn.classList.remove('active');
+            charts.forEach(ch=>ch.resize());
+          }
+        });
+      });
+
+      renderDrilldown(campaignRows[0], adRows || []);
     }
 
     renderCampaignTable([]);
@@ -225,27 +254,33 @@
         const paceStatus = avgRecent >= reqPerDay ? 'On pace' : 'Behind pace';
         const projectedDate = avgRecent > 0 ? new Date(now.getTime() + (remFollowers/avgRecent)*24*60*60*1000) : null;
 
-        // Blended CPF estimate over recent window (best available until direct follow attribution is wired)
+        // Blended CPC estimate over recent window (reliable from API clicks + spend)
         const campaignApiRows = Array.isArray(j.campaign) ? j.campaign : [];
         const spend7d = campaignApiRows.reduce((sum, r) => sum + (parseFloat(r.spend || 0) || 0), 0);
-        const followers7d = deltas.slice(-7).reduce((a,b)=>a + (b>0?b:0), 0);
-        const blendedCpf7d = followers7d > 0 ? (spend7d / followers7d) : null;
+        const clicks7d = campaignApiRows.reduce((sum, r) => sum + (parseFloat(r.clicks || 0) || 0), 0);
+        const blendedCpc7d = clicks7d > 0 ? (spend7d / clicks7d) : null;
 
-        const campaignUiRows = campaignApiRows
-          .map(r => {
-            const cpc = r.cpc != null ? parseFloat(r.cpc) : null;
-            return {
-              id: r.campaign_id || '',
-              name: r.campaign_name || 'Unknown Campaign',
-              spend: parseFloat(r.spend || 0),
-              clicks: parseFloat(r.clicks || 0),
-              cpc,
-              status: cpc == null ? 'No CPC' : (cpc <= 0.50 ? 'Efficient' : 'Needs Tuning'),
-              safe: cpc != null ? cpc <= 0.50 : false,
-            };
-          })
-          .sort((a,b) => (a.cpc ?? 9999) - (b.cpc ?? 9999));
-        renderCampaignTable(campaignUiRows);
+        const adApiRows = Array.isArray(j.ad) ? j.ad : [];
+        const byCampaign = new Map();
+        for (const r of campaignApiRows){
+          const id = r.campaign_id || '';
+          if(!id) continue;
+          const cur = byCampaign.get(id) || {id, name:r.campaign_name||'Unknown Campaign', spend:0, clicks:0, cpc:null};
+          cur.spend += parseFloat(r.spend||0) || 0;
+          cur.clicks += parseFloat(r.clicks||0) || 0;
+          byCampaign.set(id, cur);
+        }
+        const campaignUiRows = [...byCampaign.values()].map(c => {
+          const cpc = c.clicks > 0 ? (c.spend / c.clicks) : null;
+          return {
+            ...c,
+            cpc,
+            status: cpc == null ? 'No CPC' : (cpc <= 0.50 ? 'Efficient' : 'Needs Tuning'),
+            safe: cpc != null ? cpc <= 0.50 : false,
+          };
+        }).sort((a,b)=>(a.cpc??9999)-(b.cpc??9999));
+
+        renderCampaignTable(campaignUiRows, adApiRows);
 
         const hasApi = campaignApiRows.length > 0;
         const actionPlanBox = document.getElementById('actionPlanBox');
@@ -266,7 +301,7 @@
           <div class="action"><div class="id">Current vs Remaining</div><div class="txt">Current: <b>${curFollowers.toLocaleString()}</b> · Remaining: <b>${remFollowers.toLocaleString()}</b> · Days left: <b>${daysLeft}</b></div></div>
           <div class="action"><div class="id">Required Daily Pace</div><div class="txt">Need <b>${reqPerDay.toFixed(1)}</b> followers/day from now.</div></div>
           <div class="action"><div class="id">Pace Check</div><div class="txt"><b>${paceStatus}</b> · Recent avg: <b>${avgRecent.toFixed(1)}</b>/day ${projectedDate ? `· projected hit: <b>${projectedDate.toLocaleDateString()}</b>` : ''}</div></div>
-          <div class="action"><div class="id">Blended Efficiency (7D)</div><div class="txt">Estimated blended CPF: <b>${blendedCpf7d!==null ? ('$'+blendedCpf7d.toFixed(2)) : 'N/A'}</b> (spend ÷ net follower growth).</div></div>
+          <div class="action"><div class="id">Blended CPC (7D)</div><div class="txt">Estimated blended CPC: <b>${blendedCpc7d!==null ? ('$'+blendedCpc7d.toFixed(2)) : 'N/A'}</b> (spend ÷ clicks).</div></div>
         `;
 
         setTrendRange(7, history);

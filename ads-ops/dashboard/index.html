@@ -17,6 +17,8 @@
     .kpi .label{color:var(--muted);font-size:12px}.kpi .val{font-size:24px;font-weight:800}.kpi .delta{font-size:12px;margin-top:4px}.up{color:var(--green)}.down{color:var(--red)}
     .h2{margin:0 0 10px;font-size:14px} canvas{width:100%!important;height:280px!important}
     table{width:100%;border-collapse:collapse;font-size:13px} th,td{padding:10px 8px;border-bottom:1px solid #223157;text-align:left} th{color:var(--muted);font-weight:600}
+    .campaign-link{color:#9ec5ff;text-decoration:none;font-weight:700}
+    .campaign-link:hover{text-decoration:underline}
     .pill{border-radius:999px;padding:4px 8px;font-size:11px;font-weight:700;display:inline-block}.safe{background:#143d2f;color:#8ef2ca;border:1px solid #2f8766}.needs{background:#4b2f12;color:#ffd39f;border:1px solid #a76a2c}
     .actions{display:grid;gap:10px}.action{border:1px solid var(--border);border-radius:10px;padding:10px;background:#101a38}.action .id{color:#9ec5ff;font-weight:700;font-size:12px}.action .txt{font-size:13px;margin:6px 0}.meta{color:var(--muted);font-size:12px;display:flex;gap:10px;flex-wrap:wrap}
     .footer{color:var(--muted);font-size:12px}
@@ -26,6 +28,16 @@
 </head>
 <body>
   <div class="wrap">
+    <section id="landing" class="panel" style="margin-bottom:14px;">
+      <h2 style="margin:0 0 8px;">Choose Dashboard</h2>
+      <div class="sub" style="margin-bottom:12px;">Start with Swim or jump into KPI Diagnostics.</div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <a class="btn" href="https://jam-valium-sam-ship.trycloudflare.com/" target="_blank" rel="noopener">Open Swim Dashboard</a>
+        <button id="openKpiSuite" class="btn active">Open KPI Dashboard</button>
+      </div>
+    </section>
+
+    <section id="appShell" style="display:none;">
     <div class="header">
       <div>
         <div class="title">TSS Growth Operations Board</div>
@@ -42,31 +54,52 @@
       <section class="grid kpis">
         <article class="panel kpi"><div class="label">Spend (Today)</div><div class="val">$41.20</div><div class="delta up">▼ 8.4% vs yesterday</div></article>
         <article class="panel kpi"><div class="label">Net New Followers</div><div class="val">+62</div><div class="delta up">▲ 21.5% vs 7D avg</div></article>
-        <article class="panel kpi"><div class="label">Blended Cost / Follow</div><div class="val">$0.66</div><div class="delta up">▼ 14.1% lower is better</div></article>
+        <article class="panel kpi"><div class="label">Blended CPC</div><div class="val">$0.42</div><div class="delta up">▼ 9.3% lower is better</div></article>
         <article class="panel kpi"><div class="label">CTR (Link)</div><div class="val">2.94%</div><div class="delta up">▲ 0.38 pts</div></article>
         <article class="panel kpi"><div class="label">CPC</div><div class="val">$0.42</div><div class="delta up">▼ 9.3%</div></article>
         <article class="panel kpi"><div class="label">CPM</div><div class="val">$12.85</div><div class="delta down">▲ 4.2%</div></article>
       </section>
 
       <section class="grid main">
-        <article class="panel"><h3 class="h2">Spend vs Followers (14 days)</h3><canvas id="trendChart"></canvas></article>
+        <article class="panel">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;">
+            <h3 class="h2" style="margin:0;">Followers per Day</h3>
+            <div id="rangeFilters" style="display:flex;gap:6px;flex-wrap:wrap;">
+              <button class="btn range-btn active" data-days="7">7D</button>
+              <button class="btn range-btn" data-days="14">14D</button>
+              <button class="btn range-btn" data-days="30">30D</button>
+              <button class="btn range-btn" data-days="60">60D</button>
+              <button class="btn range-btn" data-days="90">90D</button>
+            </div>
+          </div>
+          <canvas id="trendChart"></canvas>
+        </article>
         <article class="panel"><h3 class="h2">Creative Mix Efficiency</h3><canvas id="mixChart"></canvas></article>
       </section>
 
-      <section class="grid half">
+      <section class="grid half" style="margin-bottom:14px;">
         <article class="panel">
-          <h3 class="h2">Top Campaigns by Cost per Follow</h3>
-          <table><thead><tr><th>Campaign</th><th>Spend</th><th>Followers</th><th>CPF</th><th>Status</th></tr></thead><tbody>
-            <tr><td>Always-On IG Follows</td><td>$18.40</td><td>34</td><td>$0.54</td><td><span class="pill safe">Scale Candidate</span></td></tr>
-            <tr><td>Social Proof Reels</td><td>$12.10</td><td>18</td><td>$0.67</td><td><span class="pill safe">Hold</span></td></tr>
-            <tr><td>Founder POV Clips</td><td>$7.95</td><td>7</td><td>$1.14</td><td><span class="pill needs">Needs Tuning</span></td></tr>
-            <tr><td>UGC Hooks Test</td><td>$2.75</td><td>3</td><td>$0.92</td><td><span class="pill needs">Low Signal</span></td></tr>
-          </tbody></table>
+          <h3 class="h2">Goals Tracker (auto-updates with cron pulls)</h3>
+          <div id="goalsBox" class="actions"></div>
         </article>
         <article class="panel">
+          <h3 class="h2">Automated Insights (refreshes every pull)</h3>
+          <div id="insightsBox" class="actions"></div>
+        </article>
+      </section>
+
+      <section class="grid half">
+        <article class="panel" id="campaignRankPanel">
+          <h3 class="h2">Top Campaigns by CPC</h3>
+          <table>
+            <thead><tr><th>Campaign</th><th>Spend</th><th>Clicks</th><th>CPC</th><th>Status</th></tr></thead>
+            <tbody id="campaignRankBody"></tbody>
+          </table>
+        </article>
+        <article class="panel" id="actionPlanPanel">
           <h3 class="h2">Today’s Ranked Action Plan</h3>
-          <div class="actions">
-            <div class="action"><div class="id">A-101 · SAFE TO EXECUTE</div><div class="txt">Shift +$6/day from Founder POV Clips → Always-On IG Follows (keep total ≤ $60/day).</div><div class="meta"><span>Confidence: 0.81</span><span>Expected CPF improvement: 10–16%</span></div></div>
+          <div class="actions" id="actionPlanBox">
+            <div class="action"><div class="id">A-101 · SAFE TO EXECUTE</div><div class="txt">Shift +$6/day from Founder POV Clips → Always-On IG Follows (keep total ≤ $60/day).</div><div class="meta"><span>Confidence: 0.81</span><span>Expected CPC improvement: 10–16%</span></div></div>
             <div class="action"><div class="id">A-102 · NEEDS APPROVAL</div><div class="txt">Pause bottom 20% ad variants with CTR &lt; 1.2% after 3k+ impressions.</div><div class="meta"><span>Risk: low</span><span>Attribution-safe: yes</span></div></div>
             <div class="action"><div class="id">A-103 · NEEDS APPROVAL</div><div class="txt">Launch one new hook variant (single-variable test) at $5/day from existing budget.</div><div class="meta"><span>Confidence: 0.64</span><span>Learning value: high</span></div></div>
           </div>
@@ -76,31 +109,180 @@
 
     <section id="kpiDiagnostics">
       <section class="grid main">
-        <article class="panel"><h3 class="h2">CTR vs Cost per Follow (Diagnostic Scatter)</h3><canvas id="diagScatter"></canvas></article>
+        <article class="panel"><h3 class="h2">CTR vs CPC (Diagnostic Scatter)</h3><canvas id="diagScatter"></canvas></article>
         <article class="panel"><h3 class="h2">Placement Waste Index</h3><canvas id="diagPlacement"></canvas></article>
       </section>
-      <section class="panel">
+      <section class="panel" style="margin-bottom:14px;" id="drillPanel">
+        <h3 class="h2">Drill-down KPI Table (Campaign → Ad Set → Ad)</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Level</th><th>Name</th><th>Spend</th><th>Impr.</th><th>Clicks</th><th>CTR</th><th>CPC</th><th>CPM</th><th>Freq</th><th>Followers</th><th>CPF</th><th>ROAS</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Campaign</td><td><a class="campaign-link" href="https://adsmanager.facebook.com/adsmanager/manage/campaigns" target="_blank" rel="noopener">Always-On IG Follows</a></td><td>$23.71</td><td>18,420</td><td>211</td><td>1.15%</td><td>$0.11</td><td>$12.87</td><td>1.82</td><td>38</td><td>$0.62</td><td>1.9x</td></tr>
+            <tr><td>└ Ad Set</td><td>Test - New Traffic Ad set with recommended settings</td><td>$11.92</td><td>9,210</td><td>125</td><td>1.36%</td><td>$0.10</td><td>$12.94</td><td>1.76</td><td>21</td><td>$0.57</td><td>2.1x</td></tr>
+            <tr><td>└└ Ad</td><td>Hook Variant A</td><td>$11.92</td><td>9,210</td><td>125</td><td>1.36%</td><td>$0.10</td><td>$12.94</td><td>1.76</td><td>21</td><td>$0.57</td><td>2.1x</td></tr>
+            <tr><td>└ Ad Set</td><td>New Traffic Ad set with recommended settings</td><td>$11.79</td><td>9,210</td><td>86</td><td>0.93%</td><td>$0.14</td><td>$12.80</td><td>1.88</td><td>17</td><td>$0.69</td><td>1.6x</td></tr>
+            <tr><td>└└ Ad</td><td>Hook Variant B</td><td>$11.79</td><td>9,210</td><td>86</td><td>0.93%</td><td>$0.14</td><td>$12.80</td><td>1.88</td><td>17</td><td>$0.69</td><td>1.6x</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="panel" id="deepInsightsPanel">
         <h3 class="h2">Deep Insight Notes</h3>
         <table><thead><tr><th>Insight</th><th>Signal</th><th>Recommended Action</th></tr></thead><tbody>
           <tr><td>High-frequency ad fatigue in warm audiences</td><td>Freq 2.7 + CTR downtrend</td><td>Refresh creative + cap spend share at 18%</td></tr>
           <tr><td>Top hook has strongest follower efficiency</td><td>CPF $0.54, CTR 3.4%</td><td>Duplicate into adjacent audiences</td></tr>
-          <tr><td>CPM drift not matched by follow lift</td><td>CPM +4.2%, followers flat on two sets</td><td>Trim lowest quartile placements</td></tr>
+          <tr><td>CPM drift not matched by click efficiency</td><td>CPM +4.2%, CPC worsened on two sets</td><td>Trim lowest quartile placements</td></tr>
         </tbody></table>
       </section>
     </section>
 
-    <section class="panel footer">UI v2 ready for API wiring. Next step: plug Meta Ads insights + net follower snapshots.</section>
+    <section class="panel footer">UI v2 with KPI Diagnostics. Data source: <code>/data/latest.json</code> (auto-refreshed by 5x/day pull job).</section>
+    </section>
   </div>
 
   <script>
     const healthBtn=document.getElementById('healthBtn'), kpiBtn=document.getElementById('kpiBtn'), healthBoard=document.getElementById('healthBoard'), kpiDiagnostics=document.getElementById('kpiDiagnostics');
-    healthBtn.onclick=()=>{healthBoard.style.display='block';kpiDiagnostics.style.display='none';healthBtn.classList.add('active');kpiBtn.classList.remove('active')};
-    kpiBtn.onclick=()=>{healthBoard.style.display='none';kpiDiagnostics.style.display='block';kpiBtn.classList.add('active');healthBtn.classList.remove('active')};
+    const landing=document.getElementById('landing'), appShell=document.getElementById('appShell'), openKpiSuite=document.getElementById('openKpiSuite');
 
-    new Chart(document.getElementById('trendChart'),{type:'line',data:{labels:['D-13','D-12','D-11','D-10','D-9','D-8','D-7','D-6','D-5','D-4','D-3','D-2','D-1','Today'],datasets:[{label:'Spend ($)',data:[38,42,39,44,41,43,47,45,46,43,42,40,44,41],borderColor:'#60a5fa',backgroundColor:'rgba(96,165,250,.2)',yAxisID:'y',tension:.35},{label:'Net New Followers',data:[44,51,46,53,48,50,58,56,60,55,54,49,57,62],borderColor:'#34d399',backgroundColor:'rgba(52,211,153,.2)',yAxisID:'y1',tension:.35}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#d7e2ff'}}},scales:{x:{ticks:{color:'#9fb0df'},grid:{color:'rgba(159,176,223,.08)'}},y:{ticks:{color:'#9fb0df'}},y1:{position:'right',ticks:{color:'#9fb0df'},grid:{drawOnChartArea:false}}}}});
-    new Chart(document.getElementById('mixChart'),{type:'doughnut',data:{labels:['POV Reels','UGC','Carousels','Static'],datasets:[{data:[42,28,18,12],backgroundColor:['#60a5fa','#34d399','#a78bfa','#fbbf24'],borderWidth:0}]},options:{plugins:{legend:{position:'bottom',labels:{color:'#d7e2ff'}}},maintainAspectRatio:false}});
-    new Chart(document.getElementById('diagScatter'),{type:'scatter',data:{datasets:[{label:'Ads',data:[{x:3.4,y:.54},{x:2.9,y:.67},{x:2.2,y:1.14},{x:1.8,y:.92},{x:1.1,y:1.45}],backgroundColor:'#34d399'}]},options:{maintainAspectRatio:false,plugins:{legend:{labels:{color:'#d7e2ff'}}},scales:{x:{title:{display:true,text:'CTR %',color:'#9fb0df'},ticks:{color:'#9fb0df'}},y:{title:{display:true,text:'Cost per Follow',color:'#9fb0df'},ticks:{color:'#9fb0df'}}}}});
-    new Chart(document.getElementById('diagPlacement'),{type:'bar',data:{labels:['IG Reels','IG Stories','Feed','Explore'],datasets:[{label:'Waste Index',data:[12,17,25,9],backgroundColor:['#34d399','#60a5fa','#f87171','#a78bfa']}]},options:{maintainAspectRatio:false,plugins:{legend:{labels:{color:'#d7e2ff'}}},scales:{x:{ticks:{color:'#9fb0df'}},y:{ticks:{color:'#9fb0df'}}}}});
+    const charts = [];
+
+    const adAccountId = 'act_1234567890';
+
+    function campaignUrl(campaignId){
+      return `https://adsmanager.facebook.com/adsmanager/manage/campaigns?act=${adAccountId.replace('act_','')}&selected_campaign_ids=${campaignId}`;
+    }
+
+    function renderCampaignTable(campaignRows){
+      const body = document.getElementById('campaignRankBody');
+      if(!campaignRows?.length){
+        body.innerHTML = `<tr><td colspan="5">No live campaign API data yet. Waiting for validated Meta API pull.</td></tr>`;
+        return;
+      }
+      body.innerHTML = campaignRows.map(r => `
+        <tr>
+          <td><a class="campaign-link" href="${campaignUrl(r.id)}" target="_blank" rel="noopener">${r.name}</a></td>
+          <td>$${Number(r.spend||0).toFixed(2)}</td>
+          <td>${Number(r.clicks||0).toLocaleString()}</td>
+          <td>${r.cpc!=null ? ('$'+Number(r.cpc).toFixed(2)) : 'N/A'}</td>
+          <td><span class="pill ${r.safe?'safe':'needs'}">${r.status||'Review'}</span></td>
+        </tr>
+      `).join('');
+    }
+
+    renderCampaignTable([]);
+
+    healthBtn.onclick=()=>{healthBoard.style.display='block';kpiDiagnostics.style.display='none';healthBtn.classList.add('active');kpiBtn.classList.remove('active');charts.forEach(c=>c.resize())};
+    kpiBtn.onclick=()=>{healthBoard.style.display='none';kpiDiagnostics.style.display='block';kpiBtn.classList.add('active');healthBtn.classList.remove('active');charts.forEach(c=>c.resize())};
+
+    openKpiSuite.onclick=()=>{
+      landing.style.display='none';
+      appShell.style.display='block';
+      charts.forEach(c=>c.resize());
+    };
+
+    const trendChart = new Chart(document.getElementById('trendChart'),{type:'line',data:{labels:['Today'],datasets:[{label:'Followers/Day',data:[0],borderColor:'#34d399',backgroundColor:'rgba(52,211,153,.2)',tension:.35}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#d7e2ff'}}},scales:{x:{ticks:{color:'#9fb0df'},grid:{color:'rgba(159,176,223,.08)'}},y:{ticks:{color:'#9fb0df'}}}}});
+    charts.push(trendChart);
+
+    charts.push(new Chart(document.getElementById('mixChart'),{type:'doughnut',data:{labels:['POV Reels','UGC','Carousels','Static'],datasets:[{data:[42,28,18,12],backgroundColor:['#60a5fa','#34d399','#a78bfa','#fbbf24'],borderWidth:0}]},options:{plugins:{legend:{position:'bottom',labels:{color:'#d7e2ff'}}},maintainAspectRatio:false}}));
+    charts.push(new Chart(document.getElementById('diagScatter'),{type:'scatter',data:{datasets:[{label:'Ads',data:[{x:3.4,y:.54},{x:2.9,y:.67},{x:2.2,y:1.14},{x:1.8,y:.92},{x:1.1,y:1.45}],backgroundColor:'#34d399'}]},options:{maintainAspectRatio:false,plugins:{legend:{labels:{color:'#d7e2ff'}}},scales:{x:{title:{display:true,text:'CTR %',color:'#9fb0df'},ticks:{color:'#9fb0df'}},y:{title:{display:true,text:'CPC',color:'#9fb0df'},ticks:{color:'#9fb0df'}}}}}));
+    charts.push(new Chart(document.getElementById('diagPlacement'),{type:'bar',data:{labels:['IG Reels','IG Stories','Feed','Explore'],datasets:[{label:'Waste Index',data:[12,17,25,9],backgroundColor:['#34d399','#60a5fa','#f87171','#a78bfa']}]},options:{maintainAspectRatio:false,plugins:{legend:{labels:{color:'#d7e2ff'}}},scales:{x:{ticks:{color:'#9fb0df'}},y:{ticks:{color:'#9fb0df'}}}}}));
+
+    function setTrendRange(days, history){
+      const sliced = history.slice(-days);
+      const labels = sliced.map(x=>x.day);
+      const vals = sliced.map(x=> (x.followers_per_day==null?0:x.followers_per_day));
+      trendChart.data.labels = labels.length ? labels : ['Today'];
+      trendChart.data.datasets[0].data = vals.length ? vals : [0];
+      trendChart.update();
+    }
+
+    async function loadInsights(){
+      try {
+        const res = await fetch('/data/latest.json', {cache:'no-store'});
+        if(!res.ok) return;
+        const j = await res.json();
+        const insights = (j.insights||[]);
+        const box = document.getElementById('insightsBox');
+        box.innerHTML = insights.map((t,i)=>`<div class="action"><div class="id">Insight ${i+1}</div><div class="txt">${t}</div></div>`).join('') || '<div class="action"><div class="txt">No insights yet.</div></div>';
+
+        // Goals engine: 150k followers by June 11, 2026
+        const goalTarget = 150000;
+        const goalDate = new Date('2026-06-11T23:59:59');
+        const now = new Date();
+        const curFollowers = Number(j?.followers?.current || 0);
+        const remFollowers = Math.max(0, goalTarget - curFollowers);
+        const msLeft = Math.max(0, goalDate.getTime() - now.getTime());
+        const daysLeft = Math.max(1, Math.ceil(msLeft / (1000*60*60*24)));
+        const reqPerDay = remFollowers / daysLeft;
+
+        const history = (j.followers_history||[]);
+        const deltas = history.map(x=>x.followers_per_day).filter(v=>typeof v==='number');
+        const avgRecent = deltas.length ? (deltas.slice(-14).reduce((a,b)=>a+b,0) / Math.min(14,deltas.length)) : 0;
+        const paceStatus = avgRecent >= reqPerDay ? 'On pace' : 'Behind pace';
+        const projectedDate = avgRecent > 0 ? new Date(now.getTime() + (remFollowers/avgRecent)*24*60*60*1000) : null;
+
+        // Blended CPF estimate over recent window (best available until direct follow attribution is wired)
+        const campaignApiRows = Array.isArray(j.campaign) ? j.campaign : [];
+        const spend7d = campaignApiRows.reduce((sum, r) => sum + (parseFloat(r.spend || 0) || 0), 0);
+        const followers7d = deltas.slice(-7).reduce((a,b)=>a + (b>0?b:0), 0);
+        const blendedCpf7d = followers7d > 0 ? (spend7d / followers7d) : null;
+
+        const campaignUiRows = campaignApiRows
+          .map(r => {
+            const cpc = r.cpc != null ? parseFloat(r.cpc) : null;
+            return {
+              id: r.campaign_id || '',
+              name: r.campaign_name || 'Unknown Campaign',
+              spend: parseFloat(r.spend || 0),
+              clicks: parseFloat(r.clicks || 0),
+              cpc,
+              status: cpc == null ? 'No CPC' : (cpc <= 0.50 ? 'Efficient' : 'Needs Tuning'),
+              safe: cpc != null ? cpc <= 0.50 : false,
+            };
+          })
+          .sort((a,b) => (a.cpc ?? 9999) - (b.cpc ?? 9999));
+        renderCampaignTable(campaignUiRows);
+
+        const hasApi = campaignApiRows.length > 0;
+        const actionPlanBox = document.getElementById('actionPlanBox');
+        const drillPanel = document.getElementById('drillPanel');
+        const deepInsightsPanel = document.getElementById('deepInsightsPanel');
+        if(!hasApi){
+          actionPlanBox.innerHTML = '<div class="action"><div class="id">Waiting for API</div><div class="txt">No validated campaign snapshots yet. Once API rows land, recommendations auto-populate.</div></div>';
+          drillPanel.style.display = 'none';
+          deepInsightsPanel.style.display = 'none';
+        } else {
+          drillPanel.style.display = 'block';
+          deepInsightsPanel.style.display = 'block';
+        }
+
+        const goalsBox = document.getElementById('goalsBox');
+        goalsBox.innerHTML = `
+          <div class="action"><div class="id">Goal</div><div class="txt">Reach <b>${goalTarget.toLocaleString()}</b> followers by <b>June 11, 2026</b>.</div></div>
+          <div class="action"><div class="id">Current vs Remaining</div><div class="txt">Current: <b>${curFollowers.toLocaleString()}</b> · Remaining: <b>${remFollowers.toLocaleString()}</b> · Days left: <b>${daysLeft}</b></div></div>
+          <div class="action"><div class="id">Required Daily Pace</div><div class="txt">Need <b>${reqPerDay.toFixed(1)}</b> followers/day from now.</div></div>
+          <div class="action"><div class="id">Pace Check</div><div class="txt"><b>${paceStatus}</b> · Recent avg: <b>${avgRecent.toFixed(1)}</b>/day ${projectedDate ? `· projected hit: <b>${projectedDate.toLocaleDateString()}</b>` : ''}</div></div>
+          <div class="action"><div class="id">Blended Efficiency (7D)</div><div class="txt">Estimated blended CPF: <b>${blendedCpf7d!==null ? ('$'+blendedCpf7d.toFixed(2)) : 'N/A'}</b> (spend ÷ net follower growth).</div></div>
+        `;
+
+        setTrendRange(7, history);
+        document.querySelectorAll('.range-btn').forEach(btn=>{
+          btn.onclick = ()=>{
+            document.querySelectorAll('.range-btn').forEach(b=>b.classList.remove('active'));
+            btn.classList.add('active');
+            setTrendRange(parseInt(btn.dataset.days,10), history);
+          };
+        });
+      } catch(e) {
+        console.warn('insights load failed', e);
+      }
+    }
+
+    loadInsights();
   </script>
 </body>
 </html>

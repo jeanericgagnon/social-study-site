@@ -1,0 +1,7 @@
+{
+  "status": "waiting_for_followers_data",
+  "message": "Add at least 2 rows to followers_daily.csv to compute net-new followers and blended CPF.",
+  "followers_csv": "/Users/ericsysclaw/.openclaw/workspace/exports/meta-ads/followers_daily.csv",
+  "ads_csv": "/Users/ericsysclaw/.openclaw/workspace/exports/meta-ads/insights_latest.csv",
+  "generated_at": "2026-03-10T18:54:21.250012Z"
+}

@@ -1,0 +1,22 @@
+{
+  "latest_date": "2026-03-10",
+  "prev_date": "2026-03-09",
+  "latest": {
+    "spend": 17.36,
+    "impressions": 2382.0,
+    "clicks": 148.0,
+    "follows": 0.0
+  },
+  "prev": {
+    "spend": 24.93,
+    "impressions": 3815.0,
+    "clicks": 233.0,
+    "follows": 0.0
+  },
+  "delta_pct": {
+    "spend": -30.37,
+    "impressions": -37.56,
+    "clicks": -36.48,
+    "follows": null
+  }
+}

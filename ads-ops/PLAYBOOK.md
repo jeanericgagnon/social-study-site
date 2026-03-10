@@ -7,7 +7,8 @@
 - Max CAC/CPA target:
 
 ## Hard constraints
-- Daily spend cap: **$100/day total**
+- Daily spend cap (current): **$60/day total**
+- Absolute ceiling without explicit override: **$100/day total**
 - Forbidden actions:
   - Delete campaigns/ad sets/ads
   - Any write without OTP workflow

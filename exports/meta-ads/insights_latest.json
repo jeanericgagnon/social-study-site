@@ -1,0 +1,910 @@
+[
+  {
+    "date_start": "2026-03-08",
+    "date_stop": "2026-03-08",
+    "account_name": "TSSAds",
+    "campaign_name": "1",
+    "adset_name": "New Traffic Ad set with recommended settings",
+    "ad_name": "1",
+    "spend": "1.16",
+    "impressions": "196",
+    "reach": "195",
+    "clicks": "5",
+    "ctr": "2.55102",
+    "cpc": "0.232",
+    "cpm": "5.918367",
+    "actions": [
+      {
+        "action_type": "link_click",
+        "value": "5"
+      },
+      {
+        "action_type": "page_engagement",
+        "value": "79"
+      },
+      {
+        "action_type": "post_engagement",
+        "value": "79"
+      },
+      {
+        "action_type": "post_interaction_gross",
+        "value": "2"
+      },
+      {
+        "action_type": "onsite_conversion.post_save",
+        "value": "1"
+      },
+      {
+        "action_type": "onsite_conversion.post_net_like",
+        "value": "1"
+      },
+      {
+        "action_type": "onsite_conversion.post_net_save",
+        "value": "1"
+      },
+      {
+        "action_type": "video_view",
+        "value": "72"
+      },
+      {
+        "action_type": "post_reaction",
+        "value": "1"
+      }
+    ],
+    "cost_per_action_type": [
+      {
+        "action_type": "video_view",
+        "value": "0.016111"
+      },
+      {
+        "action_type": "link_click",
+        "value": "0.232"
+      },
+      {
+        "action_type": "post_interaction_gross",
+        "value": "0.58"
+      },
+      {
+        "action_type": "post_engagement",
+        "value": "0.014684"
+      },
+      {
+        "action_type": "page_engagement",
+        "value": "0.014684"
+      }
+    ]
+  },
+  {
+    "date_start": "2026-03-08",
+    "date_stop": "2026-03-08",
+    "account_name": "TSSAds",
+    "campaign_name": "1",
+    "adset_name": "Test - New Traffic Ad set with recommended settings",
+    "ad_name": "1",
+    "spend": "1.04",
+    "impressions": "148",
+    "reach": "147",
+    "clicks": "6",
+    "ctr": "4.054054",
+    "cpc": "0.173333",
+    "cpm": "7.027027",
+    "actions": [
+      {
+        "action_type": "link_click",
+        "value": "6"
+      },
+      {
+        "action_type": "page_engagement",
+        "value": "61"
+      },
+      {
+        "action_type": "post_engagement",
+        "value": "61"
+      },
+      {
+        "action_type": "post_interaction_gross",
+        "value": "2"
+      },
+      {
+        "action_type": "onsite_conversion.post_net_like",
+        "value": "2"
+      },
+      {
+        "action_type": "video_view",
+        "value": "53"
+      },
+      {
+        "action_type": "post_reaction",
+        "value": "2"
+      }
+    ],
+    "cost_per_action_type": [
+      {
+        "action_type": "video_view",
+        "value": "0.019623"
+      },
+      {
+        "action_type": "link_click",
+        "value": "0.173333"
+      },
+      {
+        "action_type": "post_interaction_gross",
+        "value": "0.52"
+      },
+      {
+        "action_type": "post_engagement",
+        "value": "0.017049"
+      },
+      {
+        "action_type": "page_engagement",
+        "value": "0.017049"
+      }
+    ]
+  },
+  {
+    "date_start": "2026-03-08",
+    "date_stop": "2026-03-08",
+    "account_name": "TSSAds",
+    "campaign_name": "2",
+    "adset_name": "New Traffic Ad set with recommended settings",
+    "ad_name": "1",
+    "spend": "0.26",
+    "impressions": "50",
+    "reach": "50",
+    "clicks": "1",
+    "ctr": "2",
+    "cpc": "0.26",
+    "cpm": "5.2",
+    "actions": [
+      {
+        "action_type": "link_click",
+        "value": "1"
+      },
+      {
+        "action_type": "page_engagement",
+        "value": "17"
+      },
+      {
+        "action_type": "post_engagement",
+        "value": "17"
+      },
+      {
+        "action_type": "video_view",
+        "value": "16"
+      }
+    ],
+    "cost_per_action_type": [
+      {
+        "action_type": "video_view",
+        "value": "0.01625"
+      },
+      {
+        "action_type": "link_click",
+        "value": "0.26"
+      },
+      {
+        "action_type": "post_engagement",
+        "value": "0.015294"
+      },
+      {
+        "action_type": "page_engagement",
+        "value": "0.015294"
+      }
+    ]
+  },
+  {
+    "date_start": "2026-03-08",
+    "date_stop": "2026-03-08",
+    "account_name": "TSSAds",
+    "campaign_name": "2",
+    "adset_name": "Test - New Traffic Ad set with recommended settings",
+    "ad_name": "1",
+    "spend": "1.81",
+    "impressions": "268",
+    "reach": "268",
+    "clicks": "19",
+    "ctr": "7.089552",
+    "cpc": "0.095263",
+    "cpm": "6.753731",
+    "actions": [
+      {
+        "action_type": "link_click",
+        "value": "19"
+      },
+      {
+        "action_type": "page_engagement",
+        "value": "131"
+      },
+      {
+        "action_type": "post_engagement",
+        "value": "131"
+      },
+      {
+        "action_type": "post_interaction_gross",
+        "value": "5"
+      },
+      {
+        "action_type": "post",
+        "value": "1"
+      },
+      {
+        "action_type": "onsite_conversion.post_net_like",
+        "value": "4"
+      },
+      {
+        "action_type": "video_view",
+        "value": "107"
+      },
+      {
+        "action_type": "post_reaction",
+        "value": "4"
+      }
+    ],
+    "cost_per_action_type": [
+      {
+        "action_type": "video_view",
+        "value": "0.016916"
+      },
+      {
+        "action_type": "link_click",
+        "value": "0.095263"
+      },
+      {
+        "action_type": "post_interaction_gross",
+        "value": "0.362"
+      },
+      {
+        "action_type": "post_engagement",
+        "value": "0.013817"
+      },
+      {
+        "action_type": "page_engagement",
+        "value": "0.013817"
+      }
+    ]
+  },
+  {
+    "date_start": "2026-03-09",
+    "date_stop": "2026-03-09",
+    "account_name": "TSSAds",
+    "campaign_name": "1",
+    "adset_name": "New Traffic Ad set with recommended settings",
+    "ad_name": "1",
+    "spend": "6.25",
+    "impressions": "978",
+    "reach": "978",
+    "clicks": "48",
+    "ctr": "4.907975",
+    "cpc": "0.130208",
+    "cpm": "6.390593",
+    "actions": [
+      {
+        "action_type": "link_click",
+        "value": "47"
+      },
+      {
+        "action_type": "page_engagement",
+        "value": "442"
+      },
+      {
+        "action_type": "post_engagement",
+        "value": "442"
+      },
+      {
+        "action_type": "post_interaction_gross",
+        "value": "20"
+      },
+      {
+        "action_type": "post",
+        "value": "4"
+      },
+      {
+        "action_type": "onsite_conversion.post_save",
+        "value": "1"
+      },
+      {
+        "action_type": "onsite_conversion.post_net_like",
+        "value": "15"
+      },
+      {
+        "action_type": "onsite_conversion.post_net_save",
+        "value": "1"
+      },
+      {
+        "action_type": "video_view",
+        "value": "375"
+      },
+      {
+        "action_type": "post_reaction",
+        "value": "15"
+      }
+    ],
+    "cost_per_action_type": [
+      {
+        "action_type": "video_view",
+        "value": "0.016667"
+      },
+      {
+        "action_type": "link_click",
+        "value": "0.132979"
+      },
+      {
+        "action_type": "post_interaction_gross",
+        "value": "0.3125"
+      },
+      {
+        "action_type": "post_engagement",
+        "value": "0.01414"
+      },
+      {
+        "action_type": "page_engagement",
+        "value": "0.01414"
+      }
+    ]
+  },
+  {
+    "date_start": "2026-03-09",
+    "date_stop": "2026-03-09",
+    "account_name": "TSSAds",
+    "campaign_name": "1",
+    "adset_name": "Test - New Traffic Ad set with recommended settings",
+    "ad_name": "1",
+    "spend": "6.65",
+    "impressions": "1039",
+    "reach": "1039",
+    "clicks": "79",
+    "ctr": "7.603465",
+    "cpc": "0.084177",
+    "cpm": "6.400385",
+    "actions": [
+      {
+        "action_type": "link_click",
+        "value": "79"
+      },
+      {
+        "action_type": "page_engagement",
+        "value": "542"
+      },
+      {
+        "action_type": "onsite_conversion.post_unlike",
+        "value": "1"
+      },
+      {
+        "action_type": "post_engagement",
+        "value": "542"
+      },
+      {
+        "action_type": "post_interaction_gross",
+        "value": "29"
+      },
+      {
+        "action_type": "post",
+        "value": "4"
+      },
+      {
+        "action_type": "onsite_conversion.post_save",
+        "value": "3"
+      },
+      {
+        "action_type": "onsite_conversion.post_net_like",
+        "value": "21"
+      },
+      {
+        "action_type": "onsite_conversion.post_net_save",
+        "value": "3"
+      },
+      {
+        "action_type": "video_view",
+        "value": "434"
+      },
+      {
+        "action_type": "post_reaction",
+        "value": "22"
+      }
+    ],
+    "cost_per_action_type": [
+      {
+        "action_type": "video_view",
+        "value": "0.015323"
+      },
+      {
+        "action_type": "link_click",
+        "value": "0.084177"
+      },
+      {
+        "action_type": "post_interaction_gross",
+        "value": "0.22931"
+      },
+      {
+        "action_type": "post_engagement",
+        "value": "0.012269"
+      },
+      {
+        "action_type": "page_engagement",
+        "value": "0.012269"
+      }
+    ]
+  },
+  {
+    "date_start": "2026-03-09",
+    "date_stop": "2026-03-09",
+    "account_name": "TSSAds",
+    "campaign_name": "2",
+    "adset_name": "New Traffic Ad set with recommended settings",
+    "ad_name": "1",
+    "spend": "4.82",
+    "impressions": "730",
+    "reach": "721",
+    "clicks": "23",
+    "ctr": "3.150685",
+    "cpc": "0.209565",
+    "cpm": "6.60274",
+    "actions": [
+      {
+        "action_type": "link_click",
+        "value": "23"
+      },
+      {
+        "action_type": "page_engagement",
+        "value": "306"
+      },
+      {
+        "action_type": "onsite_conversion.post_unlike",
+        "value": "1"
+      },
+      {
+        "action_type": "post_engagement",
+        "value": "306"
+      },
+      {
+        "action_type": "post_interaction_gross",
+        "value": "10"
+      },
+      {
+        "action_type": "post",
+        "value": "4"
+      },
+      {
+        "action_type": "onsite_conversion.post_net_like",
+        "value": "5"
+      },
+      {
+        "action_type": "video_view",
+        "value": "273"
+      },
+      {
+        "action_type": "post_reaction",
+        "value": "6"
+      }
+    ],
+    "cost_per_action_type": [
+      {
+        "action_type": "video_view",
+        "value": "0.017656"
+      },
+      {
+        "action_type": "link_click",
+        "value": "0.209565"
+      },
+      {
+        "action_type": "post_interaction_gross",
+        "value": "0.482"
+      },
+      {
+        "action_type": "post_engagement",
+        "value": "0.015752"
+      },
+      {
+        "action_type": "page_engagement",
+        "value": "0.015752"
+      }
+    ]
+  },
+  {
+    "date_start": "2026-03-09",
+    "date_stop": "2026-03-09",
+    "account_name": "TSSAds",
+    "campaign_name": "2",
+    "adset_name": "Test - New Traffic Ad set with recommended settings",
+    "ad_name": "1",
+    "spend": "7.21",
+    "impressions": "1068",
+    "reach": "1056",
+    "clicks": "83",
+    "ctr": "7.771536",
+    "cpc": "0.086867",
+    "cpm": "6.750936",
+    "actions": [
+      {
+        "action_type": "link_click",
+        "value": "84"
+      },
+      {
+        "action_type": "page_engagement",
+        "value": "528"
+      },
+      {
+        "action_type": "post_engagement",
+        "value": "528"
+      },
+      {
+        "action_type": "post_interaction_gross",
+        "value": "26"
+      },
+      {
+        "action_type": "post",
+        "value": "2"
+      },
+      {
+        "action_type": "onsite_conversion.post_save",
+        "value": "1"
+      },
+      {
+        "action_type": "onsite_conversion.post_net_like",
+        "value": "23"
+      },
+      {
+        "action_type": "onsite_conversion.post_net_save",
+        "value": "1"
+      },
+      {
+        "action_type": "video_view",
+        "value": "418"
+      },
+      {
+        "action_type": "post_reaction",
+        "value": "23"
+      }
+    ],
+    "cost_per_action_type": [
+      {
+        "action_type": "video_view",
+        "value": "0.017249"
+      },
+      {
+        "action_type": "link_click",
+        "value": "0.085833"
+      },
+      {
+        "action_type": "post_interaction_gross",
+        "value": "0.277308"
+      },
+      {
+        "action_type": "post_engagement",
+        "value": "0.013655"
+      },
+      {
+        "action_type": "page_engagement",
+        "value": "0.013655"
+      }
+    ]
+  },
+  {
+    "date_start": "2026-03-10",
+    "date_stop": "2026-03-10",
+    "account_name": "TSSAds",
+    "campaign_name": "1",
+    "adset_name": "New Traffic Ad set with recommended settings",
+    "ad_name": "1",
+    "spend": "3.58",
+    "impressions": "500",
+    "reach": "494",
+    "clicks": "28",
+    "ctr": "5.6",
+    "cpc": "0.127857",
+    "cpm": "7.16",
+    "actions": [
+      {
+        "action_type": "onsite_conversion.total_messaging_connection",
+        "value": "1"
+      },
+      {
+        "action_type": "link_click",
+        "value": "28"
+      },
+      {
+        "action_type": "page_engagement",
+        "value": "271"
+      },
+      {
+        "action_type": "post_engagement",
+        "value": "271"
+      },
+      {
+        "action_type": "post_interaction_gross",
+        "value": "13"
+      },
+      {
+        "action_type": "post",
+        "value": "3"
+      },
+      {
+        "action_type": "onsite_conversion.post_save",
+        "value": "1"
+      },
+      {
+        "action_type": "onsite_conversion.post_net_like",
+        "value": "9"
+      },
+      {
+        "action_type": "onsite_conversion.post_net_save",
+        "value": "1"
+      },
+      {
+        "action_type": "onsite_conversion.messaging_first_reply",
+        "value": "1"
+      },
+      {
+        "action_type": "onsite_conversion.messaging_conversation_started_7d",
+        "value": "1"
+      },
+      {
+        "action_type": "video_view",
+        "value": "230"
+      },
+      {
+        "action_type": "post_reaction",
+        "value": "9"
+      }
+    ],
+    "cost_per_action_type": [
+      {
+        "action_type": "onsite_conversion.total_messaging_connection",
+        "value": "3.58"
+      },
+      {
+        "action_type": "video_view",
+        "value": "0.015565"
+      },
+      {
+        "action_type": "link_click",
+        "value": "0.127857"
+      },
+      {
+        "action_type": "post_interaction_gross",
+        "value": "0.275385"
+      },
+      {
+        "action_type": "post_engagement",
+        "value": "0.01321"
+      },
+      {
+        "action_type": "page_engagement",
+        "value": "0.01321"
+      },
+      {
+        "action_type": "onsite_conversion.messaging_first_reply",
+        "value": "3.58"
+      },
+      {
+        "action_type": "onsite_conversion.messaging_conversation_started_7d",
+        "value": "3.58"
+      }
+    ]
+  },
+  {
+    "date_start": "2026-03-10",
+    "date_stop": "2026-03-10",
+    "account_name": "TSSAds",
+    "campaign_name": "1",
+    "adset_name": "Test - New Traffic Ad set with recommended settings",
+    "ad_name": "1",
+    "spend": "3.54",
+    "impressions": "499",
+    "reach": "499",
+    "clicks": "28",
+    "ctr": "5.611222",
+    "cpc": "0.126429",
+    "cpm": "7.094188",
+    "actions": [
+      {
+        "action_type": "link_click",
+        "value": "29"
+      },
+      {
+        "action_type": "page_engagement",
+        "value": "250"
+      },
+      {
+        "action_type": "post_engagement",
+        "value": "250"
+      },
+      {
+        "action_type": "post_interaction_gross",
+        "value": "12"
+      },
+      {
+        "action_type": "post",
+        "value": "1"
+      },
+      {
+        "action_type": "onsite_conversion.post_save",
+        "value": "1"
+      },
+      {
+        "action_type": "onsite_conversion.post_net_like",
+        "value": "10"
+      },
+      {
+        "action_type": "onsite_conversion.post_net_save",
+        "value": "1"
+      },
+      {
+        "action_type": "video_view",
+        "value": "209"
+      },
+      {
+        "action_type": "post_reaction",
+        "value": "10"
+      }
+    ],
+    "cost_per_action_type": [
+      {
+        "action_type": "video_view",
+        "value": "0.016938"
+      },
+      {
+        "action_type": "link_click",
+        "value": "0.122069"
+      },
+      {
+        "action_type": "post_interaction_gross",
+        "value": "0.295"
+      },
+      {
+        "action_type": "post_engagement",
+        "value": "0.01416"
+      },
+      {
+        "action_type": "page_engagement",
+        "value": "0.01416"
+      }
+    ]
+  },
+  {
+    "date_start": "2026-03-10",
+    "date_stop": "2026-03-10",
+    "account_name": "TSSAds",
+    "campaign_name": "2",
+    "adset_name": "New Traffic Ad set with recommended settings",
+    "ad_name": "1",
+    "spend": "3.53",
+    "impressions": "433",
+    "reach": "428",
+    "clicks": "22",
+    "ctr": "5.080831",
+    "cpc": "0.160455",
+    "cpm": "8.152425",
+    "actions": [
+      {
+        "action_type": "link_click",
+        "value": "24"
+      },
+      {
+        "action_type": "page_engagement",
+        "value": "208"
+      },
+      {
+        "action_type": "post_engagement",
+        "value": "208"
+      },
+      {
+        "action_type": "post_interaction_gross",
+        "value": "5"
+      },
+      {
+        "action_type": "onsite_conversion.post_save",
+        "value": "1"
+      },
+      {
+        "action_type": "onsite_conversion.post_net_like",
+        "value": "4"
+      },
+      {
+        "action_type": "onsite_conversion.post_net_save",
+        "value": "1"
+      },
+      {
+        "action_type": "video_view",
+        "value": "179"
+      },
+      {
+        "action_type": "post_reaction",
+        "value": "4"
+      }
+    ],
+    "cost_per_action_type": [
+      {
+        "action_type": "video_view",
+        "value": "0.019721"
+      },
+      {
+        "action_type": "link_click",
+        "value": "0.147083"
+      },
+      {
+        "action_type": "post_interaction_gross",
+        "value": "0.706"
+      },
+      {
+        "action_type": "post_engagement",
+        "value": "0.016971"
+      },
+      {
+        "action_type": "page_engagement",
+        "value": "0.016971"
+      }
+    ]
+  },
+  {
+    "date_start": "2026-03-10",
+    "date_stop": "2026-03-10",
+    "account_name": "TSSAds",
+    "campaign_name": "2",
+    "adset_name": "Test - New Traffic Ad set with recommended settings",
+    "ad_name": "1",
+    "spend": "3.97",
+    "impressions": "517",
+    "reach": "517",
+    "clicks": "38",
+    "ctr": "7.350097",
+    "cpc": "0.104474",
+    "cpm": "7.678917",
+    "actions": [
+      {
+        "action_type": "link_click",
+        "value": "37"
+      },
+      {
+        "action_type": "page_engagement",
+        "value": "299"
+      },
+      {
+        "action_type": "post_engagement",
+        "value": "299"
+      },
+      {
+        "action_type": "post_interaction_gross",
+        "value": "13"
+      },
+      {
+        "action_type": "post",
+        "value": "1"
+      },
+      {
+        "action_type": "onsite_conversion.post_net_like",
+        "value": "12"
+      },
+      {
+        "action_type": "video_view",
+        "value": "249"
+      },
+      {
+        "action_type": "post_reaction",
+        "value": "12"
+      }
+    ],
+    "cost_per_action_type": [
+      {
+        "action_type": "video_view",
+        "value": "0.015944"
+      },
+      {
+        "action_type": "link_click",
+        "value": "0.107297"
+      },
+      {
+        "action_type": "post_interaction_gross",
+        "value": "0.305385"
+      },
+      {
+        "action_type": "post_engagement",
+        "value": "0.013278"
+      },
+      {
+        "action_type": "page_engagement",
+        "value": "0.013278"
+      }
+    ]
+  }
+]

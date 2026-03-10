@@ -1,0 +1,14 @@
+{
+  "since": "2026-02-08",
+  "until": "2026-03-10",
+  "rows": 12,
+  "total_spend": 43.82,
+  "total_clicks": 380,
+  "total_impressions": 6426,
+  "total_follows": 0,
+  "blended_cost_per_follow": null,
+  "pulled_at": "2026-03-10T18:50:50.464635Z",
+  "latest_csv": "/Users/ericsysclaw/.openclaw/workspace/exports/meta-ads/insights_latest.csv",
+  "latest_json": "/Users/ericsysclaw/.openclaw/workspace/exports/meta-ads/insights_latest.json",
+  "kpi_catalog": "/Users/ericsysclaw/.openclaw/workspace/exports/meta-ads/kpi_catalog_latest.json"
+}

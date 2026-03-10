@@ -1,8 +1,9 @@
 # Ads Playbook (Living)
 
 ## Objectives
-- Primary KPI:
-- Secondary KPI:
+- Primary KPI: **Follows** (net new followers; attributed where available)
+- Strategic rationale: Follower growth compounds into downstream sales pipeline.
+- Secondary KPI: Cost per Follower (Attributed CPF preferred; Blended CPF as fallback)
 - Max CAC/CPA target:
 
 ## Hard constraints

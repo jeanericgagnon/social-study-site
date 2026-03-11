@@ -1,0 +1,11 @@
+{
+  "formats": ["9:16", "1:1", "16:9"],
+  "hook_variants": 2,
+  "caption_style": "basic",
+  "qa_thresholds": {
+    "min_score": 0.7,
+    "min_duration_seconds": 10,
+    "max_duration_seconds": 90,
+    "max_drop_frames_pct": 1.0
+  }
+}

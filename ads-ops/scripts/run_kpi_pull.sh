@@ -13,7 +13,8 @@ fi
 # Pull ads KPIs (script supports env OR exports/meta-ads/config.json fallback)
 python ads-ops/scripts/pull_meta_to_sqlite.py
 
-# Always pull follower count from web source
+# Pull follower demographics from IG Graph API (best-effort), then follower count fallback
+python ads-ops/scripts/pull_ig_follower_demographics.py || true
 python ads-ops/scripts/pull_followers_blastup.py
 python ads-ops/scripts/build_latest_json.py
 

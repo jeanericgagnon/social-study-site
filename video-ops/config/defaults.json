@@ -1,11 +1,27 @@
 {
-  "formats": ["9:16", "1:1", "16:9"],
-  "hook_variants": 2,
-  "caption_style": "basic",
-  "qa_thresholds": {
-    "min_score": 0.7,
-    "min_duration_seconds": 10,
-    "max_duration_seconds": 90,
-    "max_drop_frames_pct": 1.0
+  "render": {
+    "variants": [
+      { "label": "9x16", "width": 1080, "height": 1920 },
+      { "label": "1x1", "width": 1080, "height": 1080 },
+      { "label": "16x9", "width": 1920, "height": 1080 }
+    ],
+    "video_codec": "libx264",
+    "crf": 20,
+    "preset": "medium",
+    "audio_codec": "aac",
+    "audio_bitrate": "192k",
+    "audio_sample_rate": 48000,
+    "audio_filter": "loudnorm=I=-16:LRA=11:TP=-1.5,acompressor=threshold=-18dB:ratio=2.5:attack=20:release=200:makeup=2"
+  },
+  "transcription": {
+    "model": "base",
+    "language": ""
+  },
+  "qa": {
+    "min_duration_seconds": 3,
+    "max_duration_seconds": 180,
+    "target_loudness_db": -16,
+    "max_silence_ratio": 0.35,
+    "pass_score": 70
   }
 }

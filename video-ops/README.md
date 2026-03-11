@@ -1,37 +1,118 @@
-# video-ops (v1 scaffold)
+# video-ops (working local v1)
 
-Local video editing automation scaffold (no voiceover yet).
+Local, no-voiceover video pipeline:
+1) Transcribe with Whisper (local-first)
+2) Render 3 aspect-ratio variants with ffmpeg
+3) Run practical QA scoring
 
-## Workflow
-- Drop source clips in `inbox/`
-- Run `./scripts/run_pipeline.sh <input-file>`
-- Inspect outputs in `outputs/` and QA/transcript artifacts in `logs/` or `processing/`
+## Requirements
+
+Required:
+- `ffmpeg`
+- `ffprobe`
+- `python3`
+
+Transcription backend (one required):
+- Preferred: local `whisper` CLI (`pip install openai-whisper`)
+- Fallback: `OPENAI_API_KEY` for OpenAI Whisper API
 
 ## Directory layout
-- `inbox/` raw source clips
-- `processing/` working files
-- `outputs/` rendered variants
-- `archive/` completed source files
-- `logs/` QA and pipeline logs
-- `templates/` caption/hook templates
-- `scripts/` automation scripts
-- `config/` defaults and pipeline settings
 
-## Config defaults
-See `config/defaults.json`:
-- formats: 9:16, 1:1, 16:9
-- hook variants: 2
-- caption style: basic
-- qa thresholds: placeholder baseline gates
+- `inbox/` source clips
+- `processing/` per-run working files
+- `outputs/` per-run rendered variants
+- `logs/` per-run logs + QA + summary JSON
+- `scripts/` pipeline scripts
+- `config/defaults.json` runtime defaults
 
-## Commands
+## Quick start
+
 ```bash
+cd video-ops
+chmod +x scripts/*.sh
+
+# run full pipeline on one file
 ./scripts/run_pipeline.sh inbox/clip.mp4
-python3 scripts/transcribe_whisper.py --input inbox/clip.mp4 --output logs/clip.transcript.json
-./scripts/render_variants_ffmpeg.sh inbox/clip.mp4 outputs/
-python3 scripts/qa_score.py --input inbox/clip.mp4 --output logs/clip.qa.json
+
+# run newest video in inbox
+./scripts/run_on_inbox.sh
 ```
 
-## Notes
-- `transcribe_whisper.py` is a stub with a TODO for real Whisper integration.
-- Rendering uses ffmpeg commands for 9:16, 1:1, and 16:9 outputs.
+## What the pipeline produces
+
+For each run (`run_YYYYMMDD_HHMMSS`):
+- `processing/<run>/`
+  - copied input media
+  - `<stem>.transcript.json`
+  - `<stem>.transcript.srt`
+- `outputs/<run>/`
+  - `<stem>_9x16.mp4`
+  - `<stem>_1x1.mp4`
+  - `<stem>_16x9.mp4`
+- `logs/<run>/`
+  - `transcribe.log`
+  - `render.log`
+  - `qa.log`
+  - `<stem>.qa.json`
+  - `<stem>.run_summary.json`
+
+## Script details
+
+### `scripts/transcribe_whisper.py`
+- Uses local `whisper` CLI first if available.
+- If local Whisper is unavailable, uses OpenAI API only when `OPENAI_API_KEY` exists.
+- Fails clearly if neither backend is available.
+- Writes both transcript JSON and SRT.
+
+Example:
+```bash
+python3 scripts/transcribe_whisper.py \
+  --input inbox/clip.mp4 \
+  --output-base processing/clip.transcript \
+  --model base
+```
+
+### `scripts/render_variants_ffmpeg.sh`
+Inputs:
+```bash
+./scripts/render_variants_ffmpeg.sh <input-video> <output-dir> [basename]
+```
+- Renders 9:16, 1:1, 16:9 using scale+pad
+- Burns subtitles when matching SRT exists beside input
+- Applies audio normalization + light compression
+
+### `scripts/qa_score.py`
+Checks:
+- duration bounds
+- average loudness (via ffmpeg volumedetect)
+- silence ratio (via silencedetect)
+- subtitle presence
+
+Outputs JSON with:
+- `score` (0-100)
+- `reasons` list
+- metrics block
+
+## Config
+
+`config/defaults.json` stores defaults used by pipeline orchestration:
+- transcription model/language
+- QA thresholds (duration, loudness target, silence ratio)
+- render profile metadata
+
+## Troubleshooting
+
+- **"Missing dependency: ffmpeg/ffprobe/python3"**
+  - Install required tools and retry.
+
+- **"Neither local 'whisper' CLI nor OPENAI_API_KEY is available"**
+  - Install local Whisper (`pip install openai-whisper`) OR export API key:
+    ```bash
+    export OPENAI_API_KEY=...
+    ```
+
+- **No burned subtitles**
+  - Ensure transcript step generated `.srt` and it exists in the processing run folder.
+
+- **QA score is low**
+  - Check `logs/<run>/<stem>.qa.json` reasons list for specific failures.

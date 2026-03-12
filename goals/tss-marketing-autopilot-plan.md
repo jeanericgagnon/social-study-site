@@ -89,5 +89,38 @@ Auto-ship approved content patterns, monitor outcomes, and retune continuously.
 4. Whether to include weekday/weekend pacing normalization in v1
 5. Exact goal target and deadline for follower growth model
 
+## Phase 1 Exit Criteria (gate to Phase 2)
+
+Run for 3–5 consecutive days and move to Phase 2 only when all are true:
+
+1. Reliability
+- Scheduled jobs success rate >= 95%
+- No critical pipeline break (data pull + KPI build + deploy path healthy)
+
+2. Signal Quality
+- False-positive alert rate <= 10%
+- At least 1 true actionable alert captured (or explicit note that no thresholds were breached)
+- Attribution confidence median at least Medium across daily runs
+
+3. Data Integrity
+- Daily spend source is unambiguous (today vs window spend clearly labeled)
+- Freshness check passes on all daily deep dives
+- No unresolved schema mismatch between dashboard JSON and UI fields
+
+4. Operator Value
+- Daily brief includes clear top 3 actions with expected impact
+- Recommendations judged useful in majority of days (>=3 of last 5)
+
+5. Safety/Control
+- Guardrails stable (no unintended outbound actions)
+- Manual override path tested and reversible
+
+## Immediate Execution Checklist (now)
+- [ ] Run today’s 6pm PT calibration review and tune thresholds
+- [ ] Confirm tomorrow morning deep-dive output quality
+- [ ] Capture one full day of clean auto-monitor events (every 3h)
+- [ ] Lock threshold adjustments after day 3 if stable
+- [ ] Start Phase 2 kickoff only after passing the criteria above
+
 ## Next Step
-Implement Phase 1 scheduler + report templates + threshold engine, then run a 3–5 day calibration period before tightening automation.
+Operate Phase 1 under the exit criteria above; once the gate is met, begin Phase 2 (creative ideation automation).

@@ -1,0 +1,19 @@
+{
+  "generated_at": "2026-03-12T21:45:59.440956Z",
+  "target_username": "thesocial.study",
+  "required_scopes": [
+    "pages_show_list",
+    "pages_read_engagement",
+    "instagram_basic"
+  ],
+  "warnings": [],
+  "errors": [],
+  "page_id": "637948899409713",
+  "page_name": "The Social Study",
+  "ig_user_id": "17841472036075692",
+  "ig_username": "thesocial.study",
+  "ig_name": "The Social Study",
+  "followers_count": 106207,
+  "media_count": 70,
+  "accessible_page_count": 1
+}

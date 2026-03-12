@@ -1,0 +1,1880 @@
+{
+  "generated_at": "2026-03-12T23:03:09.986227Z",
+  "target_username": "thesocial.study",
+  "ig_user_id": "17841472036075692",
+  "total_reels": 41,
+  "coverage": {
+    "reels_with_performance_metrics": 41,
+    "reels_missing_each_key_metric": {
+      "views": 0,
+      "reach": 0,
+      "likes": 0,
+      "comments": 0,
+      "saved": 0,
+      "shares": 0,
+      "plays": 41,
+      "impressions": 41,
+      "video_views": 41,
+      "total_interactions": 0,
+      "ig_reels_avg_watch_time": 0,
+      "ig_reels_video_view_total_time": 0
+    },
+    "top_blockers": [
+      {
+        "reason": "unsupported_for_media_product_type",
+        "count": 82
+      },
+      {
+        "reason": "deprecated_in_graph_v22_plus",
+        "count": 41
+      }
+    ]
+  },
+  "rows": [
+    {
+      "media_id": "18097383601965066",
+      "permalink": "https://www.instagram.com/reel/DVr9sDiFOKE/",
+      "timestamp": "2026-03-10T02:20:00+0000",
+      "caption": "If you\u2019ve got something to share, we want to hear it \ud83d\udde3\ufe0f Visit the link in our bio to apply to be a speaker at an upcoming lecture. \n\nLooking for speakers in San Diego, Orange County, and Denver \ud83d\udccd\n\n#thesocialstudy #sandiego #orangecountyevents #thinkanddrink #denverthingstodo",
+      "media_type": "VIDEO",
+      "media_product_type": "REELS",
+      "transcript_path": "exports/instagram/thesocial.study/reels/transcripts/18097383601965066.txt",
+      "transcript_text_present": true,
+      "transcript_char_count": 435,
+      "visual": {
+        "duration_s": 23.08,
+        "resolution": "720x1280",
+        "bitrate_mbps": 1.123,
+        "scene_cuts": 14,
+        "cuts_per_min": 36.4
+      },
+      "performance": {
+        "views": 6833,
+        "reach": 5394,
+        "likes": 84,
+        "comments": 4,
+        "saved": 22,
+        "shares": 16,
+        "plays": null,
+        "impressions": null,
+        "video_views": null,
+        "total_interactions": 126,
+        "ig_reels_avg_watch_time": 5069,
+        "ig_reels_video_view_total_time": 27620179
+      },
+      "data_quality_flags": [
+        "api_partial_or_errors"
+      ],
+      "missing_reason": {
+        "plays": "deprecated_in_graph_v22_plus",
+        "impressions": "unsupported_for_media_product_type",
+        "video_views": "unsupported_for_media_product_type"
+      },
+      "api_errors": [
+        "metric_plays_failed: (#100) Starting from version v22.0 and above, the plays metric is no longer supported for the queried media. Please refer to the documentation at https://developers.facebook.com/docs/instagram-api/reference/ig-media/insights for a list of supported metrics.",
+        "metric_impressions_failed: (#100) The Media Insights API does not support the impressions metric for this media product type.",
+        "metric_video_views_failed: (#100) The Media Insights API does not support the video_views metric for this media product type."
+      ]
+    },
+    {
+      "media_id": "18411416599123500",
+      "permalink": "https://www.instagram.com/reel/DVl0FI-FAFl/",
+      "timestamp": "2026-03-07T17:00:00+0000",
+      "caption": "Late night hang out turned lecture hall \ud83e\udd1d Because it\u2019s all about balance. Check the link in our bio to see our upcoming events. New tickets drop every Sunday at 10 AM PST. You won\u2019t wanna miss a drop! \ud83c\udf9f\ufe0f\n\n#socialstudy #thinkanddrink #sandiegoevents",
+      "media_type": "VIDEO",
+      "media_product_type": "REELS",
+      "transcript_path": "exports/instagram/thesocial.study/reels/transcripts/18411416599123500.txt",
+      "transcript_text_present": true,
+      "transcript_char_count": 514,
+      "visual": {
+        "duration_s": 24.15,
+        "resolution": "720x1280",
+        "bitrate_mbps": 2.519,
+        "scene_cuts": 18,
+        "cuts_per_min": 44.73
+      },
+      "performance": {
+        "views": 11358,
+        "reach": 8116,
+        "likes": 111,
+        "comments": 2,
+        "saved": 20,
+        "shares": 18,
+        "plays": null,
+        "impressions": null,
+        "video_views": null,
+        "total_interactions": 153,
+        "ig_reels_avg_watch_time": 5949,
+        "ig_reels_video_view_total_time": 51131872
+      },
+      "data_quality_flags": [
+        "api_partial_or_errors"
+      ],
+      "missing_reason": {
+        "plays": "deprecated_in_graph_v22_plus",
+        "impressions": "unsupported_for_media_product_type",
+        "video_views": "unsupported_for_media_product_type"
+      },
+      "api_errors": [
+        "metric_plays_failed: (#100) Starting from version v22.0 and above, the plays metric is no longer supported for the queried media. Please refer to the documentation at https://developers.facebook.com/docs/instagram-api/reference/ig-media/insights for a list of supported metrics.",
+        "metric_impressions_failed: (#100) The Media Insights API does not support the impressions metric for this media product type.",
+        "metric_video_views_failed: (#100) The Media Insights API does not support the video_views metric for this media product type."
+      ]
+    },
+    {
+      "media_id": "18168294067403788",
+      "permalink": "https://www.instagram.com/reel/DVd-vhuFGin/",
+      "timestamp": "2026-03-04T16:00:00+0000",
+      "caption": "Come see what all the hype is about! Tickets drop every Sunday at 10 AM PST. We sell out fast, so you\u2019re not gonna want to miss a drop! \ud83c\udf9f\ufe0f\n\n#thinkanddrink #sandiego #orangecountyevents #thesocialstudy",
+      "media_type": "VIDEO",
+      "media_product_type": "REELS",
+      "transcript_path": "exports/instagram/thesocial.study/reels/transcripts/18168294067403788.txt",
+      "transcript_text_present": true,
+      "transcript_char_count": 593,
+      "visual": {
+        "duration_s": 29.37,
+        "resolution": "720x1280",
+        "bitrate_mbps": 1.235,
+        "scene_cuts": 14,
+        "cuts_per_min": 28.6
+      },
+      "performance": {
+        "views": 6007,
+        "reach": 4460,
+        "likes": 44,
+        "comments": 1,
+        "saved": 4,
+        "shares": 19,
+        "plays": null,
+        "impressions": null,
+        "video_views": null,
+        "total_interactions": 70,
+        "ig_reels_avg_watch_time": 3903,
+        "ig_reels_video_view_total_time": 19707145
+      },
+      "data_quality_flags": [
+        "api_partial_or_errors"
+      ],
+      "missing_reason": {
+        "plays": "deprecated_in_graph_v22_plus",
+        "impressions": "unsupported_for_media_product_type",
+        "video_views": "unsupported_for_media_product_type"
+      },
+      "api_errors": [
+        "metric_plays_failed: (#100) Starting from version v22.0 and above, the plays metric is no longer supported for the queried media. Please refer to the documentation at https://developers.facebook.com/docs/instagram-api/reference/ig-media/insights for a list of supported metrics.",
+        "metric_impressions_failed: (#100) The Media Insights API does not support the impressions metric for this media product type.",
+        "metric_video_views_failed: (#100) The Media Insights API does not support the video_views metric for this media product type."
+      ]
+    },
+    {
+      "media_id": "17938918989153793",
+      "permalink": "https://www.instagram.com/reel/DVSUj5IkaLR/",
+      "timestamp": "2026-02-28T03:22:01+0000",
+      "caption": "Any of these topics pique your interest? Lectures just like these and more are happening now. Visit our website to buy tickets. Link in bio. \ud83d\udc40\n\n\ud83c\udf9f\ufe0f Be first in line! Tickets drop every SUNDAY at 10 AM PST\n\n#thinkanddrink #thesocialstudy #thingstodosandiego #sandiegosocial",
+      "media_type": "VIDEO",
+      "media_product_type": "REELS",
+      "transcript_path": "exports/instagram/thesocial.study/reels/transcripts/17938918989153793.txt",
+      "transcript_text_present": true,
+      "transcript_char_count": 20,
+      "visual": {
+        "duration_s": 18.06,
+        "resolution": "720x1280",
+        "bitrate_mbps": 1.263,
+        "scene_cuts": 8,
+        "cuts_per_min": 26.57
+      },
+      "performance": {
+        "views": 12398,
+        "reach": 9416,
+        "likes": 112,
+        "comments": 3,
+        "saved": 35,
+        "shares": 17,
+        "plays": null,
+        "impressions": null,
+        "video_views": null,
+        "total_interactions": 171,
+        "ig_reels_avg_watch_time": 5586,
+        "ig_reels_video_view_total_time": 52422456
+      },
+      "data_quality_flags": [
+        "api_partial_or_errors"
+      ],
+      "missing_reason": {
+        "plays": "deprecated_in_graph_v22_plus",
+        "impressions": "unsupported_for_media_product_type",
+        "video_views": "unsupported_for_media_product_type"
+      },
+      "api_errors": [
+        "metric_plays_failed: (#100) Starting from version v22.0 and above, the plays metric is no longer supported for the queried media. Please refer to the documentation at https://developers.facebook.com/docs/instagram-api/reference/ig-media/insights for a list of supported metrics.",
+        "metric_impressions_failed: (#100) The Media Insights API does not support the impressions metric for this media product type.",
+        "metric_video_views_failed: (#100) The Media Insights API does not support the video_views metric for this media product type."
+      ]
+    },
+    {
+      "media_id": "18218341246311402",
+      "permalink": "https://www.instagram.com/reel/DVFWGl-kTch/",
+      "timestamp": "2026-02-23T02:25:21+0000",
+      "caption": "Pregaming a symphony with a glass of wine and some context \ud83e\udd0c\ud83c\udfbb \n\nOne of our favorite San Diego lectures yet! If you missed it, don\u2019t worry \u2014 we have a lot more interesting topics coming soon. \n\nTickets drop every Sunday at 10 AM PST. Visit the link in our bio to learn more. \ud83c\udf9f\ufe0f \n\n#sandiegoevents #sandiegosymphony #sandiegolife #thinkanddrink",
+      "media_type": "VIDEO",
+      "media_product_type": "REELS",
+      "transcript_path": "exports/instagram/thesocial.study/reels/transcripts/18218341246311402.txt",
+      "transcript_text_present": true,
+      "transcript_char_count": 594,
+      "visual": {
+        "duration_s": 30.44,
+        "resolution": "720x1280",
+        "bitrate_mbps": 1.105,
+        "scene_cuts": 20,
+        "cuts_per_min": 39.42
+      },
+      "performance": {
+        "views": 9400,
+        "reach": 7504,
+        "likes": 96,
+        "comments": 2,
+        "saved": 7,
+        "shares": 13,
+        "plays": null,
+        "impressions": null,
+        "video_views": null,
+        "total_interactions": 118,
+        "ig_reels_avg_watch_time": 4553,
+        "ig_reels_video_view_total_time": 34587046
+      },
+      "data_quality_flags": [
+        "api_partial_or_errors"
+      ],
+      "missing_reason": {
+        "plays": "deprecated_in_graph_v22_plus",
+        "impressions": "unsupported_for_media_product_type",
+        "video_views": "unsupported_for_media_product_type"
+      },
+      "api_errors": [
+        "metric_plays_failed: (#100) Starting from version v22.0 and above, the plays metric is no longer supported for the queried media. Please refer to the documentation at https://developers.facebook.com/docs/instagram-api/reference/ig-media/insights for a list of supported metrics.",
+        "metric_impressions_failed: (#100) The Media Insights API does not support the impressions metric for this media product type.",
+        "metric_video_views_failed: (#100) The Media Insights API does not support the video_views metric for this media product type."
+      ]
+    },
+    {
+      "media_id": "18076572743523942",
+      "permalink": "https://www.instagram.com/reel/DVALVo7EZDC/",
+      "timestamp": "2026-02-21T02:17:29+0000",
+      "caption": "Time to socialize with your friends, then time to lock in on the speaker. \ud83e\udde0\ud83c\udf7b We\u2019ve got lots of events coming soon! Follow us to stay up to date on the schedule. \n\n\ud83c\udf9f\ufe0f Tickets go on sale every Sunday at 10 AM PST. \n\n#thesocialstudy #sandiegoevents #thinkanddrink",
+      "media_type": "VIDEO",
+      "media_product_type": "REELS",
+      "transcript_path": "exports/instagram/thesocial.study/reels/transcripts/18076572743523942.txt",
+      "transcript_text_present": true,
+      "transcript_char_count": 141,
+      "visual": {
+        "duration_s": 12.79,
+        "resolution": "720x1280",
+        "bitrate_mbps": 1.585,
+        "scene_cuts": 16,
+        "cuts_per_min": 75.04
+      },
+      "performance": {
+        "views": 12439,
+        "reach": 9113,
+        "likes": 85,
+        "comments": 3,
+        "saved": 10,
+        "shares": 14,
+        "plays": null,
+        "impressions": null,
+        "video_views": null,
+        "total_interactions": 112,
+        "ig_reels_avg_watch_time": 4474,
+        "ig_reels_video_view_total_time": 44207035
+      },
+      "data_quality_flags": [
+        "api_partial_or_errors"
+      ],
+      "missing_reason": {
+        "plays": "deprecated_in_graph_v22_plus",
+        "impressions": "unsupported_for_media_product_type",
+        "video_views": "unsupported_for_media_product_type"
+      },
+      "api_errors": [
+        "metric_plays_failed: (#100) Starting from version v22.0 and above, the plays metric is no longer supported for the queried media. Please refer to the documentation at https://developers.facebook.com/docs/instagram-api/reference/ig-media/insights for a list of supported metrics.",
+        "metric_impressions_failed: (#100) The Media Insights API does not support the impressions metric for this media product type.",
+        "metric_video_views_failed: (#100) The Media Insights API does not support the video_views metric for this media product type."
+      ]
+    },
+    {
+      "media_id": "17914308063297598",
+      "permalink": "https://www.instagram.com/reel/DU7Qe0nEaYo/",
+      "timestamp": "2026-02-19T04:23:00+0000",
+      "caption": "Calling all San Diego, Orange County, and Denver intellectuals \ud83e\udde0 This one\u2019s for you. Tickets drop every Sunday at 10 AM PST. \n\n#sandiegoevents #orangecountyevents #thinkanddrink #thesocialstudy",
+      "media_type": "VIDEO",
+      "media_product_type": "REELS",
+      "transcript_path": "exports/instagram/thesocial.study/reels/transcripts/17914308063297598.txt",
+      "transcript_text_present": true,
+      "transcript_char_count": 458,
+      "visual": {
+        "duration_s": 23.66,
+        "resolution": "720x1280",
+        "bitrate_mbps": 1.272,
+        "scene_cuts": 12,
+        "cuts_per_min": 30.43
+      },
+      "performance": {
+        "views": 15422,
+        "reach": 11947,
+        "likes": 110,
+        "comments": 3,
+        "saved": 24,
+        "shares": 64,
+        "plays": null,
+        "impressions": null,
+        "video_views": null,
+        "total_interactions": 202,
+        "ig_reels_avg_watch_time": 4993,
+        "ig_reels_video_view_total_time": 61748490
+      },
+      "data_quality_flags": [
+        "api_partial_or_errors"
+      ],
+      "missing_reason": {
+        "plays": "deprecated_in_graph_v22_plus",
+        "impressions": "unsupported_for_media_product_type",
+        "video_views": "unsupported_for_media_product_type"
+      },
+      "api_errors": [
+        "metric_plays_failed: (#100) Starting from version v22.0 and above, the plays metric is no longer supported for the queried media. Please refer to the documentation at https://developers.facebook.com/docs/instagram-api/reference/ig-media/insights for a list of supported metrics.",
+        "metric_impressions_failed: (#100) The Media Insights API does not support the impressions metric for this media product type.",
+        "metric_video_views_failed: (#100) The Media Insights API does not support the video_views metric for this media product type."
+      ]
+    },
+    {
+      "media_id": "17964496635040675",
+      "permalink": "https://www.instagram.com/reel/DUtzs80iRSr/",
+      "timestamp": "2026-02-13T23:00:00+0000",
+      "caption": "@carmenkoepfer talking sharks and ocean conservation in a packed Huntington Beach brewery is an ideal night out. \ud83c\udf0a \n\nWe\u2019ve got a lot more events like this coming soon. Check the link in our bio to learn more. \n\n\ud83c\udf9f\ufe0f Tickets drop every Sunday at 10 AM PST\n\n#orangecounty #orangecountyevents #thinkanddrink #thesocialstudy",
+      "media_type": "VIDEO",
+      "media_product_type": "REELS",
+      "transcript_path": "exports/instagram/thesocial.study/reels/transcripts/17964496635040675.txt",
+      "transcript_text_present": true,
+      "transcript_char_count": 82,
+      "visual": {
+        "duration_s": 9.94,
+        "resolution": "720x1280",
+        "bitrate_mbps": 1.217,
+        "scene_cuts": 22,
+        "cuts_per_min": 132.84
+      },
+      "performance": {
+        "views": 14131,
+        "reach": 9444,
+        "likes": 304,
+        "comments": 3,
+        "saved": 34,
+        "shares": 56,
+        "plays": null,
+        "impressions": null,
+        "video_views": null,
+        "total_interactions": 402,
+        "ig_reels_avg_watch_time": 4823,
+        "ig_reels_video_view_total_time": 50300218
+      },
+      "data_quality_flags": [
+        "api_partial_or_errors"
+      ],
+      "missing_reason": {
+        "plays": "deprecated_in_graph_v22_plus",
+        "impressions": "unsupported_for_media_product_type",
+        "video_views": "unsupported_for_media_product_type"
+      },
+      "api_errors": [
+        "metric_plays_failed: (#100) Starting from version v22.0 and above, the plays metric is no longer supported for the queried media. Please refer to the documentation at https://developers.facebook.com/docs/instagram-api/reference/ig-media/insights for a list of supported metrics.",
+        "metric_impressions_failed: (#100) The Media Insights API does not support the impressions metric for this media product type.",
+        "metric_video_views_failed: (#100) The Media Insights API does not support the video_views metric for this media product type."
+      ]
+    },
+    {
+      "media_id": "18150180937443607",
+      "permalink": "https://www.instagram.com/reel/DUj9_FBkeFq/",
+      "timestamp": "2026-02-10T03:17:56+0000",
+      "caption": "In 2026, we\u2019re making our nights out at the bar more mentally stimulating. \ud83e\udde0 We\u2019re packing bars and breweries every week with industry experts & curious people. Purchase tickets for our next event at the link in our bio \ud83d\udd17 Tickets drop every Sunday at 10 AM. \n\n#thesocialstudy #thinkanddrink #thingstodosandiego #orangecountyevents",
+      "media_type": "VIDEO",
+      "media_product_type": "REELS",
+      "transcript_path": "exports/instagram/thesocial.study/reels/transcripts/18150180937443607.txt",
+      "transcript_text_present": true,
+      "transcript_char_count": 630,
+      "visual": {
+        "duration_s": 32.69,
+        "resolution": "720x1280",
+        "bitrate_mbps": 1.12,
+        "scene_cuts": 24,
+        "cuts_per_min": 44.05
+      },
+      "performance": {
+        "views": 19403,
+        "reach": 16183,
+        "likes": 297,
+        "comments": 8,
+        "saved": 99,
+        "shares": 71,
+        "plays": null,
+        "impressions": null,
+        "video_views": null,
+        "total_interactions": 475,
+        "ig_reels_avg_watch_time": 6747,
+        "ig_reels_video_view_total_time": 101736328
+      },
+      "data_quality_flags": [
+        "api_partial_or_errors"
+      ],
+      "missing_reason": {
+        "plays": "deprecated_in_graph_v22_plus",
+        "impressions": "unsupported_for_media_product_type",
+        "video_views": "unsupported_for_media_product_type"
+      },
+      "api_errors": [
+        "metric_plays_failed: (#100) Starting from version v22.0 and above, the plays metric is no longer supported for the queried media. Please refer to the documentation at https://developers.facebook.com/docs/instagram-api/reference/ig-media/insights for a list of supported metrics.",
+        "metric_impressions_failed: (#100) The Media Insights API does not support the impressions metric for this media product type.",
+        "metric_video_views_failed: (#100) The Media Insights API does not support the video_views metric for this media product type."
+      ]
+    },
+    {
+      "media_id": "18061229483321567",
+      "permalink": "https://www.instagram.com/reel/DUeJAUkEgXs/",
+      "timestamp": "2026-02-07T21:02:09+0000",
+      "caption": "The Social Study made its Denver last week! \ud83c\udf7b\n\nFentanyl isn\u2019t just a border issue\u2014it\u2019s a global supply chain shaped by policy, incentives, and enforcement. Researcher Jeremiah Anthony broke down what actually changes outcomes, and why the details matter more than the headlines.\n\nStay tuned for more Denver events coming soon. Tickets drop every Sunday at 10 AM PST. \ud83c\udf9f\ufe0f\n\n#thesocialstudy #thingstododenver #thinkanddrink",
+      "media_type": "VIDEO",
+      "media_product_type": "REELS",
+      "transcript_path": "exports/instagram/thesocial.study/reels/transcripts/18061229483321567.txt",
+      "transcript_text_present": true,
+      "transcript_char_count": 691,
+      "visual": {
+        "duration_s": 39.45,
+        "resolution": "720x1280",
+        "bitrate_mbps": 1.016,
+        "scene_cuts": 2,
+        "cuts_per_min": 3.04
+      },
+      "performance": {
+        "views": 9015,
+        "reach": 6888,
+        "likes": 242,
+        "comments": 8,
+        "saved": 25,
+        "shares": 52,
+        "plays": null,
+        "impressions": null,
+        "video_views": null,
+        "total_interactions": 328,
+        "ig_reels_avg_watch_time": 7719,
+        "ig_reels_video_view_total_time": 52088517
+      },
+      "data_quality_flags": [
+        "api_partial_or_errors"
+      ],
+      "missing_reason": {
+        "plays": "deprecated_in_graph_v22_plus",
+        "impressions": "unsupported_for_media_product_type",
+        "video_views": "unsupported_for_media_product_type"
+      },
+      "api_errors": [
+        "metric_plays_failed: (#100) Starting from version v22.0 and above, the plays metric is no longer supported for the queried media. Please refer to the documentation at https://developers.facebook.com/docs/instagram-api/reference/ig-media/insights for a list of supported metrics.",
+        "metric_impressions_failed: (#100) The Media Insights API does not support the impressions metric for this media product type.",
+        "metric_video_views_failed: (#100) The Media Insights API does not support the video_views metric for this media product type."
+      ]
+    },
+    {
+      "media_id": "17944665035973849",
+      "permalink": "https://www.instagram.com/reel/DUR8cSwkYNV/",
+      "timestamp": "2026-02-03T03:18:08+0000",
+      "caption": "\ud83e\udec2 Understanding Cults and the Human Need For Belonging\n\ud83d\udcac How ChatGPT Handles Your Data (And How to Keep it Yours)\n\ud83d\udcb0 Your Money, Your Mind: Why Smart People Stay Stuck\n\nThese are just a few of the recent topics we\u2019ve hosted talks on. Interested in the next event? Tickets drop every Sunday at 10 am PST. We sell out fast \u2013 you won\u2019t want to miss it!",
+      "media_type": "VIDEO",
+      "media_product_type": "REELS",
+      "transcript_path": "exports/instagram/thesocial.study/reels/transcripts/17944665035973849.txt",
+      "transcript_text_present": true,
+      "transcript_char_count": 443,
+      "visual": {
+        "duration_s": 22.99,
+        "resolution": "720x1280",
+        "bitrate_mbps": 1.433,
+        "scene_cuts": 12,
+        "cuts_per_min": 31.32
+      },
+      "performance": {
+        "views": 8828,
+        "reach": 7759,
+        "likes": 78,
+        "comments": 1,
+        "saved": 22,
+        "shares": 19,
+        "plays": null,
+        "impressions": null,
+        "video_views": null,
+        "total_interactions": 121,
+        "ig_reels_avg_watch_time": 5106,
+        "ig_reels_video_view_total_time": 35022828
+      },
+      "data_quality_flags": [
+        "api_partial_or_errors"
+      ],
+      "missing_reason": {
+        "plays": "deprecated_in_graph_v22_plus",
+        "impressions": "unsupported_for_media_product_type",
+        "video_views": "unsupported_for_media_product_type"
+      },
+      "api_errors": [
+        "metric_plays_failed: (#100) Starting from version v22.0 and above, the plays metric is no longer supported for the queried media. Please refer to the documentation at https://developers.facebook.com/docs/instagram-api/reference/ig-media/insights for a list of supported metrics.",
+        "metric_impressions_failed: (#100) The Media Insights API does not support the impressions metric for this media product type.",
+        "metric_video_views_failed: (#100) The Media Insights API does not support the video_views metric for this media product type."
+      ]
+    },
+    {
+      "media_id": "17921248953237892",
+      "permalink": "https://www.instagram.com/reel/DUCSVZRkeRI/",
+      "timestamp": "2026-01-28T01:21:40+0000",
+      "caption": "For your next date night, may we suggest an evening of learning new things and exchanging\nideas? Grab a drink, hear from the experts, and hang around after the lecture to debrief on what\nyou\u2019ve learned. Switch it up and give your brain a night out. \ud83d\udca1\ud83c\udf7a",
+      "media_type": "VIDEO",
+      "media_product_type": "REELS",
+      "transcript_path": "exports/instagram/thesocial.study/reels/transcripts/17921248953237892.txt",
+      "transcript_text_present": true,
+      "transcript_char_count": 166,
+      "visual": {
+        "duration_s": 14.79,
+        "resolution": "720x1280",
+        "bitrate_mbps": 1.149,
+        "scene_cuts": 10,
+        "cuts_per_min": 40.57
+      },
+      "performance": {
+        "views": 19778,
+        "reach": 15887,
+        "likes": 311,
+        "comments": 12,
+        "saved": 95,
+        "shares": 66,
+        "plays": null,
+        "impressions": null,
+        "video_views": null,
+        "total_interactions": 487,
+        "ig_reels_avg_watch_time": 5004,
+        "ig_reels_video_view_total_time": 75124961
+      },
+      "data_quality_flags": [
+        "api_partial_or_errors"
+      ],
+      "missing_reason": {
+        "plays": "deprecated_in_graph_v22_plus",
+        "impressions": "unsupported_for_media_product_type",
+        "video_views": "unsupported_for_media_product_type"
+      },
+      "api_errors": [
+        "metric_plays_failed: (#100) Starting from version v22.0 and above, the plays metric is no longer supported for the queried media. Please refer to the documentation at https://developers.facebook.com/docs/instagram-api/reference/ig-media/insights for a list of supported metrics.",
+        "metric_impressions_failed: (#100) The Media Insights API does not support the impressions metric for this media product type.",
+        "metric_video_views_failed: (#100) The Media Insights API does not support the video_views metric for this media product type."
+      ]
+    },
+    {
+      "media_id": "18075405059367381",
+      "permalink": "https://www.instagram.com/reel/DTwj23Bkez8/",
+      "timestamp": "2026-01-21T04:10:17+0000",
+      "caption": "Make a smarter choice for your next night out. Tickets drop every Sunday at 10am PST on our website. Link in bio. \ud83c\udf9f\ufe0f\n\n#thesocialstudy #sandiegoevents #orangecountyevents #denversocialscene",
+      "media_type": "VIDEO",
+      "media_product_type": "REELS",
+      "transcript_path": "exports/instagram/thesocial.study/reels/transcripts/18075405059367381.txt",
+      "transcript_text_present": true,
+      "transcript_char_count": 397,
+      "visual": {
+        "duration_s": 23.33,
+        "resolution": "720x1280",
+        "bitrate_mbps": 1.846,
+        "scene_cuts": 16,
+        "cuts_per_min": 41.14
+      },
+      "performance": {
+        "views": 19058,
+        "reach": 16219,
+        "likes": 331,
+        "comments": 7,
+        "saved": 123,
+        "shares": 149,
+        "plays": null,
+        "impressions": null,
+        "video_views": null,
+        "total_interactions": 615,
+        "ig_reels_avg_watch_time": 6927,
+        "ig_reels_video_view_total_time": 100163539
+      },
+      "data_quality_flags": [
+        "api_partial_or_errors"
+      ],
+      "missing_reason": {
+        "plays": "deprecated_in_graph_v22_plus",
+        "impressions": "unsupported_for_media_product_type",
+        "video_views": "unsupported_for_media_product_type"
+      },
+      "api_errors": [
+        "metric_plays_failed: (#100) Starting from version v22.0 and above, the plays metric is no longer supported for the queried media. Please refer to the documentation at https://developers.facebook.com/docs/instagram-api/reference/ig-media/insights for a list of supported metrics.",
+        "metric_impressions_failed: (#100) The Media Insights API does not support the impressions metric for this media product type.",
+        "metric_video_views_failed: (#100) The Media Insights API does not support the video_views metric for this media product type."
+      ]
+    },
+    {
+      "media_id": "18078105974022709",
+      "permalink": "https://www.instagram.com/reel/DTlv_D0kmvy/",
+      "timestamp": "2026-01-16T23:24:41+0000",
+      "caption": "POV: You show up for a casual drink and end up learning something new, meeting like-minded people, and realizing this is way more fun than any class you took in school. \n\nCold drinks, big ideas, and a room full of curious people.\n\nCome to an upcoming event! Tickets drop every Sunday at 10am. \ud83c\udfab\n\n#orangecountyevents #sandiegoevents #thinkanddrink",
+      "media_type": "VIDEO",
+      "media_product_type": "REELS",
+      "transcript_path": "exports/instagram/thesocial.study/reels/transcripts/18078105974022709.txt",
+      "transcript_text_present": true,
+      "transcript_char_count": 10,
+      "visual": {
+        "duration_s": 17.13,
+        "resolution": "720x1280",
+        "bitrate_mbps": 1.762,
+        "scene_cuts": 16,
+        "cuts_per_min": 56.03
+      },
+      "performance": {
+        "views": 20116,
+        "reach": 15461,
+        "likes": 346,
+        "comments": 4,
+        "saved": 48,
+        "shares": 62,
+        "plays": null,
+        "impressions": null,
+        "video_views": null,
+        "total_interactions": 463,
+        "ig_reels_avg_watch_time": 5354,
+        "ig_reels_video_view_total_time": 83951538
+      },
+      "data_quality_flags": [
+        "api_partial_or_errors"
+      ],
+      "missing_reason": {
+        "plays": "deprecated_in_graph_v22_plus",
+        "impressions": "unsupported_for_media_product_type",
+        "video_views": "unsupported_for_media_product_type"
+      },
+      "api_errors": [
+        "metric_plays_failed: (#100) Starting from version v22.0 and above, the plays metric is no longer supported for the queried media. Please refer to the documentation at https://developers.facebook.com/docs/instagram-api/reference/ig-media/insights for a list of supported metrics.",
+        "metric_impressions_failed: (#100) The Media Insights API does not support the impressions metric for this media product type.",
+        "metric_video_views_failed: (#100) The Media Insights API does not support the video_views metric for this media product type."
+      ]
+    },
+    {
+      "media_id": "18079940015195595",
+      "permalink": "https://www.instagram.com/reel/DTeaT_IEXRn/",
+      "timestamp": "2026-01-14T02:59:47+0000",
+      "caption": "No homework, no exams, no pressure. Join professors, researchers, and storytellers in your favorite local bars and give your brain a night out. \ud83c\udf9f\ufe0f Tickets drop every Sunday at 10am!\n\n#thesocialstudy #sandiegoevents #orangecounty #thingstodosandiego #sandiegosocial",
+      "media_type": "VIDEO",
+      "media_product_type": "REELS",
+      "transcript_path": "exports/instagram/thesocial.study/reels/transcripts/18079940015195595.txt",
+      "transcript_text_present": true,
+      "transcript_char_count": 549,
+      "visual": {
+        "duration_s": 27.86,
+        "resolution": "720x1280",
+        "bitrate_mbps": 1.332,
+        "scene_cuts": 24,
+        "cuts_per_min": 51.68
+      },
+      "performance": {
+        "views": 17653,
+        "reach": 14292,
+        "likes": 256,
+        "comments": 3,
+        "saved": 87,
+        "shares": 132,
+        "plays": null,
+        "impressions": null,
+        "video_views": null,
+        "total_interactions": 482,
+        "ig_reels_avg_watch_time": 5785,
+        "ig_reels_video_view_total_time": 78954261
+      },
+      "data_quality_flags": [
+        "api_partial_or_errors"
+      ],
+      "missing_reason": {
+        "plays": "deprecated_in_graph_v22_plus",
+        "impressions": "unsupported_for_media_product_type",
+        "video_views": "unsupported_for_media_product_type"
+      },
+      "api_errors": [
+        "metric_plays_failed: (#100) Starting from version v22.0 and above, the plays metric is no longer supported for the queried media. Please refer to the documentation at https://developers.facebook.com/docs/instagram-api/reference/ig-media/insights for a list of supported metrics.",
+        "metric_impressions_failed: (#100) The Media Insights API does not support the impressions metric for this media product type.",
+        "metric_video_views_failed: (#100) The Media Insights API does not support the video_views metric for this media product type."
+      ]
+    },
+    {
+      "media_id": "18103784221735645",
+      "permalink": "https://www.instagram.com/reel/DSTcvxfkrKY/",
+      "timestamp": "2025-12-16T00:17:35+0000",
+      "caption": "Smart conversations. Cold drinks. Zero small talk.\n\nThe Social Study is where curious people come to learn something new and actually talk about it after.\nWeekly talks, real Q&A, and a room full of people who\u2019d rather think than scroll.\n\nSan Diego + Orange County now.\nDenver coming early \u201926.\n\nTickets sell out fast. Link in bio.",
+      "media_type": "VIDEO",
+      "media_product_type": "REELS",
+      "transcript_path": "exports/instagram/thesocial.study/reels/transcripts/18103784221735645.txt",
+      "transcript_text_present": true,
+      "transcript_char_count": 808,
+      "visual": {
+        "duration_s": 40.4,
+        "resolution": "720x1280",
+        "bitrate_mbps": 1.349,
+        "scene_cuts": 18,
+        "cuts_per_min": 26.73
+      },
+      "performance": {
+        "views": 31267,
+        "reach": 24669,
+        "likes": 747,
+        "comments": 30,
+        "saved": 248,
+        "shares": 495,
+        "plays": null,
+        "impressions": null,
+        "video_views": null,
+        "total_interactions": 1529,
+        "ig_reels_avg_watch_time": 8059,
+        "ig_reels_video_view_total_time": 196633532
+      },
+      "data_quality_flags": [
+        "api_partial_or_errors"
+      ],
+      "missing_reason": {
+        "plays": "deprecated_in_graph_v22_plus",
+        "impressions": "unsupported_for_media_product_type",
+        "video_views": "unsupported_for_media_product_type"
+      },
+      "api_errors": [
+        "metric_plays_failed: (#100) Starting from version v22.0 and above, the plays metric is no longer supported for the queried media. Please refer to the documentation at https://developers.facebook.com/docs/instagram-api/reference/ig-media/insights for a list of supported metrics.",
+        "metric_impressions_failed: (#100) The Media Insights API does not support the impressions metric for this media product type.",
+        "metric_video_views_failed: (#100) The Media Insights API does not support the video_views metric for this media product type."
+      ]
+    },
+    {
+      "media_id": "18153042991412207",
+      "permalink": "https://www.instagram.com/reel/DRS__80Ev30/",
+      "timestamp": "2025-11-20T23:36:10+0000",
+      "caption": "@iyreejarrett joined us at @club.616 to break down why people join cults \u2014 and it\u2019s rarely the wild stuff you see on Netflix. It\u2019s community, purpose, belonging\u2026 real human needs that get twisted into control.\n\nJoin us for lectures like these or on whatever topics you find interesting. Tickets drop every Sunday at 10am!",
+      "media_type": "VIDEO",
+      "media_product_type": "REELS",
+      "transcript_path": "exports/instagram/thesocial.study/reels/transcripts/18153042991412207.txt",
+      "transcript_text_present": true,
+      "transcript_char_count": 1924,
+      "visual": {
+        "duration_s": 110.85,
+        "resolution": "720x1280",
+        "bitrate_mbps": 0.913,
+        "scene_cuts": 40,
+        "cuts_per_min": 21.65
+      },
+      "performance": {
+        "views": 15639,
+        "reach": 13077,
+        "likes": 235,
+        "comments": 12,
+        "saved": 29,
+        "shares": 30,
+        "plays": null,
+        "impressions": null,
+        "video_views": null,
+        "total_interactions": 311,
+        "ig_reels_avg_watch_time": 9032,
+        "ig_reels_video_view_total_time": 110682127
+      },
+      "data_quality_flags": [
+        "api_partial_or_errors"
+      ],
+      "missing_reason": {
+        "plays": "deprecated_in_graph_v22_plus",
+        "impressions": "unsupported_for_media_product_type",
+        "video_views": "unsupported_for_media_product_type"
+      },
+      "api_errors": [
+        "metric_plays_failed: (#100) Starting from version v22.0 and above, the plays metric is no longer supported for the queried media. Please refer to the documentation at https://developers.facebook.com/docs/instagram-api/reference/ig-media/insights for a list of supported metrics.",
+        "metric_impressions_failed: (#100) The Media Insights API does not support the impressions metric for this media product type.",
+        "metric_video_views_failed: (#100) The Media Insights API does not support the video_views metric for this media product type."
+      ]
+    },
+    {
+      "media_id": "17866720143481359",
+      "permalink": "https://www.instagram.com/reel/DQ787taD2P_/",
+      "timestamp": "2025-11-12T00:47:01+0000",
+      "caption": "One speaker, one hour, one room full of people who are tired of small talk and ready for something real.\n\nWe\u2019ve been filling bars in San Diego and Orange County with professors, researchers, and lifelong learners sharing what they know \u2014 without the academic walls, without the awkward networking energy.\n\nDenver \u2014 we\u2019re coming early 2026.\n\nFollow along \u2014 the first lineup drops soon.",
+      "media_type": "VIDEO",
+      "media_product_type": "REELS",
+      "transcript_path": "exports/instagram/thesocial.study/reels/transcripts/17866720143481359.txt",
+      "transcript_text_present": true,
+      "transcript_char_count": 558,
+      "visual": {
+        "duration_s": 30.58,
+        "resolution": "720x1280",
+        "bitrate_mbps": 1.318,
+        "scene_cuts": 22,
+        "cuts_per_min": 43.17
+      },
+      "performance": {
+        "views": 14716,
+        "reach": 12705,
+        "likes": 227,
+        "comments": 13,
+        "saved": 48,
+        "shares": 148,
+        "plays": null,
+        "impressions": null,
+        "video_views": null,
+        "total_interactions": 438,
+        "ig_reels_avg_watch_time": 5618,
+        "ig_reels_video_view_total_time": 64782364
+      },
+      "data_quality_flags": [
+        "api_partial_or_errors"
+      ],
+      "missing_reason": {
+        "plays": "deprecated_in_graph_v22_plus",
+        "impressions": "unsupported_for_media_product_type",
+        "video_views": "unsupported_for_media_product_type"
+      },
+      "api_errors": [
+        "metric_plays_failed: (#100) Starting from version v22.0 and above, the plays metric is no longer supported for the queried media. Please refer to the documentation at https://developers.facebook.com/docs/instagram-api/reference/ig-media/insights for a list of supported metrics.",
+        "metric_impressions_failed: (#100) The Media Insights API does not support the impressions metric for this media product type.",
+        "metric_video_views_failed: (#100) The Media Insights API does not support the video_views metric for this media product type."
+      ]
+    },
+    {
+      "media_id": "18096001432739782",
+      "permalink": "https://www.instagram.com/reel/DQQOTyDE-RL/",
+      "timestamp": "2025-10-26T01:13:20+0000",
+      "caption": "Smarter nights out > small talk. Big ideas, cold drinks, curious minds.\n\n\ud83c\udf9f Tickets every Sunday at 10 AM\n\ud83d\udce9 Newsletter in bio",
+      "media_type": "VIDEO",
+      "media_product_type": "REELS",
+      "transcript_path": "exports/instagram/thesocial.study/reels/transcripts/18096001432739782.txt",
+      "transcript_text_present": true,
+      "transcript_char_count": 711,
+      "visual": {
+        "duration_s": 38.13,
+        "resolution": "720x1280",
+        "bitrate_mbps": 1.403,
+        "scene_cuts": 28,
+        "cuts_per_min": 44.06
+      },
+      "performance": {
+        "views": 16383,
+        "reach": 12873,
+        "likes": 374,
+        "comments": 17,
+        "saved": 123,
+        "shares": 301,
+        "plays": null,
+        "impressions": null,
+        "video_views": null,
+        "total_interactions": 825,
+        "ig_reels_avg_watch_time": 8266,
+        "ig_reels_video_view_total_time": 104260073
+      },
+      "data_quality_flags": [
+        "api_partial_or_errors"
+      ],
+      "missing_reason": {
+        "plays": "deprecated_in_graph_v22_plus",
+        "impressions": "unsupported_for_media_product_type",
+        "video_views": "unsupported_for_media_product_type"
+      },
+      "api_errors": [
+        "metric_plays_failed: (#100) Starting from version v22.0 and above, the plays metric is no longer supported for the queried media. Please refer to the documentation at https://developers.facebook.com/docs/instagram-api/reference/ig-media/insights for a list of supported metrics.",
+        "metric_impressions_failed: (#100) The Media Insights API does not support the impressions metric for this media product type.",
+        "metric_video_views_failed: (#100) The Media Insights API does not support the video_views metric for this media product type."
+      ]
+    },
+    {
+      "media_id": "18074735069182147",
+      "permalink": "https://www.instagram.com/reel/DP7pcOfEXsi/",
+      "timestamp": "2025-10-18T01:23:22+0000",
+      "caption": "Curiosity takes you higher \u2014 literally.\n\nCome study with us. \n\nNext event drops Sunday at 10 AM.\n\n@universityclubsd \n@chelsdaus\n@meeeotch",
+      "media_type": "VIDEO",
+      "media_product_type": "REELS",
+      "transcript_path": "exports/instagram/thesocial.study/reels/transcripts/18074735069182147.txt",
+      "transcript_text_present": true,
+      "transcript_char_count": 23,
+      "visual": {
+        "duration_s": 23.15,
+        "resolution": "720x1280",
+        "bitrate_mbps": 1.742,
+        "scene_cuts": 8,
+        "cuts_per_min": 20.74
+      },
+      "performance": {
+        "views": 15998,
+        "reach": 12725,
+        "likes": 180,
+        "comments": 5,
+        "saved": 49,
+        "shares": 43,
+        "plays": null,
+        "impressions": null,
+        "video_views": null,
+        "total_interactions": 277,
+        "ig_reels_avg_watch_time": 5718,
+        "ig_reels_video_view_total_time": 71856774
+      },
+      "data_quality_flags": [
+        "api_partial_or_errors"
+      ],
+      "missing_reason": {
+        "plays": "deprecated_in_graph_v22_plus",
+        "impressions": "unsupported_for_media_product_type",
+        "video_views": "unsupported_for_media_product_type"
+      },
+      "api_errors": [
+        "metric_plays_failed: (#100) Starting from version v22.0 and above, the plays metric is no longer supported for the queried media. Please refer to the documentation at https://developers.facebook.com/docs/instagram-api/reference/ig-media/insights for a list of supported metrics.",
+        "metric_impressions_failed: (#100) The Media Insights API does not support the impressions metric for this media product type.",
+        "metric_video_views_failed: (#100) The Media Insights API does not support the video_views metric for this media product type."
+      ]
+    },
+    {
+      "media_id": "18037849661651056",
+      "permalink": "https://www.instagram.com/reel/DPpXWD_kd6p/",
+      "timestamp": "2025-10-10T22:59:55+0000",
+      "caption": "The universe doesn\u2019t feel as far away once you realize it\u2019s falling on us every day.\n\nOrange County, that was a beautiful start.\nEvents drop every Sunday at 10 AM \u2014 keep an eye out for the next idea worth sharing.\n\n#TheSocialStudy #OrangeCountyEvents #SanDiegoEvents #OCBreweries #SDbreweries",
+      "media_type": "VIDEO",
+      "media_product_type": "REELS",
+      "transcript_path": "exports/instagram/thesocial.study/reels/transcripts/18037849661651056.txt",
+      "transcript_text_present": true,
+      "transcript_char_count": 764,
+      "visual": {
+        "duration_s": 45.67,
+        "resolution": "720x1280",
+        "bitrate_mbps": 1.439,
+        "scene_cuts": 10,
+        "cuts_per_min": 13.14
+      },
+      "performance": {
+        "views": 12001,
+        "reach": 9457,
+        "likes": 216,
+        "comments": 6,
+        "saved": 43,
+        "shares": 108,
+        "plays": null,
+        "impressions": null,
+        "video_views": null,
+        "total_interactions": 375,
+        "ig_reels_avg_watch_time": 7769,
+        "ig_reels_video_view_total_time": 66673711
+      },
+      "data_quality_flags": [
+        "api_partial_or_errors"
+      ],
+      "missing_reason": {
+        "plays": "deprecated_in_graph_v22_plus",
+        "impressions": "unsupported_for_media_product_type",
+        "video_views": "unsupported_for_media_product_type"
+      },
+      "api_errors": [
+        "metric_plays_failed: (#100) Starting from version v22.0 and above, the plays metric is no longer supported for the queried media. Please refer to the documentation at https://developers.facebook.com/docs/instagram-api/reference/ig-media/insights for a list of supported metrics.",
+        "metric_impressions_failed: (#100) The Media Insights API does not support the impressions metric for this media product type.",
+        "metric_video_views_failed: (#100) The Media Insights API does not support the video_views metric for this media product type."
+      ]
+    },
+    {
+      "media_id": "17863768086417259",
+      "permalink": "https://www.instagram.com/reel/DPfQgP2EoSu/",
+      "timestamp": "2025-10-07T00:49:07+0000",
+      "caption": "Can you tell which song was made by AI and which was made by a human?\nLast week at The Social Study, @roseqsun from UC San Diego tested our ears\u2014and most of us got it wrong.\nListen closely, then comment A or B, and why.\n\nAnswer is: A is AI\n\n#thesocialstudy #sandiegoevents #orangecountyevents #ucsd #aimusic",
+      "media_type": "VIDEO",
+      "media_product_type": "REELS",
+      "transcript_path": "exports/instagram/thesocial.study/reels/transcripts/17863768086417259.txt",
+      "transcript_text_present": true,
+      "transcript_char_count": 628,
+      "visual": {
+        "duration_s": 66.38,
+        "resolution": "720x1280",
+        "bitrate_mbps": 1.354,
+        "scene_cuts": 12,
+        "cuts_per_min": 10.85
+      },
+      "performance": {
+        "views": 14205,
+        "reach": 10604,
+        "likes": 182,
+        "comments": 28,
+        "saved": 31,
+        "shares": 63,
+        "plays": null,
+        "impressions": null,
+        "video_views": null,
+        "total_interactions": 307,
+        "ig_reels_avg_watch_time": 10827,
+        "ig_reels_video_view_total_time": 113857899
+      },
+      "data_quality_flags": [
+        "api_partial_or_errors"
+      ],
+      "missing_reason": {
+        "plays": "deprecated_in_graph_v22_plus",
+        "impressions": "unsupported_for_media_product_type",
+        "video_views": "unsupported_for_media_product_type"
+      },
+      "api_errors": [
+        "metric_plays_failed: (#100) Starting from version v22.0 and above, the plays metric is no longer supported for the queried media. Please refer to the documentation at https://developers.facebook.com/docs/instagram-api/reference/ig-media/insights for a list of supported metrics.",
+        "metric_impressions_failed: (#100) The Media Insights API does not support the impressions metric for this media product type.",
+        "metric_video_views_failed: (#100) The Media Insights API does not support the video_views metric for this media product type."
+      ]
+    },
+    {
+      "media_id": "18041285615425470",
+      "permalink": "https://www.instagram.com/reel/DOzH2jUEjjy/",
+      "timestamp": "2025-09-19T21:26:26+0000",
+      "caption": "Your annual checkup is about to change forever.\n\nAt The Social Study, Dr. Mini Manchanda showed us how AI is collapsing decades of medical research into milliseconds.\n\nMiss a night, miss the future.\n\nComment STUDY and I\u2019ll send you the link before tickets sell out.",
+      "media_type": "VIDEO",
+      "media_product_type": "REELS",
+      "transcript_path": "exports/instagram/thesocial.study/reels/transcripts/18041285615425470.txt",
+      "transcript_text_present": true,
+      "transcript_char_count": 773,
+      "visual": {
+        "duration_s": 51.34,
+        "resolution": "720x1280",
+        "bitrate_mbps": 1.365,
+        "scene_cuts": 16,
+        "cuts_per_min": 18.7
+      },
+      "performance": {
+        "views": 21090,
+        "reach": 15404,
+        "likes": 411,
+        "comments": 119,
+        "saved": 86,
+        "shares": 32,
+        "plays": null,
+        "impressions": null,
+        "video_views": null,
+        "total_interactions": 651,
+        "ig_reels_avg_watch_time": 11709,
+        "ig_reels_video_view_total_time": 182506734
+      },
+      "data_quality_flags": [
+        "api_partial_or_errors"
+      ],
+      "missing_reason": {
+        "plays": "deprecated_in_graph_v22_plus",
+        "impressions": "unsupported_for_media_product_type",
+        "video_views": "unsupported_for_media_product_type"
+      },
+      "api_errors": [
+        "metric_plays_failed: (#100) Starting from version v22.0 and above, the plays metric is no longer supported for the queried media. Please refer to the documentation at https://developers.facebook.com/docs/instagram-api/reference/ig-media/insights for a list of supported metrics.",
+        "metric_impressions_failed: (#100) The Media Insights API does not support the impressions metric for this media product type.",
+        "metric_video_views_failed: (#100) The Media Insights API does not support the video_views metric for this media product type."
+      ]
+    },
+    {
+      "media_id": "18053644076630230",
+      "permalink": "https://www.instagram.com/reel/DOZe1J7Ejbl/",
+      "timestamp": "2025-09-09T22:25:25+0000",
+      "caption": "Last week marked our 10th event. \n\nWe are still in our infancy stage but have been overwhelmed by the love and support of this community. \n\nThank you all so much and we look forward to all the events we have planned. \ud83d\udc95",
+      "media_type": "VIDEO",
+      "media_product_type": "REELS",
+      "transcript_path": "exports/instagram/thesocial.study/reels/transcripts/18053644076630230.txt",
+      "transcript_text_present": true,
+      "transcript_char_count": 227,
+      "visual": {
+        "duration_s": 26.14,
+        "resolution": "720x1280",
+        "bitrate_mbps": 1.475,
+        "scene_cuts": 26,
+        "cuts_per_min": 59.67
+      },
+      "performance": {
+        "views": 8696,
+        "reach": 6299,
+        "likes": 198,
+        "comments": 4,
+        "saved": 20,
+        "shares": 58,
+        "plays": null,
+        "impressions": null,
+        "video_views": null,
+        "total_interactions": 281,
+        "ig_reels_avg_watch_time": 7504,
+        "ig_reels_video_view_total_time": 47689892
+      },
+      "data_quality_flags": [
+        "api_partial_or_errors"
+      ],
+      "missing_reason": {
+        "plays": "deprecated_in_graph_v22_plus",
+        "impressions": "unsupported_for_media_product_type",
+        "video_views": "unsupported_for_media_product_type"
+      },
+      "api_errors": [
+        "metric_plays_failed: (#100) Starting from version v22.0 and above, the plays metric is no longer supported for the queried media. Please refer to the documentation at https://developers.facebook.com/docs/instagram-api/reference/ig-media/insights for a list of supported metrics.",
+        "metric_impressions_failed: (#100) The Media Insights API does not support the impressions metric for this media product type.",
+        "metric_video_views_failed: (#100) The Media Insights API does not support the video_views metric for this media product type."
+      ]
+    },
+    {
+      "media_id": "17937047811077124",
+      "permalink": "https://www.instagram.com/reel/DOUnlboD2pj/",
+      "timestamp": "2025-09-08T01:07:00+0000",
+      "caption": "Professors, researchers, and storytellers in your favorite local bars. Big ideas, good company, and a cold drink in hand. Happening in San Diego and Orange County. Tickets go live every Sunday.",
+      "media_type": "VIDEO",
+      "media_product_type": "REELS",
+      "transcript_path": "exports/instagram/thesocial.study/reels/transcripts/17937047811077124.txt",
+      "transcript_text_present": true,
+      "transcript_char_count": 180,
+      "visual": {
+        "duration_s": 24.49,
+        "resolution": "720x1280",
+        "bitrate_mbps": 1.601,
+        "scene_cuts": 42,
+        "cuts_per_min": 102.88
+      },
+      "performance": {
+        "views": 13429,
+        "reach": 11148,
+        "likes": 235,
+        "comments": 4,
+        "saved": 81,
+        "shares": 100,
+        "plays": null,
+        "impressions": null,
+        "video_views": null,
+        "total_interactions": 423,
+        "ig_reels_avg_watch_time": 5781,
+        "ig_reels_video_view_total_time": 59209941
+      },
+      "data_quality_flags": [
+        "api_partial_or_errors"
+      ],
+      "missing_reason": {
+        "plays": "deprecated_in_graph_v22_plus",
+        "impressions": "unsupported_for_media_product_type",
+        "video_views": "unsupported_for_media_product_type"
+      },
+      "api_errors": [
+        "metric_plays_failed: (#100) Starting from version v22.0 and above, the plays metric is no longer supported for the queried media. Please refer to the documentation at https://developers.facebook.com/docs/instagram-api/reference/ig-media/insights for a list of supported metrics.",
+        "metric_impressions_failed: (#100) The Media Insights API does not support the impressions metric for this media product type.",
+        "metric_video_views_failed: (#100) The Media Insights API does not support the video_views metric for this media product type."
+      ]
+    },
+    {
+      "media_id": "18059940011369544",
+      "permalink": "https://www.instagram.com/reel/DN6jGMgkquz/",
+      "timestamp": "2025-08-28T22:06:24+0000",
+      "caption": "This week we learned about microplastics with Dr. Dimitri Deheyn, a researcher at Scripps Oceanography.\n\n\ud83c\udf2c Humans breathe about 10,000 liters of air a day. Along with it come 150 to 200 plastic particles.\n\ud83d\udc0b Whale sharks filter 40,000 liters of seawater daily just to eat. Thousands of particles flow through them.\n\ud83d\udca7 More than 90% of drinking water tested contains microplastics.\n\ud83d\udc57 Ghana\u2019s Kantamanto Market receives 15 million secondhand garments every week. About 40% become waste, overwhelming landfills and beaches. Locals call it \u201cwaste colonialism.\u201d\n\ud83e\uddf4 Some cosmetics still contain microbeads. They\u2019re banned in the U.S., but imports can slip through.\n\nMinutes of use. Centuries of impact.\n\nBig ideas. Cutting-edge research. The Social Study.\n\nIn #sandiego \u2014 coming soon to #orangecounty.\n\ud83c\udf9f Tickets drop every Sunday at 10am. Be ready.",
+      "media_type": "VIDEO",
+      "media_product_type": "REELS",
+      "transcript_path": "exports/instagram/thesocial.study/reels/transcripts/18059940011369544.txt",
+      "transcript_text_present": true,
+      "transcript_char_count": 769,
+      "visual": {
+        "duration_s": 53.57,
+        "resolution": "720x1280",
+        "bitrate_mbps": 1.624,
+        "scene_cuts": 16,
+        "cuts_per_min": 17.92
+      },
+      "performance": {
+        "views": 23111,
+        "reach": 17799,
+        "likes": 775,
+        "comments": 12,
+        "saved": 82,
+        "shares": 177,
+        "plays": null,
+        "impressions": null,
+        "video_views": null,
+        "total_interactions": 1056,
+        "ig_reels_avg_watch_time": 12192,
+        "ig_reels_video_view_total_time": 215254161
+      },
+      "data_quality_flags": [
+        "api_partial_or_errors"
+      ],
+      "missing_reason": {
+        "plays": "deprecated_in_graph_v22_plus",
+        "impressions": "unsupported_for_media_product_type",
+        "video_views": "unsupported_for_media_product_type"
+      },
+      "api_errors": [
+        "metric_plays_failed: (#100) Starting from version v22.0 and above, the plays metric is no longer supported for the queried media. Please refer to the documentation at https://developers.facebook.com/docs/instagram-api/reference/ig-media/insights for a list of supported metrics.",
+        "metric_impressions_failed: (#100) The Media Insights API does not support the impressions metric for this media product type.",
+        "metric_video_views_failed: (#100) The Media Insights API does not support the video_views metric for this media product type."
+      ]
+    },
+    {
+      "media_id": "17861890581396672",
+      "permalink": "https://www.instagram.com/reel/DNjlABQyHe2/",
+      "timestamp": "2025-08-20T00:01:01+0000",
+      "caption": "Champions clean up. The All Blacks call it \u201csweep the sheds.\u201d Reed Maltbie showed us why character shows up in the details and how a \u201cNo Dickheads\u201d mentality changes teams, communities, and the person in the mirror.\n\n#SanDiego #SanDiegoEvents #OrangeCounty #OC#thesocialstudy #",
+      "media_type": "VIDEO",
+      "media_product_type": "REELS",
+      "transcript_path": "exports/instagram/thesocial.study/reels/transcripts/17861890581396672.txt",
+      "transcript_text_present": true,
+      "transcript_char_count": 1223,
+      "visual": {
+        "duration_s": 57.4,
+        "resolution": "720x1280",
+        "bitrate_mbps": 1.536,
+        "scene_cuts": 30,
+        "cuts_per_min": 31.36
+      },
+      "performance": {
+        "views": 16088,
+        "reach": 11440,
+        "likes": 348,
+        "comments": 11,
+        "saved": 53,
+        "shares": 71,
+        "plays": null,
+        "impressions": null,
+        "video_views": null,
+        "total_interactions": 484,
+        "ig_reels_avg_watch_time": 12892,
+        "ig_reels_video_view_total_time": 157022751
+      },
+      "data_quality_flags": [
+        "api_partial_or_errors"
+      ],
+      "missing_reason": {
+        "plays": "deprecated_in_graph_v22_plus",
+        "impressions": "unsupported_for_media_product_type",
+        "video_views": "unsupported_for_media_product_type"
+      },
+      "api_errors": [
+        "metric_plays_failed: (#100) Starting from version v22.0 and above, the plays metric is no longer supported for the queried media. Please refer to the documentation at https://developers.facebook.com/docs/instagram-api/reference/ig-media/insights for a list of supported metrics.",
+        "metric_impressions_failed: (#100) The Media Insights API does not support the impressions metric for this media product type.",
+        "metric_video_views_failed: (#100) The Media Insights API does not support the video_views metric for this media product type."
+      ]
+    },
+    {
+      "media_id": "18513628441013932",
+      "permalink": "https://www.instagram.com/reel/DNjkftaRjSA/",
+      "timestamp": "2025-08-19T23:56:28+0000",
+      "caption": "Champions clean up. The All Blacks call it \u201csweep the sheds.\u201d Reed Maltbie showed us why character shows up in the details and how a \u201cNo Dickheads\u201d mentality changes teams, communities, and the person in the mirror.\n\n#SanDiego #SanDiegoEvents #OrangeCounty #OC",
+      "media_type": "VIDEO",
+      "media_product_type": "REELS",
+      "transcript_path": "exports/instagram/thesocial.study/reels/transcripts/18513628441013932.txt",
+      "transcript_text_present": true,
+      "transcript_char_count": 1223,
+      "visual": {
+        "duration_s": 57.88,
+        "resolution": "360x640",
+        "bitrate_mbps": 0.451,
+        "scene_cuts": 30,
+        "cuts_per_min": 31.1
+      },
+      "performance": {
+        "views": 11,
+        "reach": 9,
+        "likes": 0,
+        "comments": 0,
+        "saved": 0,
+        "shares": 0,
+        "plays": null,
+        "impressions": null,
+        "video_views": null,
+        "total_interactions": 0,
+        "ig_reels_avg_watch_time": 4122,
+        "ig_reels_video_view_total_time": 41225
+      },
+      "data_quality_flags": [
+        "api_partial_or_errors"
+      ],
+      "missing_reason": {
+        "plays": "deprecated_in_graph_v22_plus",
+        "impressions": "unsupported_for_media_product_type",
+        "video_views": "unsupported_for_media_product_type"
+      },
+      "api_errors": [
+        "metric_plays_failed: (#100) Starting from version v22.0 and above, the plays metric is no longer supported for the queried media. Please refer to the documentation at https://developers.facebook.com/docs/instagram-api/reference/ig-media/insights for a list of supported metrics.",
+        "metric_impressions_failed: (#100) The Media Insights API does not support the impressions metric for this media product type.",
+        "metric_video_views_failed: (#100) The Media Insights API does not support the video_views metric for this media product type."
+      ]
+    },
+    {
+      "media_id": "18063652967016495",
+      "permalink": "https://www.instagram.com/reel/DNjOYr5RPa0/",
+      "timestamp": "2025-08-19T20:43:02+0000",
+      "caption": "Reed Maltbie explaining the No Dickheads policy of the all blacks at our most recent talk at Mike Hess!",
+      "media_type": "VIDEO",
+      "media_product_type": "REELS",
+      "transcript_path": "exports/instagram/thesocial.study/reels/transcripts/18063652967016495.txt",
+      "transcript_text_present": true,
+      "transcript_char_count": 1224,
+      "visual": {
+        "duration_s": 57.28,
+        "resolution": "360x640",
+        "bitrate_mbps": 0.447,
+        "scene_cuts": 28,
+        "cuts_per_min": 29.33
+      },
+      "performance": {
+        "views": 19,
+        "reach": 9,
+        "likes": 0,
+        "comments": 0,
+        "saved": 0,
+        "shares": 0,
+        "plays": null,
+        "impressions": null,
+        "video_views": null,
+        "total_interactions": 0,
+        "ig_reels_avg_watch_time": 31230,
+        "ig_reels_video_view_total_time": 406000
+      },
+      "data_quality_flags": [
+        "api_partial_or_errors"
+      ],
+      "missing_reason": {
+        "plays": "deprecated_in_graph_v22_plus",
+        "impressions": "unsupported_for_media_product_type",
+        "video_views": "unsupported_for_media_product_type"
+      },
+      "api_errors": [
+        "metric_plays_failed: (#100) Starting from version v22.0 and above, the plays metric is no longer supported for the queried media. Please refer to the documentation at https://developers.facebook.com/docs/instagram-api/reference/ig-media/insights for a list of supported metrics.",
+        "metric_impressions_failed: (#100) The Media Insights API does not support the impressions metric for this media product type.",
+        "metric_video_views_failed: (#100) The Media Insights API does not support the video_views metric for this media product type."
+      ]
+    },
+    {
+      "media_id": "18073213910289654",
+      "permalink": "https://www.instagram.com/reel/DNY7nd_xpEJ/",
+      "timestamp": "2025-08-15T20:46:38+0000",
+      "caption": "OC, we\u2019re almost here!\n\nThis October, The Social Study is bringing great drinks, good company, and fascinating talks from industry experts with ideas worth sharing.\n\nFollow along to see which local spots we\u2019ll be bringing to life on weeknights!\n\nWe\u2019re also looking for an MC to help run events, welcome guests, and keep the night flowing smoothly.\n\nIf that\u2019s you, the form\u2019s on our site\u2014come be part of the fun!\n\n#orangecounty #ocevents #costamesa #huntingtonbeach #newportbeach #irvine #thesocialstudy #socalevents #thingstodoinoc",
+      "media_type": "VIDEO",
+      "media_product_type": "REELS",
+      "transcript_path": "exports/instagram/thesocial.study/reels/transcripts/18073213910289654.txt",
+      "transcript_text_present": true,
+      "transcript_char_count": 376,
+      "visual": {
+        "duration_s": 21.75,
+        "resolution": "720x1280",
+        "bitrate_mbps": 1.562,
+        "scene_cuts": 14,
+        "cuts_per_min": 38.61
+      },
+      "performance": {
+        "views": 14193,
+        "reach": 10030,
+        "likes": 291,
+        "comments": 14,
+        "saved": 128,
+        "shares": 273,
+        "plays": null,
+        "impressions": null,
+        "video_views": null,
+        "total_interactions": 709,
+        "ig_reels_avg_watch_time": 7442,
+        "ig_reels_video_view_total_time": 80196661
+      },
+      "data_quality_flags": [
+        "api_partial_or_errors"
+      ],
+      "missing_reason": {
+        "plays": "deprecated_in_graph_v22_plus",
+        "impressions": "unsupported_for_media_product_type",
+        "video_views": "unsupported_for_media_product_type"
+      },
+      "api_errors": [
+        "metric_plays_failed: (#100) Starting from version v22.0 and above, the plays metric is no longer supported for the queried media. Please refer to the documentation at https://developers.facebook.com/docs/instagram-api/reference/ig-media/insights for a list of supported metrics.",
+        "metric_impressions_failed: (#100) The Media Insights API does not support the impressions metric for this media product type.",
+        "metric_video_views_failed: (#100) The Media Insights API does not support the video_views metric for this media product type."
+      ]
+    },
+    {
+      "media_id": "18053135474527448",
+      "permalink": "https://www.instagram.com/reel/DMlBSA6xNcY/",
+      "timestamp": "2025-07-26T16:55:08+0000",
+      "caption": "This week we learned about Nathan Harrison, San Diego\u2019s first Black homesteader. Born enslaved in Kentucky in the 1830s, freed during the Gold Rush, and buried in an unmarked grave in Mount Hope Cemetery. He spoke Luiseno, Spanish, and English. He gifted water to travelers instead of selling it. He built alliances with both Native and settler communities. And he played into tourist expectations because it kept him alive.\n\nThat\u2019s what The Social Study is about. Real research, surprising insights, and topics you probably didn\u2019t cover in school.\n\nTickets go up every Sunday at 10am. Be ready.",
+      "media_type": "VIDEO",
+      "media_product_type": "REELS",
+      "transcript_path": "exports/instagram/thesocial.study/reels/transcripts/18053135474527448.txt",
+      "transcript_text_present": true,
+      "transcript_char_count": 725,
+      "visual": {
+        "duration_s": 52.64,
+        "resolution": "720x1280",
+        "bitrate_mbps": 1.811,
+        "scene_cuts": 22,
+        "cuts_per_min": 25.08
+      },
+      "performance": {
+        "views": 164175,
+        "reach": 126232,
+        "likes": 8833,
+        "comments": 88,
+        "saved": 2158,
+        "shares": 6300,
+        "plays": null,
+        "impressions": null,
+        "video_views": null,
+        "total_interactions": 17408,
+        "ig_reels_avg_watch_time": 16768,
+        "ig_reels_video_view_total_time": 2219235511
+      },
+      "data_quality_flags": [
+        "api_partial_or_errors"
+      ],
+      "missing_reason": {
+        "plays": "deprecated_in_graph_v22_plus",
+        "impressions": "unsupported_for_media_product_type",
+        "video_views": "unsupported_for_media_product_type"
+      },
+      "api_errors": [
+        "metric_plays_failed: (#100) Starting from version v22.0 and above, the plays metric is no longer supported for the queried media. Please refer to the documentation at https://developers.facebook.com/docs/instagram-api/reference/ig-media/insights for a list of supported metrics.",
+        "metric_impressions_failed: (#100) The Media Insights API does not support the impressions metric for this media product type.",
+        "metric_video_views_failed: (#100) The Media Insights API does not support the video_views metric for this media product type."
+      ]
+    },
+    {
+      "media_id": "18514089226015737",
+      "permalink": "https://www.instagram.com/reel/DMMOkv-RICR/",
+      "timestamp": "2025-07-17T01:50:04+0000",
+      "caption": "",
+      "media_type": "VIDEO",
+      "media_product_type": "REELS",
+      "transcript_path": "exports/instagram/thesocial.study/reels/transcripts/18514089226015737.txt",
+      "transcript_text_present": true,
+      "transcript_char_count": 665,
+      "visual": {
+        "duration_s": 44.39,
+        "resolution": "360x640",
+        "bitrate_mbps": 0.338,
+        "scene_cuts": 14,
+        "cuts_per_min": 18.92
+      },
+      "performance": {
+        "views": 133,
+        "reach": 115,
+        "likes": 1,
+        "comments": 0,
+        "saved": 0,
+        "shares": 1,
+        "plays": null,
+        "impressions": null,
+        "video_views": null,
+        "total_interactions": 2,
+        "ig_reels_avg_watch_time": 5844,
+        "ig_reels_video_view_total_time": 689699
+      },
+      "data_quality_flags": [
+        "api_partial_or_errors"
+      ],
+      "missing_reason": {
+        "plays": "deprecated_in_graph_v22_plus",
+        "impressions": "unsupported_for_media_product_type",
+        "video_views": "unsupported_for_media_product_type"
+      },
+      "api_errors": [
+        "metric_plays_failed: (#100) Starting from version v22.0 and above, the plays metric is no longer supported for the queried media. Please refer to the documentation at https://developers.facebook.com/docs/instagram-api/reference/ig-media/insights for a list of supported metrics.",
+        "metric_impressions_failed: (#100) The Media Insights API does not support the impressions metric for this media product type.",
+        "metric_video_views_failed: (#100) The Media Insights API does not support the video_views metric for this media product type."
+      ]
+    },
+    {
+      "media_id": "17989313186819213",
+      "permalink": "https://www.instagram.com/reel/DMMOTKYREIm/",
+      "timestamp": "2025-07-17T01:48:27+0000",
+      "caption": "",
+      "media_type": "VIDEO",
+      "media_product_type": "REELS",
+      "transcript_path": "exports/instagram/thesocial.study/reels/transcripts/17989313186819213.txt",
+      "transcript_text_present": true,
+      "transcript_char_count": 98,
+      "visual": {
+        "duration_s": 17.16,
+        "resolution": "360x640",
+        "bitrate_mbps": 0.344,
+        "scene_cuts": 4,
+        "cuts_per_min": 13.99
+      },
+      "performance": {
+        "views": 230,
+        "reach": 187,
+        "likes": 3,
+        "comments": 0,
+        "saved": 0,
+        "shares": 0,
+        "plays": null,
+        "impressions": null,
+        "video_views": null,
+        "total_interactions": 3,
+        "ig_reels_avg_watch_time": 7546,
+        "ig_reels_video_view_total_time": 1418802
+      },
+      "data_quality_flags": [
+        "api_partial_or_errors"
+      ],
+      "missing_reason": {
+        "plays": "deprecated_in_graph_v22_plus",
+        "impressions": "unsupported_for_media_product_type",
+        "video_views": "unsupported_for_media_product_type"
+      },
+      "api_errors": [
+        "metric_plays_failed: (#100) Starting from version v22.0 and above, the plays metric is no longer supported for the queried media. Please refer to the documentation at https://developers.facebook.com/docs/instagram-api/reference/ig-media/insights for a list of supported metrics.",
+        "metric_impressions_failed: (#100) The Media Insights API does not support the impressions metric for this media product type.",
+        "metric_video_views_failed: (#100) The Media Insights API does not support the video_views metric for this media product type."
+      ]
+    },
+    {
+      "media_id": "18283842745278850",
+      "permalink": "https://www.instagram.com/reel/DMCF0jYxQsb/",
+      "timestamp": "2025-07-13T03:21:07+0000",
+      "caption": "Drinks in hand. Curiosity in the air. Social by design.",
+      "media_type": "VIDEO",
+      "media_product_type": "REELS",
+      "transcript_path": "exports/instagram/thesocial.study/reels/transcripts/18283842745278850.txt",
+      "transcript_text_present": true,
+      "transcript_char_count": 4,
+      "visual": {
+        "duration_s": 17.13,
+        "resolution": "720x1280",
+        "bitrate_mbps": 1.175,
+        "scene_cuts": 6,
+        "cuts_per_min": 21.01
+      },
+      "performance": {
+        "views": 15044,
+        "reach": 10298,
+        "likes": 248,
+        "comments": 0,
+        "saved": 32,
+        "shares": 30,
+        "plays": null,
+        "impressions": null,
+        "video_views": null,
+        "total_interactions": 312,
+        "ig_reels_avg_watch_time": 9179,
+        "ig_reels_video_view_total_time": 94894105
+      },
+      "data_quality_flags": [
+        "api_partial_or_errors"
+      ],
+      "missing_reason": {
+        "plays": "deprecated_in_graph_v22_plus",
+        "impressions": "unsupported_for_media_product_type",
+        "video_views": "unsupported_for_media_product_type"
+      },
+      "api_errors": [
+        "metric_plays_failed: (#100) Starting from version v22.0 and above, the plays metric is no longer supported for the queried media. Please refer to the documentation at https://developers.facebook.com/docs/instagram-api/reference/ig-media/insights for a list of supported metrics.",
+        "metric_impressions_failed: (#100) The Media Insights API does not support the impressions metric for this media product type.",
+        "metric_video_views_failed: (#100) The Media Insights API does not support the video_views metric for this media product type."
+      ]
+    },
+    {
+      "media_id": "18150328597379843",
+      "permalink": "https://www.instagram.com/reel/DLc1ybTxIN9/",
+      "timestamp": "2025-06-28T16:09:14+0000",
+      "caption": "Went to a brewery to catch a lecture on sea life big and small. Scripps oceanographer Jules Jaffe shared how researchers uncover wild facts about plankton, deep-sea communication, and how he built technology that helped rediscover the Titanic.\n\nThe Social Study is a live event series where smart talks meet happy hour vibes. We host weekly lectures in bars and breweries around San Diego\u2014curious minds welcome.\n\n\ud83d\udccd Talks dropping every week\n\ud83e\udde0 Cold beer meets real ideas\n\ud83c\udf9f Tickets in bio",
+      "media_type": "VIDEO",
+      "media_product_type": "REELS",
+      "transcript_path": "exports/instagram/thesocial.study/reels/transcripts/18150328597379843.txt",
+      "transcript_text_present": true,
+      "transcript_char_count": 665,
+      "visual": {
+        "duration_s": 44.39,
+        "resolution": "720x1280",
+        "bitrate_mbps": 1.473,
+        "scene_cuts": 18,
+        "cuts_per_min": 24.33
+      },
+      "performance": {
+        "views": 15599,
+        "reach": 13097,
+        "likes": 518,
+        "comments": 7,
+        "saved": 157,
+        "shares": 560,
+        "plays": null,
+        "impressions": null,
+        "video_views": null,
+        "total_interactions": 1244,
+        "ig_reels_avg_watch_time": 9486,
+        "ig_reels_video_view_total_time": 112447833
+      },
+      "data_quality_flags": [
+        "api_partial_or_errors"
+      ],
+      "missing_reason": {
+        "plays": "deprecated_in_graph_v22_plus",
+        "impressions": "unsupported_for_media_product_type",
+        "video_views": "unsupported_for_media_product_type"
+      },
+      "api_errors": [
+        "metric_plays_failed: (#100) Starting from version v22.0 and above, the plays metric is no longer supported for the queried media. Please refer to the documentation at https://developers.facebook.com/docs/instagram-api/reference/ig-media/insights for a list of supported metrics.",
+        "metric_impressions_failed: (#100) The Media Insights API does not support the impressions metric for this media product type.",
+        "metric_video_views_failed: (#100) The Media Insights API does not support the video_views metric for this media product type."
+      ]
+    },
+    {
+      "media_id": "18052809146370790",
+      "permalink": "https://www.instagram.com/reel/DK-bxwyTX9A/",
+      "timestamp": "2025-06-16T20:46:34+0000",
+      "caption": "Last week we kicked off The Social Study with oceanographer Jules Jaffe at Novo Brewing. He shared how his team helped rediscover the Titanic, how sea creatures communicate in total darkness, and the plankton territory wars happening beneath the surface.\n\nThe Social Study is a new event series where top minds across disciplines share the most interesting knowledge they\u2019ve gained working in their field. All in bars and breweries across San Diego.\n\nMore events coming soon.",
+      "media_type": "VIDEO",
+      "media_product_type": "REELS",
+      "transcript_path": "exports/instagram/thesocial.study/reels/transcripts/18052809146370790.txt",
+      "transcript_text_present": true,
+      "transcript_char_count": 100,
+      "visual": {
+        "duration_s": 10.7,
+        "resolution": "720x1280",
+        "bitrate_mbps": 0.959,
+        "scene_cuts": 2,
+        "cuts_per_min": 11.21
+      },
+      "performance": {
+        "views": 46385,
+        "reach": 33086,
+        "likes": 1728,
+        "comments": 16,
+        "saved": 260,
+        "shares": 981,
+        "plays": null,
+        "impressions": null,
+        "video_views": null,
+        "total_interactions": 2986,
+        "ig_reels_avg_watch_time": 7584,
+        "ig_reels_video_view_total_time": 253831822
+      },
+      "data_quality_flags": [
+        "api_partial_or_errors"
+      ],
+      "missing_reason": {
+        "plays": "deprecated_in_graph_v22_plus",
+        "impressions": "unsupported_for_media_product_type",
+        "video_views": "unsupported_for_media_product_type"
+      },
+      "api_errors": [
+        "metric_plays_failed: (#100) Starting from version v22.0 and above, the plays metric is no longer supported for the queried media. Please refer to the documentation at https://developers.facebook.com/docs/instagram-api/reference/ig-media/insights for a list of supported metrics.",
+        "metric_impressions_failed: (#100) The Media Insights API does not support the impressions metric for this media product type.",
+        "metric_video_views_failed: (#100) The Media Insights API does not support the video_views metric for this media product type."
+      ]
+    },
+    {
+      "media_id": "17947157001003521",
+      "permalink": "https://www.instagram.com/reel/DKlcS7-RDS-/",
+      "timestamp": "2025-06-07T03:48:31+0000",
+      "caption": "",
+      "media_type": "VIDEO",
+      "media_product_type": "REELS",
+      "transcript_path": "exports/instagram/thesocial.study/reels/transcripts/17947157001003521.txt",
+      "transcript_text_present": true,
+      "transcript_char_count": 10,
+      "visual": {
+        "duration_s": 21.43,
+        "resolution": "360x640",
+        "bitrate_mbps": 0.397,
+        "scene_cuts": 28,
+        "cuts_per_min": 78.4
+      },
+      "performance": {
+        "views": 125,
+        "reach": 115,
+        "likes": 0,
+        "comments": 0,
+        "saved": 0,
+        "shares": 0,
+        "plays": null,
+        "impressions": null,
+        "video_views": null,
+        "total_interactions": 0,
+        "ig_reels_avg_watch_time": 2057,
+        "ig_reels_video_view_total_time": 234503
+      },
+      "data_quality_flags": [
+        "api_partial_or_errors"
+      ],
+      "missing_reason": {
+        "plays": "deprecated_in_graph_v22_plus",
+        "impressions": "unsupported_for_media_product_type",
+        "video_views": "unsupported_for_media_product_type"
+      },
+      "api_errors": [
+        "metric_plays_failed: (#100) Starting from version v22.0 and above, the plays metric is no longer supported for the queried media. Please refer to the documentation at https://developers.facebook.com/docs/instagram-api/reference/ig-media/insights for a list of supported metrics.",
+        "metric_impressions_failed: (#100) The Media Insights API does not support the impressions metric for this media product type.",
+        "metric_video_views_failed: (#100) The Media Insights API does not support the video_views metric for this media product type."
+      ]
+    },
+    {
+      "media_id": "17945193468005140",
+      "permalink": "https://www.instagram.com/reel/DKiSD-RSBaq/",
+      "timestamp": "2025-06-05T22:21:18+0000",
+      "caption": "We\u2019ve got you covered San Diego",
+      "media_type": "VIDEO",
+      "media_product_type": "REELS",
+      "transcript_path": "exports/instagram/thesocial.study/reels/transcripts/17945193468005140.txt",
+      "transcript_text_present": true,
+      "transcript_char_count": 10,
+      "visual": {
+        "duration_s": 21.43,
+        "resolution": "720x1280",
+        "bitrate_mbps": 1.674,
+        "scene_cuts": 28,
+        "cuts_per_min": 78.4
+      },
+      "performance": {
+        "views": 6969,
+        "reach": 6519,
+        "likes": 101,
+        "comments": 0,
+        "saved": 4,
+        "shares": 14,
+        "plays": null,
+        "impressions": null,
+        "video_views": null,
+        "total_interactions": 119,
+        "ig_reels_avg_watch_time": 5915,
+        "ig_reels_video_view_total_time": 31086078
+      },
+      "data_quality_flags": [
+        "api_partial_or_errors"
+      ],
+      "missing_reason": {
+        "plays": "deprecated_in_graph_v22_plus",
+        "impressions": "unsupported_for_media_product_type",
+        "video_views": "unsupported_for_media_product_type"
+      },
+      "api_errors": [
+        "metric_plays_failed: (#100) Starting from version v22.0 and above, the plays metric is no longer supported for the queried media. Please refer to the documentation at https://developers.facebook.com/docs/instagram-api/reference/ig-media/insights for a list of supported metrics.",
+        "metric_impressions_failed: (#100) The Media Insights API does not support the impressions metric for this media product type.",
+        "metric_video_views_failed: (#100) The Media Insights API does not support the video_views metric for this media product type."
+      ]
+    },
+    {
+      "media_id": "18080509645762672",
+      "permalink": "https://www.instagram.com/reel/DKTq5JsRd2X/",
+      "timestamp": "2025-05-31T06:09:45+0000",
+      "caption": "",
+      "media_type": "VIDEO",
+      "media_product_type": "REELS",
+      "transcript_path": "exports/instagram/thesocial.study/reels/transcripts/18080509645762672.txt",
+      "transcript_text_present": true,
+      "transcript_char_count": 10,
+      "visual": {
+        "duration_s": 21.43,
+        "resolution": "360x640",
+        "bitrate_mbps": 0.397,
+        "scene_cuts": 28,
+        "cuts_per_min": 78.4
+      },
+      "performance": {
+        "views": 126,
+        "reach": 115,
+        "likes": 0,
+        "comments": 0,
+        "saved": 0,
+        "shares": 0,
+        "plays": null,
+        "impressions": null,
+        "video_views": null,
+        "total_interactions": 0,
+        "ig_reels_avg_watch_time": 2298,
+        "ig_reels_video_view_total_time": 271229
+      },
+      "data_quality_flags": [
+        "api_partial_or_errors"
+      ],
+      "missing_reason": {
+        "plays": "deprecated_in_graph_v22_plus",
+        "impressions": "unsupported_for_media_product_type",
+        "video_views": "unsupported_for_media_product_type"
+      },
+      "api_errors": [
+        "metric_plays_failed: (#100) Starting from version v22.0 and above, the plays metric is no longer supported for the queried media. Please refer to the documentation at https://developers.facebook.com/docs/instagram-api/reference/ig-media/insights for a list of supported metrics.",
+        "metric_impressions_failed: (#100) The Media Insights API does not support the impressions metric for this media product type.",
+        "metric_video_views_failed: (#100) The Media Insights API does not support the video_views metric for this media product type."
+      ]
+    },
+    {
+      "media_id": "18051776531362900",
+      "permalink": "https://www.instagram.com/reel/DJxDMzRyyf6/",
+      "timestamp": "2025-05-17T19:28:40+0000",
+      "caption": "June sold out. July\u2019s coming. More events brewing.",
+      "media_type": "VIDEO",
+      "media_product_type": "REELS",
+      "transcript_path": "exports/instagram/thesocial.study/reels/transcripts/18051776531362900.txt",
+      "transcript_text_present": true,
+      "transcript_char_count": 71,
+      "visual": {
+        "duration_s": 19.43,
+        "resolution": "720x1280",
+        "bitrate_mbps": 1.144,
+        "scene_cuts": 166,
+        "cuts_per_min": 512.55
+      },
+      "performance": {
+        "views": 6655,
+        "reach": 6104,
+        "likes": 79,
+        "comments": 2,
+        "saved": 22,
+        "shares": 38,
+        "plays": null,
+        "impressions": null,
+        "video_views": null,
+        "total_interactions": 142,
+        "ig_reels_avg_watch_time": 4782,
+        "ig_reels_video_view_total_time": 26021314
+      },
+      "data_quality_flags": [
+        "api_partial_or_errors"
+      ],
+      "missing_reason": {
+        "plays": "deprecated_in_graph_v22_plus",
+        "impressions": "unsupported_for_media_product_type",
+        "video_views": "unsupported_for_media_product_type"
+      },
+      "api_errors": [
+        "metric_plays_failed: (#100) Starting from version v22.0 and above, the plays metric is no longer supported for the queried media. Please refer to the documentation at https://developers.facebook.com/docs/instagram-api/reference/ig-media/insights for a list of supported metrics.",
+        "metric_impressions_failed: (#100) The Media Insights API does not support the impressions metric for this media product type.",
+        "metric_video_views_failed: (#100) The Media Insights API does not support the video_views metric for this media product type."
+      ]
+    },
+    {
+      "media_id": "17843841408488706",
+      "permalink": "https://www.instagram.com/reel/DJwuD5cpr1N/",
+      "timestamp": "2025-05-17T16:23:51+0000",
+      "caption": "",
+      "media_type": "VIDEO",
+      "media_product_type": "REELS",
+      "transcript_path": "exports/instagram/thesocial.study/reels/transcripts/17843841408488706.txt",
+      "transcript_text_present": true,
+      "transcript_char_count": 410,
+      "visual": {
+        "duration_s": 19.55,
+        "resolution": "360x640",
+        "bitrate_mbps": 0.312,
+        "scene_cuts": 70,
+        "cuts_per_min": 214.85
+      },
+      "performance": {
+        "views": 415,
+        "reach": 380,
+        "likes": 3,
+        "comments": 0,
+        "saved": 0,
+        "shares": 0,
+        "plays": null,
+        "impressions": null,
+        "video_views": null,
+        "total_interactions": 3,
+        "ig_reels_avg_watch_time": 2650,
+        "ig_reels_video_view_total_time": 1015124
+      },
+      "data_quality_flags": [
+        "api_partial_or_errors"
+      ],
+      "missing_reason": {
+        "plays": "deprecated_in_graph_v22_plus",
+        "impressions": "unsupported_for_media_product_type",
+        "video_views": "unsupported_for_media_product_type"
+      },
+      "api_errors": [
+        "metric_plays_failed: (#100) Starting from version v22.0 and above, the plays metric is no longer supported for the queried media. Please refer to the documentation at https://developers.facebook.com/docs/instagram-api/reference/ig-media/insights for a list of supported metrics.",
+        "metric_impressions_failed: (#100) The Media Insights API does not support the impressions metric for this media product type.",
+        "metric_video_views_failed: (#100) The Media Insights API does not support the video_views metric for this media product type."
+      ]
+    }
+  ]
+}

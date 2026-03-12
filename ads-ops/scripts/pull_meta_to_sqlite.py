@@ -29,39 +29,43 @@ if not TOKEN or not AD_ACCOUNT:
 if not AD_ACCOUNT.startswith("act_"):
     AD_ACCOUNT = f"act_{AD_ACCOUNT}"
 
-fields = [
-  # entity + naming
+FIELDS = [
   "account_id","account_name","campaign_id","campaign_name","adset_id","adset_name","ad_id","ad_name",
-  # delivery/efficiency
   "date_start","date_stop","spend","impressions","reach","frequency","cpm","cpp",
   "clicks","ctr","unique_ctr","cpc","inline_link_clicks","outbound_clicks","website_ctr",
-  # conversion/action payloads (raw arrays)
   "actions","action_values","cost_per_action_type",
   "conversions","conversion_values","cost_per_conversion",
-  # commerce
   "purchase_roas","website_purchase_roas",
-  # video (as available by placement/creative)
   "video_play_actions","video_p25_watched_actions","video_p50_watched_actions",
   "video_p75_watched_actions","video_p95_watched_actions","video_p100_watched_actions",
-  "video_avg_time_watched_actions","video_thruplay_watched_actions"
+  "video_avg_time_watched_actions","video_thruplay_watched_actions",
 ]
 
-def fetch(level: str):
-    today = datetime.now(timezone.utc).date()
-    since = (today - timedelta(days=7)).isoformat()
-    until = today.isoformat()
+BREAKDOWN_VARIANTS = {
+    "placement": ["publisher_platform", "platform_position"],
+    "age_gender": ["age", "gender"],
+    "device": ["device_platform"],
+    "region": ["region"],
+    "city": ["city"],
+}
+
+
+def fetch(level: str, since: str, until: str, breakdowns=None):
     params = {
         "access_token": TOKEN,
         "level": level,
         "time_range": json.dumps({"since": since, "until": until}),
         "time_increment": 1,
-        "fields": ",".join(fields),
+        "fields": ",".join(FIELDS),
         "limit": 500,
     }
+    if breakdowns:
+        params["breakdowns"] = ",".join(breakdowns)
+
     url = f"{BASE}/{AD_ACCOUNT}/insights"
     all_rows = []
     while True:
-        r = requests.get(url, params=params, timeout=60)
+        r = requests.get(url, params=params, timeout=90)
         r.raise_for_status()
         body = r.json()
         all_rows.extend(body.get("data", []))
@@ -69,10 +73,10 @@ def fetch(level: str):
         if not nxt:
             break
         url, params = nxt, {}
-    return since, until, all_rows
+    return all_rows
 
-def main():
-    conn = sqlite3.connect(DB_PATH)
+
+def ensure_tables(conn):
     conn.execute("""
       CREATE TABLE IF NOT EXISTS kpi_snapshots (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -85,17 +89,56 @@ def main():
         payload_json TEXT NOT NULL
       )
     """)
+    conn.execute("""
+      CREATE TABLE IF NOT EXISTS kpi_breakdown_snapshots (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        pulled_at_utc TEXT NOT NULL,
+        source TEXT NOT NULL,
+        ad_account_id TEXT NOT NULL,
+        date_start TEXT NOT NULL,
+        date_stop TEXT NOT NULL,
+        level TEXT NOT NULL,
+        variant TEXT NOT NULL,
+        breakdowns_json TEXT NOT NULL,
+        payload_json TEXT NOT NULL
+      )
+    """)
+
+
+def main():
+    conn = sqlite3.connect(DB_PATH)
+    ensure_tables(conn)
 
     now = datetime.now(timezone.utc).isoformat()
-    # Pull both campaign + ad levels by default so UI can drill campaign -> ads.
-    levels = [x.strip() for x in os.getenv("META_PULL_LEVELS", "campaign,ad").split(",") if x.strip()]
+    lookback_days = int(os.getenv("META_LOOKBACK_DAYS", "30"))
+    today = datetime.now(timezone.utc).date()
+    since = (today - timedelta(days=lookback_days)).isoformat()
+    until = today.isoformat()
+
+    levels = [x.strip() for x in os.getenv("META_PULL_LEVELS", "campaign,adset,ad").split(",") if x.strip()]
+
     for level in levels:
-        since, until, rows = fetch(level)
-        conn.execute(
-          "INSERT INTO kpi_snapshots (pulled_at_utc, source, ad_account_id, date_start, date_stop, level, payload_json) VALUES (?,?,?,?,?,?,?)",
-          (now, "meta_marketing_api", AD_ACCOUNT, since, until, level, json.dumps(rows))
-        )
-        print(f"saved {level}: {len(rows)} rows")
+        try:
+            rows = fetch(level, since, until)
+            conn.execute(
+              "INSERT INTO kpi_snapshots (pulled_at_utc, source, ad_account_id, date_start, date_stop, level, payload_json) VALUES (?,?,?,?,?,?,?)",
+              (now, "meta_marketing_api", AD_ACCOUNT, since, until, level, json.dumps(rows))
+            )
+            print(f"saved {level}: {len(rows)} rows")
+        except Exception as e:
+            print(f"warn {level}: {e}")
+
+    for level in ["ad"]:
+        for variant, breakdowns in BREAKDOWN_VARIANTS.items():
+            try:
+                rows = fetch(level, since, until, breakdowns=breakdowns)
+                conn.execute(
+                  "INSERT INTO kpi_breakdown_snapshots (pulled_at_utc, source, ad_account_id, date_start, date_stop, level, variant, breakdowns_json, payload_json) VALUES (?,?,?,?,?,?,?,?,?)",
+                  (now, "meta_marketing_api", AD_ACCOUNT, since, until, level, variant, json.dumps(breakdowns), json.dumps(rows))
+                )
+                print(f"saved {level}:{variant}: {len(rows)} rows")
+            except Exception as e:
+                print(f"warn {level}:{variant}: {e}")
 
     conn.commit()
     conn.close()

@@ -1,0 +1,17 @@
+{
+  "ok": true,
+  "phase": "run-full",
+  "run_id": "6371a0da95e95bcd",
+  "sources_total": 680,
+  "segments_planned": 190544,
+  "segments_kept": 8000,
+  "target_min": 5000,
+  "target_max": 8000,
+  "dedupe": true,
+  "write_packs": true,
+  "segment_plan": "/Users/ericsysclaw/.openclaw/workspace/ads-ops/library_v2/manifests/segment_plan_v2.jsonl",
+  "segments_kept_manifest": "/Users/ericsysclaw/.openclaw/workspace/ads-ops/library_v2/manifests/segments_kept_v2.jsonl",
+  "packs_dir": "/Users/ericsysclaw/.openclaw/workspace/ads-ops/library_v2/packs",
+  "note": "run-full currently generates planned/scored manifests and packs; media rendering stage can be attached next.",
+  "created_at": "2026-03-13T15:23:52.405307Z"
+}

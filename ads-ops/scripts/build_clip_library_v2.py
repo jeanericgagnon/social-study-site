@@ -375,10 +375,117 @@ def run_full(args: argparse.Namespace) -> int:
     return 0
 
 
+def render_kept(args: argparse.Namespace) -> int:
+    out_dir = Path(args.out_dir).expanduser().resolve()
+    manifests_dir = out_dir / "manifests"
+    logs_dir = out_dir / "logs"
+    kept_path = manifests_dir / "segments_kept_v2.jsonl"
+
+    if not kept_path.exists():
+        print(json.dumps({"ok": False, "error": f"kept manifest missing: {kept_path}"}))
+        return 2
+
+    rows: list[dict[str, Any]] = []
+    with kept_path.open("r", encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if line:
+                rows.append(json.loads(line))
+
+    max_render = int(args.max_render or 0)
+    if max_render > 0:
+        rows = rows[:max_render]
+
+    rendered = 0
+    skipped_existing = 0
+    failed = 0
+    failures: list[dict[str, Any]] = []
+
+    for r in rows:
+        src = Path(r["source_path"])
+        clip_out = Path(r["clip_path"])
+        thumb_out = Path(r["thumb_path"])
+        clip_out.parent.mkdir(parents=True, exist_ok=True)
+        thumb_out.parent.mkdir(parents=True, exist_ok=True)
+
+        if clip_out.exists() and clip_out.stat().st_size > 0:
+            skipped_existing += 1
+            continue
+
+        cmd = [
+            "/opt/homebrew/bin/ffmpeg",
+            "-y",
+            "-hide_banner",
+            "-loglevel",
+            "error",
+            "-ss",
+            str(r["start_sec"]),
+            "-t",
+            str(r["duration_sec"]),
+            "-i",
+            str(src),
+            "-vf",
+            "scale=1080:1920:force_original_aspect_ratio=decrease,pad=1080:1920:(ow-iw)/2:(oh-ih)/2:black,fps=30,format=yuv420p",
+            "-c:v",
+            "libx264",
+            "-preset",
+            "veryfast",
+            "-crf",
+            "22",
+            "-c:a",
+            "aac",
+            "-b:a",
+            "128k",
+            str(clip_out),
+        ]
+        p = sh(cmd)
+        if p.returncode != 0 or not clip_out.exists():
+            failed += 1
+            failures.append({
+                "segment_uid": r.get("segment_uid"),
+                "source_path": str(src),
+                "error": (p.stderr or "ffmpeg failed").strip()[:500],
+            })
+            continue
+
+        mid = max(0.0, float(r["duration_sec"]) / 2.0)
+        sh([
+            "/opt/homebrew/bin/ffmpeg",
+            "-y",
+            "-hide_banner",
+            "-loglevel",
+            "error",
+            "-ss",
+            str(mid),
+            "-i",
+            str(clip_out),
+            "-frames:v",
+            "1",
+            str(thumb_out),
+        ])
+        rendered += 1
+
+    summary = {
+        "ok": True,
+        "phase": "render-kept",
+        "input_rows": len(rows),
+        "rendered": rendered,
+        "skipped_existing": skipped_existing,
+        "failed": failed,
+        "max_render": max_render,
+        "failures_sample": failures[:20],
+        "created_at": now_iso(),
+    }
+    write_json(logs_dir / "render_kept_summary.json", summary)
+    print(json.dumps(summary))
+    return 0
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description="Build clip library v2 assets")
     ap.add_argument("--init-spec", action="store_true", help="Initialize v2 spec/schema/manifests")
     ap.add_argument("--run-full", action="store_true", help="Build full segment plan + scoring + packs")
+    ap.add_argument("--render-kept", action="store_true", help="Render ffmpeg clips for kept manifest")
     ap.add_argument("--root", required=True, help="Source root with approved videos")
     ap.add_argument("--out-dir", required=True, help="Output root for library_v2")
     ap.add_argument("--durations", default="1.5,2.5,3.5,5.0,7.0")
@@ -386,6 +493,7 @@ def main() -> int:
     ap.add_argument("--stride-max", type=float, default=1.5)
     ap.add_argument("--target-min", type=int, default=5000)
     ap.add_argument("--target-max", type=int, default=8000)
+    ap.add_argument("--max-render", type=int, default=0, help="Limit render-kept to first N rows (0=all)")
     ap.add_argument("--enforce-quality-gates", action="store_true")
     ap.add_argument("--dedupe", action="store_true")
     ap.add_argument("--write-packs", action="store_true")
@@ -395,8 +503,10 @@ def main() -> int:
         return init_spec(args)
     if args.run_full:
         return run_full(args)
+    if args.render_kept:
+        return render_kept(args)
 
-    print(json.dumps({"ok": False, "error": "Provide --init-spec or --run-full"}))
+    print(json.dumps({"ok": False, "error": "Provide --init-spec, --run-full, or --render-kept"}))
     return 2
 
 

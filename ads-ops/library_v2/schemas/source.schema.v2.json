@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "clip-library-v2-source",
+  "type": "object",
+  "required": [
+    "source_uid",
+    "source_path",
+    "rel_path",
+    "size_bytes",
+    "probe_ok"
+  ],
+  "properties": {
+    "source_uid": {
+      "type": "string"
+    },
+    "source_path": {
+      "type": "string"
+    },
+    "rel_path": {
+      "type": "string"
+    },
+    "ext": {
+      "type": "string"
+    },
+    "size_bytes": {
+      "type": "integer"
+    },
+    "mtime_epoch": {
+      "type": "number"
+    },
+    "probe_ok": {
+      "type": "boolean"
+    },
+    "duration_s": {
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "width": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "height": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "fps": {
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "video_codec": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "audio_codec": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "bitrate": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "probe_error": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  }
+}

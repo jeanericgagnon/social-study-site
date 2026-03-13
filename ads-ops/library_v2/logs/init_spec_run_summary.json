@@ -1,0 +1,24 @@
+{
+  "ok": true,
+  "phase": "init-spec",
+  "spec": "/Users/ericsysclaw/.openclaw/workspace/ads-ops/library_v2/spec_v2.json",
+  "source_schema": "/Users/ericsysclaw/.openclaw/workspace/ads-ops/library_v2/schemas/source.schema.v2.json",
+  "segment_schema": "/Users/ericsysclaw/.openclaw/workspace/ads-ops/library_v2/schemas/segment.schema.v2.json",
+  "sources_manifest": "/Users/ericsysclaw/.openclaw/workspace/ads-ops/library_v2/manifests/sources_manifest_v2.json",
+  "count_total": 680,
+  "count_probe_ok": 677,
+  "count_probe_fail": 3,
+  "quality_gates_enabled": true,
+  "durations": [
+    1.5,
+    2.5,
+    3.5,
+    5.0,
+    7.0
+  ],
+  "stride_min": 0.75,
+  "stride_max": 1.5,
+  "target_min": 5000,
+  "target_max": 8000,
+  "created_at": "2026-03-13T15:10:21.890404Z"
+}

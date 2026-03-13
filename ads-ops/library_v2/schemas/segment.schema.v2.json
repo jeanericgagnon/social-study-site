@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "clip-library-v2-segment",
+  "type": "object",
+  "required": [
+    "segment_uid",
+    "source_uid",
+    "start_sec",
+    "end_sec",
+    "duration_sec",
+    "clip_path",
+    "decision",
+    "ad_utility_score"
+  ],
+  "properties": {
+    "segment_uid": {
+      "type": "string"
+    },
+    "source_uid": {
+      "type": "string"
+    },
+    "start_sec": {
+      "type": "number"
+    },
+    "end_sec": {
+      "type": "number"
+    },
+    "duration_sec": {
+      "type": "number"
+    },
+    "clip_path": {
+      "type": "string"
+    },
+    "thumb_path": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "decision": {
+      "type": "string",
+      "enum": [
+        "use",
+        "conditional",
+        "reject"
+      ]
+    },
+    "ad_utility_score": {
+      "type": "number"
+    },
+    "quality": {
+      "type": "object",
+      "properties": {
+        "blur_score": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "shake_score": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "exposure_score": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "hook_open_score": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "text_safe_score": {
+          "type": [
+            "number",
+            "null"
+          ]
+        }
+      }
+    },
+    "created_at": {
+      "type": "string"
+    },
+    "run_id": {
+      "type": "string"
+    }
+  }
+}

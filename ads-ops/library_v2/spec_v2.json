@@ -1,0 +1,40 @@
+{
+  "version": "clip-library-v2",
+  "created_at": "2026-03-13T15:08:57.201620Z",
+  "root": "/Volumes/maxone/TSS_AdsFactory/phase1_selected",
+  "out_dir": "/Users/ericsysclaw/.openclaw/workspace/ads-ops/library_v2",
+  "durations": [
+    1.5,
+    2.5,
+    3.5,
+    5.0,
+    7.0
+  ],
+  "stride_min": 0.75,
+  "stride_max": 1.5,
+  "target_min": 5000,
+  "target_max": 8000,
+  "quality_gates": {
+    "enabled": true,
+    "required_probe_ok": true,
+    "min_duration_s": 1.5,
+    "max_duration_s": 600,
+    "allowed_decisions": [
+      "use",
+      "conditional",
+      "reject"
+    ],
+    "reject_on": [
+      "corrupt",
+      "probe_failed",
+      "too_short",
+      "unsupported_format"
+    ]
+  },
+  "output_standard": {
+    "resolution": "1080x1920",
+    "fps": 30,
+    "pix_fmt": "yuv420p",
+    "audio": "aac"
+  }
+}

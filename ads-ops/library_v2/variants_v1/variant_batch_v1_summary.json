@@ -1,0 +1,22 @@
+{
+  "ok": true,
+  "created_at": "2026-03-14T02:43:28.174120Z",
+  "index": "/Users/ericsysclaw/.openclaw/workspace/ads-ops/library_v2/exports/kept_index_v2.json",
+  "plan_json": "/Users/ericsysclaw/.openclaw/workspace/ads-ops/library_v2/variants_v1/variant_batch_v1_plan.json",
+  "plan_jsonl": "/Users/ericsysclaw/.openclaw/workspace/ads-ops/library_v2/variants_v1/variant_batch_v1_plan.jsonl",
+  "variant_count": 120,
+  "render_enabled": true,
+  "render_count_requested": 30,
+  "rendered": 28,
+  "failed": 2,
+  "failures_sample": [
+    {
+      "variant_id": "vb1_0019",
+      "error": "[mov,mp4,m4a,3gp,3g2,mj2 @ 0x139e066a0] moov atom not found\n[in#0 @ 0x139e05c40] Error opening input: Invalid data found when processing input\nError opening input file /Users/ericsysclaw/.openclaw/workspace/ads-ops/library_v2/segments/9a1e9fdd3b8598d8/3d152250a230ab2c.mp4.\nError opening input files:"
+    },
+    {
+      "variant_id": "vb1_0025",
+      "error": "[mov,mp4,m4a,3gp,3g2,mj2 @ 0x12ce066a0] moov atom not found\n[in#0 @ 0x12ce05c40] Error opening input: Invalid data found when processing input\nError opening input file /Users/ericsysclaw/.openclaw/workspace/ads-ops/library_v2/segments/c24659a6f8a10ebd/c6431b6126dbc813.mp4.\nError opening input files:"
+    }
+  ]
+}

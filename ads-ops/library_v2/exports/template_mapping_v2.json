@@ -1,0 +1,41 @@
+{
+  "templates": {
+    "ugc_testimonial": {
+      "required": [
+        "hook",
+        "body",
+        "cta"
+      ],
+      "notes": "Face-forward opening + proof beat + direct CTA"
+    },
+    "founder_story": {
+      "required": [
+        "hook",
+        "body"
+      ],
+      "notes": "Origin/problem-solution framing"
+    },
+    "social_proof_montage": {
+      "required": [
+        "hook",
+        "broll",
+        "cta"
+      ],
+      "notes": "Fast sequence, logo safe-zone, subtitle heavy"
+    },
+    "event_vibe_cut": {
+      "required": [
+        "hook",
+        "broll"
+      ],
+      "notes": "Energy-first montage with beat-synced cuts"
+    }
+  },
+  "role_counts": {
+    "hook": 1233,
+    "body": 7749,
+    "cta": 5236,
+    "broll": 97
+  },
+  "notes": "Starter map for automated variant assembly"
+}

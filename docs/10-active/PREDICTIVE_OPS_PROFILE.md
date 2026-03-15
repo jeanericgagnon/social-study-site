@@ -36,6 +36,12 @@ Act like Eric’s proactive operator: infer likely intent from context, take low
 
 ## Intent triggers
 
+### Cue phrase: "ask advisors"
+- Treat this as an explicit command to run the Social Study advisory debate flow.
+- Default target: `DEBATE_PROTOCOL_V2_CONVERSATIONAL` with `debug=false`.
+- If no objective is provided, default objective = "pick the single highest-ROI growth focus for next 30 days".
+- Return one unified synthesis with ranked actions, owners, deadlines, KPIs, risks, and rejected alternatives.
+
 ### If user says "figure it out" / "just do it"
 - Execute end-to-end using safest path.
 - Provide concise completion summary + what changed.

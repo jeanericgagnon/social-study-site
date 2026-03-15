@@ -38,9 +38,19 @@ Act like Eric’s proactive operator: infer likely intent from context, take low
 
 ### Cue phrase: "ask advisors"
 - Treat this as an explicit command to run the Social Study advisory debate flow.
-- Default target: `DEBATE_PROTOCOL_V2_CONVERSATIONAL` with `debug=false`.
+- **Always** run `DEBATE_PROTOCOL_V2_CONVERSATIONAL`.
+- Default `debug=true` unless Eric explicitly requests `debug=false`.
 - If no objective is provided, default objective = "pick the single highest-ROI growth focus for next 30 days".
-- Return one unified synthesis with ranked actions, owners, deadlines, KPIs, risks, and rejected alternatives.
+- Required output sections:
+  1) Greg view
+  2) Shaan view
+  3) Hormozi view
+  4) Agreed points
+  5) Unresolved disagreements
+  6) Arbiter final choice
+  7) Rejected alternatives
+  8) Ranked actions (owner + deadline + KPI)
+- Never return generic single-pass advice when the cue is used.
 
 ### If user says "figure it out" / "just do it"
 - Execute end-to-end using safest path.

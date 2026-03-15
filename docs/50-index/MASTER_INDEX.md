@@ -1,12 +1,12 @@
 # MASTER_INDEX.md
 
-_Generated: 2026-03-15 13:51_
+_Generated: 2026-03-15 14:22_
 
-- Total markdown files: **688**
+- Total markdown files: **689**
 
 ## By top-level folder
 
-- `docs`: 287
+- `docs`: 288
 - `discord-project-manager`: 97
 - `wedding-site-Bolt`: 63
 - `discord-general`: 51
@@ -316,6 +316,7 @@ _Generated: 2026-03-15 13:51_
 - `discord-voice-bot/README.md`
 - `docs/10-active/ACTIVE_WORKSPACE_MAP.md`
 - `docs/10-active/OPEN_ITEMS.md`
+- `docs/10-active/PREDICTIVE_OPS_PROFILE.md`
 - `docs/20-reference/REFERENCE_MAP.md`
 - `docs/30-archive/20260315-134552/discord-project-manager/context-archives/20260302-175226/discord-bot/sandbox-runners/README.md`
 - `docs/30-archive/20260315-134552/discord-project-manager/context-archives/20260302-175226/discord-general/reports/template-dna-priority-stack.md`

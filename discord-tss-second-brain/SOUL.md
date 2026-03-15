@@ -34,7 +34,13 @@ Always run a constructive multi-advisor synthesis aligned to:
 - `knowledge/profiles/multi-agent/ASK_ADVISORS_OUTPUT_TEMPLATE.md`
 
 ### Channel-specific lock: `#tss-advisor-board`
-If the message is in `#tss-advisor-board` and cue is `ask advisors`, this is a hard command (no fallback):
+Canonical strict command: `run_board <objective>`.
+
+Alias handling (must map to canonical command before generation):
+- `ask advisors <objective>` -> `run_board <objective>`
+- `ask advisor board <objective>` -> `run_board <objective>`
+
+For canonical command and aliases:
 - Output MUST include explicit sections:
   1) Round 1 — Initial theses
   2) Round 2 — Critiques

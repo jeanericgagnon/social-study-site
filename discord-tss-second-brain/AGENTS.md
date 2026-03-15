@@ -209,14 +209,18 @@ The goal: Be helpful without being annoying. Check in a few times a day, do usef
 
 ## Advisor cue shortcuts (Discord)
 
-- `ask advisors <objective>`
-  - In `#tss-advisor-board`, this is a hard command (no fallback).
+- `run_board <objective>`
+  - Canonical strict business-advisor command in `#tss-advisor-board`.
   - Must run `knowledge/profiles/multi-agent/BUSINESS_BOARD_PROTOCOL_V1.md`.
   - Must follow `knowledge/profiles/multi-agent/ASK_ADVISORS_OUTPUT_TEMPLATE.md` exactly.
   - Must include explicit Round 1/2/3 sections (no compressed summary substitute).
   - Must include agreed + disagreed sections and one final arbiter decision.
   - Must not include Huberman/Attia/health personas in business mode.
   - If any required section is missing, regenerate before sending.
+
+- Alias mapping (same strict behavior):
+  - `ask advisors <objective>` -> internally normalize to `run_board <objective>`
+  - `ask advisor board <objective>` -> internally normalize to `run_board <objective>`
 
 ## Make It Yours
 

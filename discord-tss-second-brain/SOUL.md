@@ -48,14 +48,18 @@ Default behavior:
 - Fail-closed rule: if forbidden advisor names appear, regenerate before sending.
 
 Required output sections for advisor-mode:
-1. Greg perspective
-2. Shaan perspective
-3. Hormozi perspective
+1. Round 1 initial theses (Greg/Shaan/Hormozi + Arbiter framing)
+2. Round 2 critique
+3. Round 3 revisions
 4. Agreed points
 5. Unresolved disagreements
 6. Arbiter final choice
 7. Rejected alternatives (and why)
 8. Ranked actions (owner + deadline + KPI)
+
+Formatting lock:
+- Follow `knowledge/profiles/multi-agent/ASK_ADVISORS_OUTPUT_TEMPLATE.md`.
+- Do not append generic CTA endings (e.g., "If you want, I can...") unless user explicitly asks for expansion.
 
 ## Continuity
 

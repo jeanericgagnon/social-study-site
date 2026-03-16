@@ -7,6 +7,7 @@ import requests
 WORKSPACE = Path('/Users/ericsysclaw/.openclaw/workspace')
 CONF = WORKSPACE / 'exports' / 'meta-ads' / 'config.json'
 OUT = WORKSPACE / 'exports' / 'meta-ads' / 'follower_demographics_city_latest.json'
+HISTORY_DIR = WORKSPACE / 'exports' / 'meta-ads' / 'follower_demographics_city_history'
 
 
 def main():
@@ -58,8 +59,9 @@ def main():
 
     rows.sort(key=lambda x: x['followers'], reverse=True)
 
+    updated_at = datetime.now(timezone.utc).isoformat().replace('+00:00', 'Z')
     payload = {
-        'updated_at': datetime.now(timezone.utc).isoformat().replace('+00:00', 'Z'),
+        'updated_at': updated_at,
         'ig_user_id': ig_id,
         'metric': 'follower_demographics',
         'period': 'lifetime',
@@ -68,8 +70,14 @@ def main():
         'rows': rows,
     }
     OUT.parent.mkdir(parents=True, exist_ok=True)
+    HISTORY_DIR.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(payload, indent=2))
-    print(json.dumps({'ok': True, 'rows': len(rows), 'out': str(OUT)}, indent=2))
+
+    ts = updated_at.replace(':', '').replace('-', '').replace('T', '_').replace('Z', 'Z')
+    hist_file = HISTORY_DIR / f'follower_demographics_city_{ts}.json'
+    hist_file.write_text(json.dumps(payload, indent=2))
+
+    print(json.dumps({'ok': True, 'rows': len(rows), 'out': str(OUT), 'history': str(hist_file)}, indent=2))
 
 
 if __name__ == '__main__':

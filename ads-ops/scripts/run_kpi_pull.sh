@@ -57,26 +57,8 @@ if not ok:
     subprocess.run(['python','ads-ops/scripts/build_latest_json.py'],check=False)
 PY
 
-# Deploy updated dashboard so site reflects every successful refresh (retry for transient Vercel errors)
-(
-  cd ads-ops/dashboard
-  if command -v vercel >/dev/null 2>&1; then
-    ok=0
-    for i in 1 2 3; do
-      if vercel --prod --yes --scope eric-gagnons-projects; then
-        ok=1
-        break
-      fi
-      echo "WARN: vercel deploy attempt $i failed"
-      sleep 8
-    done
-    [ "$ok" -eq 1 ] || echo "WARN: vercel deploy failed after retries"
-  else
-    echo "WARN: vercel CLI not found; skipping deploy"
-  fi
-)
-
-# Optional: trigger Vercel deploy hook after fresh data
-if [ -n "${VERCEL_DEPLOY_HOOK_URL:-}" ]; then
-  curl -fsS -X POST "$VERCEL_DEPLOY_HOOK_URL" >/dev/null || true
-fi
+# Deploys intentionally removed from this script.
+# Reason: keep pull step write-only and avoid deployment retry storms.
+# Publish should happen in a single place: health-board/scripts/sync_and_deploy.sh
+# (one deploy attempt per scheduled cycle).
+echo "INFO: pull complete (no deploy in run_kpi_pull.sh)"

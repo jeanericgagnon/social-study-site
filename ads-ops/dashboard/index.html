@@ -46,6 +46,7 @@
       <div class="nav">
         <button id="healthBtn" class="btn active">Health Board</button>
         <button id="kpiBtn" class="btn">KPI Diagnostics</button>
+        <div class="badge" id="followersBadge">Followers: —</div>
         <div class="badge">Read-Only KPI Mode</div>
       </div>
     </div>
@@ -244,6 +245,8 @@
         const now = new Date();
         const curFollowers = Number(j?.followers?.current || 0);
         const remFollowers = Math.max(0, goalTarget - curFollowers);
+        const followersBadge = document.getElementById('followersBadge');
+        if (followersBadge) followersBadge.textContent = `Followers: ${curFollowers.toLocaleString()}`;
         const msLeft = Math.max(0, goalDate.getTime() - now.getTime());
         const daysLeft = Math.max(1, Math.ceil(msLeft / (1000*60*60*24)));
         const reqPerDay = remFollowers / daysLeft;
@@ -251,6 +254,11 @@
         const history = (j.followers_history||[]);
         const deltas = history.map(x=>x.followers_per_day).filter(v=>typeof v==='number');
         const avgRecent = deltas.length ? (deltas.slice(-14).reduce((a,b)=>a+b,0) / Math.min(14,deltas.length)) : 0;
+        const avg7 = deltas.length ? (deltas.slice(-7).reduce((a,b)=>a+b,0) / Math.min(7,deltas.length)) : 0;
+        const latestDaily = deltas.length ? deltas[deltas.length-1] : 0;
+        const weeklyGrowth = history.length >= 8
+          ? (Number(history[history.length-1].followers||0) - Number(history[history.length-8].followers||0))
+          : 0;
         const paceStatus = avgRecent >= reqPerDay ? 'On pace' : 'Behind pace';
         const projectedDate = avgRecent > 0 ? new Date(now.getTime() + (remFollowers/avgRecent)*24*60*60*1000) : null;
 
@@ -297,9 +305,11 @@
 
         const goalsBox = document.getElementById('goalsBox');
         goalsBox.innerHTML = `
-          <div class="action"><div class="id">Goal</div><div class="txt">Reach <b>${goalTarget.toLocaleString()}</b> followers by <b>June 11, 2026</b>.</div></div>
-          <div class="action"><div class="id">Current vs Remaining</div><div class="txt">Current: <b>${curFollowers.toLocaleString()}</b> · Remaining: <b>${remFollowers.toLocaleString()}</b> · Days left: <b>${daysLeft}</b></div></div>
-          <div class="action"><div class="id">Required Daily Pace</div><div class="txt">Need <b>${reqPerDay.toFixed(1)}</b> followers/day from now.</div></div>
+          <div class="action"><div class="id">Goal Target</div><div class="txt">Reach <b>${goalTarget.toLocaleString()}</b> followers by <b>June 11, 2026</b>.</div></div>
+          <div class="action"><div class="id">Current Followers</div><div class="txt"><b>${curFollowers.toLocaleString()}</b></div></div>
+          <div class="action"><div class="id">Needed to 150k</div><div class="txt"><b>${remFollowers.toLocaleString()}</b> followers · <b>${daysLeft}</b> days left</div></div>
+          <div class="action"><div class="id">Daily Growth</div><div class="txt">Latest: <b>${latestDaily.toFixed(1)}</b>/day · 7D avg: <b>${avg7.toFixed(1)}</b>/day · Required: <b>${reqPerDay.toFixed(1)}</b>/day</div></div>
+          <div class="action"><div class="id">Weekly Growth</div><div class="txt"><b>${weeklyGrowth>=0?'+':''}${weeklyGrowth.toLocaleString()}</b> net followers (last 7 days)</div></div>
           <div class="action"><div class="id">Pace Check</div><div class="txt"><b>${paceStatus}</b> · Recent avg: <b>${avgRecent.toFixed(1)}</b>/day ${projectedDate ? `· projected hit: <b>${projectedDate.toLocaleDateString()}</b>` : ''}</div></div>
           <div class="action"><div class="id">Blended CPC (7D)</div><div class="txt">Estimated blended CPC: <b>${blendedCpc7d!==null ? ('$'+blendedCpc7d.toFixed(2)) : 'N/A'}</b> (spend ÷ clicks).</div></div>
         `;

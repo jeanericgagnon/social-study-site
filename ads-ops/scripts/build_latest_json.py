@@ -98,6 +98,14 @@ conn.execute("""CREATE TABLE IF NOT EXISTS follower_snapshots (
   follower_count INTEGER NOT NULL,
   payload_json TEXT NOT NULL
 )""")
+conn.execute("""CREATE TABLE IF NOT EXISTS follower_city_snapshots (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  pulled_at_utc TEXT NOT NULL,
+  source TEXT NOT NULL,
+  ig_user_id TEXT,
+  city TEXT NOT NULL,
+  follower_count INTEGER NOT NULL
+)""")
 
 latest_by_level = conn.execute("""
 SELECT s.*
@@ -116,6 +124,45 @@ SELECT * FROM follower_snapshots
 ORDER BY pulled_at_utc DESC, id DESC
 LIMIT 1
 """).fetchone()
+
+city_ts_rows = conn.execute("""
+SELECT DISTINCT pulled_at_utc
+FROM follower_city_snapshots
+ORDER BY pulled_at_utc DESC
+LIMIT 2
+""").fetchall()
+
+followers_city = []
+followers_city_delta = []
+if city_ts_rows:
+    latest_ts = city_ts_rows[0][0]
+    prev_ts = city_ts_rows[1][0] if len(city_ts_rows) > 1 else None
+
+    latest_rows = conn.execute("""
+    SELECT city, follower_count
+    FROM follower_city_snapshots
+    WHERE pulled_at_utc = ?
+    """, (latest_ts,)).fetchall()
+
+    prev_map = {}
+    if prev_ts:
+        prev_rows = conn.execute("""
+        SELECT city, follower_count
+        FROM follower_city_snapshots
+        WHERE pulled_at_utc = ?
+        """, (prev_ts,)).fetchall()
+        prev_map = {r[0]: int(r[1]) for r in prev_rows}
+
+    for r in latest_rows:
+        city = r[0]
+        cur = int(r[1])
+        prev = prev_map.get(city)
+        delta = (cur - prev) if prev is not None else None
+        followers_city.append({"city": city, "followers": cur})
+        followers_city_delta.append({"city": city, "followers": cur, "delta_since_last_pull": delta})
+
+    followers_city.sort(key=lambda x: x["followers"], reverse=True)
+    followers_city_delta.sort(key=lambda x: x["followers"], reverse=True)
 
 # Build daily follower history (last value per day)
 raw = conn.execute("""
@@ -149,6 +196,7 @@ if latest_follow:
 
 raw_campaign_rows = []
 raw_ad_rows = []
+breakdowns = {}
 meta_pulled_at = None
 for r in latest_by_level:
     level = r["level"]
@@ -158,6 +206,8 @@ for r in latest_by_level:
         raw_campaign_rows = rows
     elif level == "ad":
         raw_ad_rows = rows
+    elif "__" in level:
+        breakdowns[level] = rows
 
 campaign_rows = aggregate_campaign(raw_campaign_rows)
 ad_rows = aggregate_ads(raw_ad_rows)
@@ -173,17 +223,30 @@ if campaign_rows:
 else:
     insights.append("Ads API snapshots missing (awaiting Meta API pull).")
 
+# Normalize selected expanded breakdown keys for downstream dashboards
+norm_breakdowns = {
+    "country": breakdowns.get("ad__country", []),
+    "region": breakdowns.get("ad__region", []),
+    "age_gender": breakdowns.get("ad__age_gender", []),
+    "placement": breakdowns.get("ad__publisher_platform_platform_position", []),
+    "device": breakdowns.get("ad__impression_device", []),
+}
+
 payload = {
     "updated_at": (latest_follow["pulled_at_utc"] if latest_follow else None) or meta_pulled_at,
     "campaign": campaign_rows,
     "ad": ad_rows,
+    "breakdowns": norm_breakdowns,
     "followers": {
         "current": int(latest_follow["follower_count"]) if latest_follow else None,
         "username": latest_follow["username"] if latest_follow else None,
         "source": latest_follow["source"] if latest_follow else None,
         "pulled_at": latest_follow["pulled_at_utc"] if latest_follow else None,
+        "updated_at": latest_follow["pulled_at_utc"] if latest_follow else None,
         "delta_24h": (int(latest_follow["follower_count"]) - int(baseline["follower_count"])) if latest_follow and baseline else None,
     },
+    "followers_city": followers_city,
+    "followers_city_delta": followers_city_delta,
     "followers_history": follower_history,
     "insights": insights,
 }
